@@ -1,0 +1,364 @@
+{
+  "versione": 1,
+  "web": "art/",
+  "personaggi": {
+    "Africano": {
+      "file": "characters/africano.webp",
+      "w": 768,
+      "h": 1152
+    },
+    "Balcanico": {
+      "file": "characters/balcanico.webp",
+      "w": 768,
+      "h": 1152
+    },
+    "boss": {
+      "file": "characters/boss.webp",
+      "w": 512,
+      "h": 512
+    },
+    "giudice-assolto": {
+      "file": "characters/giudice-assolto.webp",
+      "w": 512,
+      "h": 512
+    },
+    "giudice-condanna": {
+      "file": "characters/giudice-condanna.webp",
+      "w": 512,
+      "h": 512
+    },
+    "giudice": {
+      "file": "characters/giudice.webp",
+      "w": 512,
+      "h": 512
+    },
+    "Italiano": {
+      "file": "characters/italiano.webp",
+      "w": 768,
+      "h": 1152
+    },
+    "Magrebino": {
+      "file": "characters/magrebino.webp",
+      "w": 768,
+      "h": 1152
+    },
+    "Pakistano": {
+      "file": "characters/pakistano.webp",
+      "w": 768,
+      "h": 1152
+    },
+    "Zingaro": {
+      "file": "characters/zingaro.webp",
+      "w": 768,
+      "h": 1152
+    }
+  },
+  "drip": {
+    "cappello": {
+      "file": "drip/cappello.webp",
+      "w": 512,
+      "h": 364,
+      "z": 4,
+      "ancore": {
+        "Magrebino": {
+          "x": 0.504,
+          "y": 0.087,
+          "larghezza": 0.25,
+          "rot": 0
+        },
+        "Pakistano": {
+          "x": 0.5,
+          "y": 0.067,
+          "larghezza": 0.315,
+          "rot": 0
+        },
+        "Africano": {
+          "x": 0.5,
+          "y": 0.083,
+          "larghezza": 0.254,
+          "rot": 0
+        },
+        "Zingaro": {
+          "x": 0.5,
+          "y": 0.075,
+          "larghezza": 0.27,
+          "rot": 0
+        },
+        "Balcanico": {
+          "x": 0.508,
+          "y": 0.071,
+          "larghezza": 0.212,
+          "rot": 0
+        },
+        "Italiano": {
+          "x": 0.508,
+          "y": 0.076,
+          "larghezza": 0.267,
+          "rot": 0
+        }
+      }
+    },
+    "catena": {
+      "file": "drip/catena.webp",
+      "w": 425,
+      "h": 512,
+      "z": 2,
+      "ancore": {
+        "Magrebino": {
+          "x": 0.481,
+          "y": 0.293,
+          "larghezza": 0.175,
+          "rot": 0
+        },
+        "Pakistano": {
+          "x": 0.5,
+          "y": 0.284,
+          "larghezza": 0.175,
+          "rot": 0
+        },
+        "Africano": {
+          "x": 0.528,
+          "y": 0.284,
+          "larghezza": 0.16,
+          "rot": 0
+        },
+        "Zingaro": {
+          "x": 0.528,
+          "y": 0.303,
+          "larghezza": 0.175,
+          "rot": 0
+        },
+        "Balcanico": {
+          "x": 0.519,
+          "y": 0.284,
+          "larghezza": 0.175,
+          "rot": 0
+        },
+        "Italiano": {
+          "x": 0.519,
+          "y": 0.275,
+          "larghezza": 0.175,
+          "rot": 0
+        }
+      }
+    },
+    "orologio": {
+      "file": "drip/orologio.webp",
+      "w": 408,
+      "h": 512,
+      "z": 3,
+      "ancore": {
+        "Magrebino": {
+          "x": 0.649,
+          "y": 0.554,
+          "larghezza": 0.06,
+          "rot": 0
+        },
+        "Pakistano": {
+          "x": 0.649,
+          "y": 0.563,
+          "larghezza": 0.06,
+          "rot": 0
+        },
+        "Africano": {
+          "x": 0.705,
+          "y": 0.535,
+          "larghezza": 0.06,
+          "rot": 0
+        },
+        "Zingaro": {
+          "x": 0.737,
+          "y": 0.545,
+          "larghezza": 0.06,
+          "rot": 0
+        },
+        "Balcanico": {
+          "x": 0.751,
+          "y": 0.544,
+          "larghezza": 0.068,
+          "rot": 0
+        },
+        "Italiano": {
+          "x": 0.658,
+          "y": 0.554,
+          "larghezza": 0.06,
+          "rot": 0
+        }
+      }
+    },
+    "tuta": {
+      "file": "drip/tuta.webp",
+      "w": 457,
+      "h": 512,
+      "z": 1,
+      "ancore": {
+        "Africano": {
+          "x": 0.5,
+          "y": 0.5,
+          "larghezza": 1,
+          "rot": 0,
+          "file": "drip/tuta-africano.webp"
+        },
+        "Balcanico": {
+          "x": 0.5,
+          "y": 0.5,
+          "larghezza": 1,
+          "rot": 0,
+          "file": "drip/tuta-balcanico.webp"
+        },
+        "Italiano": {
+          "x": 0.5,
+          "y": 0.5,
+          "larghezza": 1,
+          "rot": 0,
+          "file": "drip/tuta-italiano.webp"
+        },
+        "Magrebino": {
+          "x": 0.5,
+          "y": 0.5,
+          "larghezza": 1,
+          "rot": 0,
+          "file": "drip/tuta-magrebino.webp"
+        },
+        "Pakistano": {
+          "x": 0.5,
+          "y": 0.5,
+          "larghezza": 1,
+          "rot": 0,
+          "file": "drip/tuta-pakistano.webp"
+        },
+        "Zingaro": {
+          "x": 0.5,
+          "y": 0.5,
+          "larghezza": 1,
+          "rot": 0,
+          "file": "drip/tuta-zingaro.webp"
+        }
+      }
+    }
+  },
+  "fasciato": {
+    "file": "drip/fasciato.webp",
+    "w": 512,
+    "h": 342,
+    "z": 5,
+    "ancore": {
+      "Magrebino": {
+        "x": 0.514,
+        "y": 0.14,
+        "larghezza": 0.191,
+        "rot": 0
+      },
+      "Pakistano": {
+        "x": 0.51,
+        "y": 0.136,
+        "larghezza": 0.241,
+        "rot": 0
+      },
+      "Africano": {
+        "x": 0.51,
+        "y": 0.137,
+        "larghezza": 0.195,
+        "rot": 0
+      },
+      "Zingaro": {
+        "x": 0.51,
+        "y": 0.133,
+        "larghezza": 0.215,
+        "rot": 0
+      },
+      "Balcanico": {
+        "x": 0.518,
+        "y": 0.11,
+        "larghezza": 0.162,
+        "rot": 0
+      },
+      "Italiano": {
+        "x": 0.518,
+        "y": 0.133,
+        "larghezza": 0.204,
+        "rot": 0
+      }
+    }
+  },
+  "oggetti": {
+    "cappello": "items/cappello.webp",
+    "catena": "items/catena.webp",
+    "monopattino": "items/monopattino.webp",
+    "motorino": "items/motorino.webp",
+    "orologio": "items/orologio.webp",
+    "passamontagna": "items/passamontagna.webp",
+    "telefono": "items/telefono.webp",
+    "tronchese": "items/tronchese.webp",
+    "tuta": "items/tuta.webp"
+  },
+  "luoghi": {
+    "bar-sport": "locations/bar-sport.webp",
+    "cantiere": "locations/cantiere.webp",
+    "centro-commerciale": "locations/centro-commerciale.webp",
+    "discoteca": "locations/discoteca.webp",
+    "galera": "locations/galera.webp",
+    "mercato": "locations/mercato.webp",
+    "ospedale": "locations/ospedale.webp",
+    "parchetto": "locations/parchetto.webp",
+    "piazza-notte": "locations/piazza-notte.webp",
+    "piazza-sera": "locations/piazza-sera.webp",
+    "piazza": "locations/piazza.webp",
+    "stazione": "locations/stazione.webp",
+    "strada-notte": "locations/strada-notte.webp",
+    "tribunale": "locations/tribunale.webp"
+  },
+  "azioni": {
+    "C01": "actions/c01.webp",
+    "C02": "actions/c02.webp",
+    "C03": "actions/c03.webp",
+    "C04": "actions/c04.webp",
+    "C05": "actions/c05.webp",
+    "C06": "actions/c06.webp",
+    "C07": "actions/c07.webp",
+    "C08": "actions/c08.webp",
+    "C09": "actions/c09.webp",
+    "C10": "actions/c10.webp",
+    "C11": "actions/c11.webp",
+    "C12": "actions/c12.webp",
+    "C13": "actions/c13.webp",
+    "C14": "actions/c14.webp",
+    "C15": "actions/c15.webp",
+    "C16": "actions/c16.webp",
+    "C17": "actions/c17.webp",
+    "C18": "actions/c18.webp",
+    "C19": "actions/c19.webp",
+    "C20": "actions/c20.webp",
+    "C21": "actions/c21.webp",
+    "C22": "actions/c22.webp",
+    "C23": "actions/c23.webp",
+    "C24": "actions/c24.webp",
+    "C25": "actions/c25.webp",
+    "C26": "actions/c26.webp",
+    "G01": "actions/g01.webp",
+    "G02": "actions/g02.webp",
+    "G03": "actions/g03.webp",
+    "G04": "actions/g04.webp",
+    "L01": "actions/l01.webp",
+    "L02": "actions/l02.webp",
+    "L03": "actions/l03.webp",
+    "L04": "actions/l04.webp",
+    "L05": "actions/l05.webp"
+  },
+  "ui": {
+    "energia": "ui/energia.webp",
+    "esito-arresto": "ui/esito-arresto.webp",
+    "esito-bottino": "ui/esito-bottino.webp",
+    "esito-ospedale": "ui/esito-ospedale.webp",
+    "fine-galera": "ui/fine-galera.webp",
+    "fine-ospedale": "ui/fine-ospedale.webp",
+    "fine-vittoria": "ui/fine-vittoria.webp",
+    "icona-app": "ui/icona-app.webp",
+    "reputazione": "ui/reputazione.webp",
+    "rischio": "ui/rischio.webp",
+    "salute": "ui/salute.webp",
+    "soldi": "ui/soldi.webp",
+    "splash": "ui/splash.webp",
+    "tooltip": "ui/tooltip.webp"
+  }
+}

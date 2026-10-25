@@ -1,0 +1,35 @@
+{
+  "_nota": "Ancore dei layer sui ritratti 768x1152, normalizzate: x,y = centro del layer, larghezza = frazione della larghezza del ritratto, rot = gradi in senso orario. Una voce con 'file' usa un layer dedicato a quella classe. Controllo: python3 tools/ottimizza-art.py --anteprima generated/anteprima-drip.png",
+  "cappello": {
+    "Magrebino": {"x": 0.504, "y": 0.087, "larghezza": 0.25, "rot": 0},
+    "Pakistano": {"x": 0.5, "y": 0.067, "larghezza": 0.315, "rot": 0},
+    "Africano":  {"x": 0.5, "y": 0.083, "larghezza": 0.254, "rot": 0},
+    "Zingaro":   {"x": 0.5, "y": 0.075, "larghezza": 0.27, "rot": 0},
+    "Balcanico": {"x": 0.508, "y": 0.071, "larghezza": 0.212, "rot": 0},
+    "Italiano":  {"x": 0.508, "y": 0.076, "larghezza": 0.267, "rot": 0}
+  },
+  "catena": {
+    "Magrebino": {"x": 0.481, "y": 0.293, "larghezza": 0.175, "rot": 0},
+    "Pakistano": {"x": 0.5, "y": 0.284, "larghezza": 0.175, "rot": 0},
+    "Africano":  {"x": 0.528, "y": 0.284, "larghezza": 0.16, "rot": 0},
+    "Zingaro":   {"x": 0.528, "y": 0.303, "larghezza": 0.175, "rot": 0},
+    "Balcanico": {"x": 0.519, "y": 0.284, "larghezza": 0.175, "rot": 0},
+    "Italiano":  {"x": 0.519, "y": 0.275, "larghezza": 0.175, "rot": 0}
+  },
+  "orologio": {
+    "Magrebino": {"x": 0.649, "y": 0.554, "larghezza": 0.06, "rot": 0},
+    "Pakistano": {"x": 0.649, "y": 0.563, "larghezza": 0.06, "rot": 0},
+    "Africano":  {"x": 0.705, "y": 0.535, "larghezza": 0.06, "rot": 0},
+    "Zingaro":   {"x": 0.737, "y": 0.545, "larghezza": 0.06, "rot": 0},
+    "Balcanico": {"x": 0.751, "y": 0.544, "larghezza": 0.068, "rot": 0},
+    "Italiano":  {"x": 0.658, "y": 0.554, "larghezza": 0.06, "rot": 0}
+  },
+  "fasciato": {
+    "Magrebino": {"x": 0.514, "y": 0.14, "larghezza": 0.191, "rot": 0},
+    "Pakistano": {"x": 0.51, "y": 0.136, "larghezza": 0.241, "rot": 0},
+    "Africano":  {"x": 0.51, "y": 0.137, "larghezza": 0.195, "rot": 0},
+    "Zingaro":   {"x": 0.51, "y": 0.133, "larghezza": 0.215, "rot": 0},
+    "Balcanico": {"x": 0.518, "y": 0.11, "larghezza": 0.162, "rot": 0},
+    "Italiano":  {"x": 0.518, "y": 0.133, "larghezza": 0.204, "rot": 0}
+  }
+}
