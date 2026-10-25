@@ -33,8 +33,8 @@ node tools/gen-image.mjs --prompt "<prompt>" --ref in.png --mask mask.png --out 
 # several variants to choose from
 node tools/gen-image.mjs --prompt "<prompt>" --n 3 --out assets/art/concepts/<name>.png   # → <name>_1.png, _2.png, _3.png
 
-# batch from a JSON file (see tools/jobs.example.json)
-node tools/gen-image.mjs --batch tools/jobs/<batch>.json
+# batch from a JSON file (see tools/jobs.example.json); 8 jobs at a time, skip files that already exist
+node tools/gen-image.mjs --batch tools/jobs/<batch>.json --concurrency 8 --skip-existing
 
 # inspect the request without spending credits
 node tools/gen-image.mjs --prompt "..." --dry-run
@@ -84,6 +84,8 @@ assets/art/
   items/        <slug>.png              icons, transparent bg, 1024x1024 (downscale in build step)
   locations/    <slug>.png              scene backgrounds, 1536x1024, opaque
   ui/           <slug>.png              frames, buttons, decorative elements, transparent bg
+  actions/      <id>.png                one icon per action id of game-data.json (l01.png … c26.png)
+  drip/         <slug>.png              paper-doll layers worn over the class portraits (tuta-<classe>.png per class)
   concepts/     <slug>_<n>.png          explorations, not shipped
 generated/                              default dump when --out is omitted; treat as scratch
 ```
@@ -112,7 +114,20 @@ do not regenerate assets the user did not ask to change.
   tell the user.
 - `API 400 ... moderation` → rephrase; the API blocked the prompt (often real people, brands, or
   violence). Do not try to evade it.
+- `API 400 Transparent background is not supported for this model` → `gpt-image-2` cannot do
+  transparency; the alpha art uses `gpt-image-2.5-sunburst` (set `"model"` in each job of the batch).
+- `fetch failed (UND_ERR_CONNECT_TIMEOUT)` → network hiccup; the script retries network errors, 429
+  and 5xx three times. Rerun a batch with `--skip-existing` to finish only what is missing.
 - Transparent background came back opaque → ensure `--background transparent` and a `.png`/`.webp`
   output; some styles ("photo", "scene") resist transparency — say "isolated on transparent
   background, no floor, no shadow" in the prompt.
 - Script can't find `.env` → it looks only at the project root (`B:\GAMES\MaranzaSimulator\.env`).
+- From a cloud session the API is reachable only from Windows on Mich's PC (PowerShell), not from the
+  Linux sandbox that mounts the folder. Long batches: start them detached with `Start-Process` and
+  read the log, so the command does not hit the tool timeout.
+
+## After generating
+
+Run `python3 tools/ottimizza-art.py` (needs Pillow): it writes the WebP files the game loads into
+`public/art/` and regenerates `assets/art/manifest.json`. Drip layer anchors live in
+`tools/ancore-drip.json`; `--anteprima <file.png>` renders every class wearing all layers to check them.
