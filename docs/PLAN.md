@@ -136,6 +136,6 @@ assets/art/ PNG sorgente + manifest.json (thread grafica)
 | 0 | fatta | domande chiuse in `RISPOSTE.md` |
 | 1 | fatta | il port del motore e' gia' completo: 312 partite del simulatore (6 classi × 4 policy × 13 semi) rigiocate nel motore TS identiche passo per passo (`tests/tracce.test.ts`, seme 0 in `npm test`, altri con `TRACCE_SEMI`). Le policy e l'harness sono gia' scritti. |
 | 2 | da fare | resta il tutorial del Boss (esiti `BOSS`, sblocchi di tier) e le query mancanti per la UI |
-| 3 | da fare | |
+| 3 | fatta | `npm run autoplay`: 4800 partite (200 per classe × policy) in circa 90 secondi, tabella **identica byte per byte** a `sim/results/batch_finale.txt`. La UI si puo' unire. |
 | 4–5, 7 | da fare | |
 | 6 | in corso | grafica pronta sul branch `claude/project-thread-3yj1pf` (92 immagini, WebP, manifest), stile B in attesa di conferma; la unisco io in fase 6 |
