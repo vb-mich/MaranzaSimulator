@@ -1,1 +1,123 @@
 @import "tailwindcss";
+
+/* Vaporwave palette, from the splash art: night violet, neon pink and cyan, sunset yellow. */
+@theme {
+  --color-notte-950: #160a26;
+  --color-notte-900: #201033;
+  --color-notte-800: #2c1747;
+  --color-notte-700: #3b2060;
+  --color-notte-600: #4f2c7c;
+  --color-rosa: #ff3ea5;
+  --color-ciano: #2de2e6;
+  --color-sole: #ffd319;
+  --color-arancio: #ff8b2b;
+  --color-rischio-basso: #3ddc84;
+  --color-rischio-medio: #ffd319;
+  --color-rischio-alto: #ff4d4d;
+  --color-rischio-estremo: #b78cff;
+  --font-sans: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    background: var(--color-notte-950);
+  }
+  body {
+    @apply bg-notte-950 text-white antialiased;
+    overscroll-behavior-y: none;
+  }
+  button {
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@utility titolo-neon {
+  background: linear-gradient(180deg, #fff 0%, #ffc4ea 45%, var(--color-rosa) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 6px rgb(255 62 165 / 0.6));
+}
+
+@utility pannello {
+  @apply rounded-2xl border border-white/10 bg-notte-900/85 backdrop-blur-sm;
+}
+
+@utility bottone {
+  @apply rounded-xl px-4 py-3 font-extrabold transition active:scale-[0.97] disabled:opacity-40 disabled:active:scale-100;
+}
+
+@utility bottone-primario {
+  @apply bottone bg-rosa text-white shadow-[0_0_18px_rgb(255_62_165/0.45)];
+}
+
+@utility bottone-secondario {
+  @apply bottone border border-ciano/60 bg-notte-800 text-ciano;
+}
+
+@keyframes entra-su {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes entra-zoom {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes pulsa {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+@utility anim-entra-su {
+  animation: entra-su 0.25s ease-out both;
+}
+
+@utility anim-entra-zoom {
+  animation: entra-zoom 0.22s ease-out both;
+}
+
+@utility anim-pulsa {
+  animation: pulsa 1.4s ease-in-out infinite;
+}
+
+@utility pb-sicuro {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+@utility pt-sicuro {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
