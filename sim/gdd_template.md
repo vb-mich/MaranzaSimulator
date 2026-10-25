@@ -328,7 +328,9 @@ $ Con le pene attuali l'unica azione che puo' produrre da sola una condanna ≥ 
 ## Eventi
 
 ### Condizioni del giorno
-All'inizio di ogni giorno si fa **una sola estrazione**: la probabilita' che il giorno abbia una condizione e' la somma delle probabilita' della tabella (circa il 50%, di piu' d'estate e d'inverno) e la condizione e' scelta in proporzione. Le condizioni a data fissa (Giorno di paga, Feste) hanno la precedenza. La condizione e' annunciata la Notte prima come **teaser** annunciata la Notte prima come **teaser** ("Domani: Operazione Alto Impatto. Occhio."). E' la ragione per cui il giocatore vuole vedere il giorno dopo.
+Per ogni giorno si fa **una sola estrazione**, la sera prima: la probabilita' che il giorno abbia una condizione e' la somma delle probabilita' della tabella (circa il 50%, di piu' d'estate e d'inverno) e la condizione e' scelta in proporzione. Le condizioni a data fissa (Giorno di paga, Feste) hanno la precedenza. La condizione e' annunciata la Notte prima come **teaser** ("Domani: Operazione Alto Impatto. Occhio."). E' la ragione per cui il giocatore vuole vedere il giorno dopo.
+
+$ Le condizioni usano un generatore casuale a parte (seme della partita + COND_SEME_OFFSET): sapere la sera la condizione di domani non cambia nessun altro numero della partita, e il simulatore resta identico al gioco.
 
 | Condizione | Prob./giorno | Effetto |
 |---|---|---|

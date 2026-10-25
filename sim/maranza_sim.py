@@ -30,13 +30,19 @@ SLOT_NOMI = {1: "Mattina", 2: "Pomeriggio", 3: "Sera", 4: "Notte"}
 
 REP_DECAY = 0.99        # ogni giorno la reputazione perde l'1% ("la piazza dimentica")
 REP_DIMINUENTE = 100.0  # i guadagni di rep sono moltiplicati per (1 - rep/100)
-REP_LOOT_BONUS = 0.30   # a rep 100 il bottino e' +30%
+REP_LOOT_BONUS = 0.30   # a rep 100 (REP_MAX) il bottino e' +30%
 REP_MIN = 1.0
 REP_MAX = 100.0
+REP_INIZIALE = 5.0      # reputazione a inizio partita
 SEQUESTRO_ARRESTO = 0.10   # quota di contanti sequestrata all'arresto
 SEQUESTRO_MAX = 500        # ... ma la madama trova solo quelli in tasca
 NOIA_PIAZZA = 0.5          # rep x0.5 per ogni ripetizione della stessa azione negli ultimi 7 giorni
+NOIA_GIORNI = 7            # finestra della noia: conta le ripetizioni con (oggi - giorno) < 7
 ZONA_CALDA = 0.85          # bottino x0.85 per ogni ripetizione dello stesso reato negli ultimi 7 giorni (min x0.5)
+ZONA_CALDA_GIORNI = 7      # finestra della zona calda: conta le ripetizioni con (oggi - giorno) < 7
+ZONA_CALDA_MIN = 0.5       # la zona calda non scende sotto x0.5
+RECENTI_MAX = 60           # azioni ricordate per noia/zona calda (basta >= 4 slot x 7 giorni)
+INVESTIMENTO_BOTTINO_MIN = 0.5   # a investimento t il minimo del bottino sale di t x 0.5 x (max - min)
 FURTO_OSPEDALE = 0.10      # quota di contanti "sparita" durante il ricovero
 GAME_OVER_PENA = 90        # una singola condanna >= 90 giorni = "marcito in galera"
 GAME_OVER_GALERA_TOT = 240 # oppure piu' di 240 giorni dell'anno dietro le sbarre (None = disattivato)
@@ -44,17 +50,56 @@ RECIDIVA_MAX = 5           # ogni condanna +RECIDIVA_PENA pena, fino a 5 volte
 RECIDIVA_PENA = 0.10
 RECIDIVA_TIRO = 3          # malus al tiro del giudice per condanna (max 5 volte)
 SORVEGLIATO_MULT = 1.25
+SORVEGLIATO_GIORNI = 30    # durata della messa alla prova
 TUTORIAL_GIORNI = 7        # "il giudice e' buono": bonus al tiro nei primi giorni
 TUTORIAL_BONUS = 15
 INCENSURATO_BONUS = 10     # bonus al tiro se nessuna condanna precedente
 LAVORI_AL_GIORNO = 1       # lavori legali (tag LEGALE con bottino) al giorno
-RICOVERO = (1, 3)          # giorni di ospedale
+RICOVERO = (1, 3)          # giorni di ospedale (randint, estremi inclusi)
+DANNO_RICOVERO = {"default": 20, "FORZA": 30, "sfida_piazza": 15}   # salute persa al ricovero
+OSPEDALE_SALUTE_USCITA = 20  # salute recuperata all'uscita dall'ospedale
 MULTA_EURO_GIORNO = 25     # multa non pagata: 1 giorno di galera ogni 25€
 SALUTE_BASSA = 30          # sotto questa salute l'energia massima e' ridotta
 SALUTE_BASSA_MULT = 0.8
+SALUTE_GIORNO = 1          # salute recuperata ogni giorno
 PENA_SCALA = 1.0           # moltiplicatore globale delle pene base (tuning)
-SALUTE_MAX = 100
+SALUTE_MAX = 100           # anche la salute iniziale
 PRESTANOME = 0.40          # Zingaro: probabilita' che una perdita di soldi venga azzerata
+REP_USCITA_GALERA = 3      # rep guadagnata il giorno in cui si esce di galera
+PATRIMONIO_DRIP = 0.5      # drip e veicoli contano al 50% nel patrimonio
+GAME_OVER_PENALITA = 0.5   # run finita prima dei 365 giorni: punti x0.5 x (giorno / GIORNI)
+SONNO_INTERVALLO = 2       # slot assoluti minimi tra due riposi (giorno*4 + slot)
+TRASFERTA_SLOT = 2         # slot consumati da una trasferta (senza veicolo, non Magrebino)
+TRASFERTA_SLOT_LIMITE = 3  # una trasferta da TRASFERTA_SLOT slot non si inizia da questo slot in poi
+ULTIMO_SONNO_INIZIALE = -10   # a inizio partita l'ultimo riposo e' "molto tempo fa": si puo' dormire subito
+COND_SEME_OFFSET = 1_000_000_007   # le condizioni del giorno usano un generatore a parte: seme + offset
+
+# ---- Rischio (rischi) ----------------------------------------------------
+RISCHIO_MAX = 0.95              # tetto di gabbio e di ospedale dopo tutti i modificatori
+RISCHIO_FUGA_VEICOLO_PT = 0.05  # -gabbio per livello di veicolo nelle azioni VEICOLO (fuga)
+RISCHIO_VEICOLO_REQ_PT = 0.05   # -gabbio col motorino nelle azioni che richiedono un veicolo
+RISCHIO_TOOL_PT = 0.05          # -gabbio per attrezzo: passamontagna (NOTTE), tronchese (EFFRAZIONE)
+
+# ---- Azioni speciali (esegui) ------------------------------------------
+SLOT_VINCITA_P = 0.30           # G01: probabilita' di vincita
+SLOT_VINCITA_MULT = 2.5         # ... incasso = puntata x2.5
+SCOMMESSA_VINCITA_P = 0.45      # G02
+SCOMMESSA_VINCITA_MULT = 2.0
+SCOMMESSA_REP = 2               # rep se vinci la scommessa
+POKER_VINCITA_P = 0.40          # G03: P(vincita) = 0.40 + rep / 500
+POKER_VINCITA_REP_DIV = 500
+POKER_VINCITA_MULT = 2.5
+POKER_REP = {"vinci": 3, "perdi": -2}
+CORSA_VINCITA_P = 0.5           # G04: P(vincita) = 0.5 (+0.10 Balcanico)
+CORSA_BALCANICO_BONUS = 0.10
+CORSA_VINCITA_MULT = 2.0
+VIRALE_P = 0.08                 # TikTok / parkour / tag: probabilita' di diventare virale
+VIRALE_REP = 10                 # ... +10 rep (prima dei rendimenti decrescenti)
+CHILL_DRIP_DIV = 500            # chill: rep = (rep base + drip / 500) x (1 - rep / 60)
+CHILL_CAP = 60
+TIKTOK_CAP = 80                 # tiktok: rep = rep base x (1 - rep / 80)
+MONOPATTINO_TIENI_P = 0.5       # C09 senza veicolo: 50% te lo tieni invece del bottino
+VEICOLO_BONUS_P = 0.5           # C18 senza veicolo: 50% ti prendi anche il mezzo (oltre al bottino)
 
 # ---- Classi -------------------------------------------------------------
 # soldi iniziali, energia massima. Le abilita' sono implementate nel motore.
@@ -66,6 +111,27 @@ CLASSI = {   # soldi iniziali, energia massima (le abilita' sono nel motore)
     "Balcanico": dict(soldi=50,  energia=160),
     "Italiano":  dict(soldi=200, energia=120),
 }
+# Abilita' di classe (vedi abilita_classi in export_data.py)
+TRAPPER_DRIP_MIN = 200          # Magrebino: +10% rep se il drip piu' caro vale > 200
+TRAPPER_REP_MULT = 1.10
+RAMADAN_INIZIO = [2, 15]        # Magrebino: [mese, giorno], estremi inclusi
+RAMADAN_FINE = [3, 16]
+RAMADAN_SLOT_VIETATI = [1, 2]   # ... niente azioni di Mattina e Pomeriggio
+INSTANCABILE_SOGLIA = 15        # Pakistano: energia <= 15 -> riportata a 100, 1 volta al mese
+INSTANCABILE_ENERGIA = 100
+INCASSO_PAKISTANO_MULT = 1.10   # Pakistano: business is business
+VENTIQUATTROSETTE_SLOT = 4      # Pakistano: una sola azione a settimana (ISO) in questo slot (Notte)
+FUGA_AFRICANO_MULT = 0.90       # Africano: solo sul gabbio
+INCASSO_AFRICANO_MULT = 0.90    # Africano: soldi alla famiglia
+REP_ZINGARO_MULT = 0.90         # Zingaro: vita di carovana (solo guadagni)
+CUGGINO_ENERGIA_MULT = 2        # Zingaro: in galera le azioni costano il doppio dell'energia
+FORZA_BRUTA_MULT = 0.70         # Balcanico: gabbio e ospedale x0.7 nelle azioni FORZA
+RECUPERO_BALCANICO = 1.0        # Balcanico: dormendo recupera sempre il 100% dell'energia max
+GUAIO_BALCANICO_BONUS = 0.10    # Balcanico: +10% di probabilita' giornaliera di un guaio
+PAGHETTA_IMPORTO = 50           # Italiano: ogni lunedi' (non in galera)
+PAGHETTA_GIORNO_SETTIMANA = 0   # date.weekday() di Python: 0 = lunedi'
+PAGHETTA_EMERGENZA_SOGLIA = 5   # Italiano: soldi <= 5 -> riportati a 20, 1 volta al mese
+PAGHETTA_EMERGENZA_IMPORTO = 20
 
 # ---- Cibo (costo giornaliero, recupero energia, effetto salute) -------
 CIBO = [  # nome, costo, recupero (quota di energia max), salute/giorno
@@ -95,6 +161,19 @@ AVVOCATI = {   # nome: (costo, bonus al tiro del giudice)
     "quartiere": (150, 10),
     "grido":     (600, 25),
 }
+TIRO_DADO = [1, 100]            # tiro del giudice: randint, estremi inclusi
+TIRO_CLASSE = {"Africano": 10, "Italiano": -10}
+NOTO_IN_QUESTURA = {"da_rep": 60, "per_punti": 5, "max": 8}   # rep > 60: -min(8, (rep - 60) / 5) al tiro
+TRIBUNALE_SOGLIE = {"assolto": 85, "messa_alla_prova": 65, "ridotta": 40, "piena": 10}   # tiro >= soglia
+TRIBUNALE_MULT = {"assolto": 0, "messa_alla_prova": 0, "ridotta": 0.5, "piena": 1.0, "aggravata": 1.5, "patteggiamento": 0.6}
+RISCHIO_MULTA_RIDOTTA_PROVA = 0.5   # messa alla prova: si paga la multa x0.5
+MULTA_AGGRAVATA_MULT = 2.0      # pena aggravata: multa x2
+REP_ASSOLTO = 2
+SPAVALDO_REP = 5                # difesa "spavaldo": gratis, +5 rep, -15 al tiro
+SPAVALDO_TIRO = -15
+VEICOLO_SEQUESTRO_ARRESTO = 0.5 # arresto in un'azione che richiede veicolo: 50% sequestro
+PENA_ARROTONDAMENTO = 0.5       # pena = floor(pena + 0.5): arrotondamento "scolastico"
+PENA_MIN_GIORNI = 1             # ogni condanna vale almeno 1 giorno
 
 # ---- Azioni ------------------------------------------------------------
 # Campi:
@@ -227,6 +306,39 @@ GUAI = [
     "boss_nota", "influencer", "furto_veicolo", "mamma_spesa", "serata", "sbirro_occhio",
     "gratta_vinci", "febbre", "giornalista", "turno_kebab", "rissa_subita",
 ]
+# Numeri dei guai, letti da evento_personale. Convenzioni come nelle azioni: energia, costo e multa
+# sono quantita' tolte (positive); rep e salute sono variazioni con segno; *_p sono probabilita'.
+# attenzionato_giorni/_val: durata e +gabbio dell'"attenzionato". I danni da ricovero sono in DANNO_RICOVERO.
+GUAI_EFFETTI = {
+    "cuggino_soldi": dict(costo=50, rep_paga=3, rep_rifiuta=-3,
+                          attenzionato_p=0.2, attenzionato_giorni=7, attenzionato_val=0.05),
+    "sfida_piazza":  dict(vittoria_p=0.5, rep_vinci=8, rep_perdi=-5, rep_rifiuta=-6),   # Balcanico: x SFIDA_BALCANICO_MULT
+    "posto_blocco":  dict(p=0.3, multa=80, sequestro_p=0.2),
+    "perquisizione": dict(p=0.3, quota=0.10),
+    "portafoglio":   dict(valore=[20, 150], rep_restituisci=5),
+    "boss_nota":     dict(rep_min=25, tag=["SPACCIO", "FORZA"], bottino_mult=1.5),
+    "influencer":    dict(rep=5, energia=20),
+    "furto_veicolo": dict(p=0.5),
+    "mamma_spesa":   dict(energia=20, salute=5, rep=-1),
+    "serata":        dict(costo=40, rep=4, energia=30),
+    "sbirro_occhio": dict(attenzionato_giorni=1, attenzionato_val=0.10),
+    "gratta_vinci":  dict(premi=[0, 0, 0, 5, 10, 20, 50, 100]),
+    "febbre":        dict(energia_max_quota=0.5, salute=-5),
+    "giornalista":   dict(rep=8, attenzionato_giorni=7, attenzionato_val=0.05),
+    "turno_kebab":   dict(soldi=30),
+    "rissa_subita":  dict(p=0.3),
+}
+SFIDA_BALCANICO_MULT = 1.3      # sfida in piazza: il Balcanico vince con 0.5 x 1.3
+
+# ---- Presentazione (UI): non usati dal simulatore, esportati per il client --------
+TIER_REP = [0, 10, 20, 35, 45, 50, 70]
+TIER_AZIONE = {0: 1, 10: 2, 20: 3, 35: 4, 45: 4, 50: 4, 70: 5}   # rep_min -> tier (campo "tier" delle azioni)
+GRADI_REP = [[0, "Sconosciuto"], [10, "Zanza"], [20, "Conosciuto"], [35, "Rispettato"], [50, "Boss di zona"], [70, "Leggenda"]]
+RISCHIO_COLORI = [[0.08, "basso"], [0.15, "medio"], [0.30, "alto"], [1.0, "estremo"]]
+UI_FULMINI = [[20, 1], [40, 2], [60, 3], [9999, 4]]
+UI_BOTTINO_SIMBOLI = [[100, "€"], [500, "€€"], [999999, "€€€"]]
+UI_SLIDER_TACCHE = [[0.0, "Alla buona"], [0.5, "Preparato"], [1.0, "Da professionista"]]
+UI_RISCHIO_SU = "gabbio+ospedale, alla tacca selezionata, con i modificatori di oggi"
 
 # ======================================================================
 #  MOTORE
@@ -238,9 +350,9 @@ class Stato:
     soldi: float
     energia: float
     energia_max: int
-    rep: float = 5.0
-    salute: float = 100.0
-    salute_max: int = 100
+    rep: float = REP_INIZIALE
+    salute: float = float(SALUTE_MAX)
+    salute_max: int = SALUTE_MAX
     giorno: int = 0            # 0..364
     slot: int = 1
     galera: int = 0            # giorni residui
@@ -253,7 +365,7 @@ class Stato:
     veicolo: int = 0           # 0 nessuno / 1 monopattino / 2 motorino
     cooldown: dict = field(default_factory=dict)   # id -> giorno di sblocco
     recenti: list = field(default_factory=list)    # (giorno, id) delle ultime azioni
-    ultimo_sonno: int = -10    # indice assoluto (giorno*4+slot) dell'ultimo riposo
+    ultimo_sonno: int = ULTIMO_SONNO_INIZIALE   # indice assoluto (giorno*4+slot) dell'ultimo riposo
     cibo_pagato: bool = False
     cibo_gratis: bool = False
     lavori_oggi: int = 0
@@ -282,18 +394,18 @@ class Stato:
         return max([NEGOZIO[i]["valore"] for i in self.items if NEGOZIO[i]["tipo"] == "drip"] + [0])
     def drip_tot(self):
         return sum(NEGOZIO[i]["valore"] for i in self.items if NEGOZIO[i]["tipo"] in ("drip","veicolo"))
-    def patrimonio(self): return self.soldi + 0.5 * self.drip_tot()
+    def patrimonio(self): return self.soldi + PATRIMONIO_DRIP * self.drip_tot()
     def punti(self):
         p = self.patrimonio() * self.rep
         if not self.vivo:
-            p *= 0.5 * (self.giorno / GIORNI)
+            p *= GAME_OVER_PENALITA * (self.giorno / GIORNI)
         return p
     def zona_calda(self, aid):
-        n = sum(1 for g, i in self.recenti if i == aid and self.giorno - g < 7)
-        return max(0.5, ZONA_CALDA ** n)
+        n = sum(1 for g, i in self.recenti if i == aid and self.giorno - g < ZONA_CALDA_GIORNI)
+        return max(ZONA_CALDA_MIN, ZONA_CALDA ** n)
     def noia(self, aid):
-        """Moltiplicatore rep per ripetizione: 0.5^n, n = volte fatta negli ultimi 7 giorni."""
-        n = sum(1 for g, i in self.recenti if i == aid and self.giorno - g < 7)
+        """Moltiplicatore rep per ripetizione: 0.5^n, n = volte fatta negli ultimi NOIA_GIORNI giorni."""
+        n = sum(1 for g, i in self.recenti if i == aid and self.giorno - g < NOIA_GIORNI)
         return NOIA_PIAZZA ** n
     def reddito_giornaliero(self):
         h = self.storico_guadagni[-14:]
@@ -303,6 +415,9 @@ class Stato:
 class Gioco:
     def __init__(self, classe, policy="bilanciato", seed=None, verbose=False):
         self.rng = random.Random(seed)
+        # condizioni del giorno: generatore a parte, cosi' il teaser della Notte (condizione di domani
+        # estratta in anticipo) non sposta le altre estrazioni
+        self.rng_cond = random.Random(None if seed is None else seed + COND_SEME_OFFSET)
         self.verbose = verbose
         cl = CLASSI[classe]
         emax = cl["energia"]
@@ -320,8 +435,9 @@ class Gioco:
     #  Calendario / abilita' di classe
     # ------------------------------------------------------------------
     def ramadan(self):
-        d = self.s.data
-        return (d.month == 2 and d.day >= 15) or (d.month == 3 and d.day <= 16)
+        d = self.s.data   # NB: assume inizio e fine in due mesi consecutivi
+        return ((d.month == RAMADAN_INIZIO[0] and d.day >= RAMADAN_INIZIO[1])
+                or (d.month == RAMADAN_FINE[0] and d.day <= RAMADAN_FINE[1]))
 
     def nuovo_giorno(self):
         s = self.s
@@ -332,12 +448,12 @@ class Gioco:
         if s.galera == 0:
             s.rep = max(REP_MIN, s.rep * REP_DECAY)
         # salute si rigenera lentamente
-        self.cambia_salute(+1)
+        self.cambia_salute(+SALUTE_GIORNO)
         if s.sorvegliato > 0: s.sorvegliato -= 1
         if s.attenzionato > 0: s.attenzionato -= 1
         # Italiano: paghetta il lunedi'
-        if s.classe == "Italiano" and d.weekday() == 0 and s.galera == 0:
-            s.soldi += 50; self.log("Paghetta del papi +50")
+        if s.classe == "Italiano" and d.weekday() == PAGHETTA_GIORNO_SETTIMANA and s.galera == 0:
+            s.soldi += PAGHETTA_IMPORTO; self.log("Paghetta del papi +50")
         # condizione del giorno
         s.cond = {}
         if (d.month, d.day) in FESTE:
@@ -350,14 +466,14 @@ class Gioco:
                 # una sola estrazione: P(condizione) = somma delle p ammesse oggi, scelta proporzionale
                 cand = [c for c in CONDIZIONI if "solo_giorno_mese" not in c and ("stagione" not in c or d.month in c["stagione"])]
                 tot = sum(c["p"] for c in cand)
-                if self.rng.random() < tot:
-                    s.cond = self.rng.choices(cand, weights=[c["p"] for c in cand])[0]
+                if self.rng_cond.random() < tot:
+                    s.cond = self.rng_cond.choices(cand, weights=[c["p"] for c in cand])[0]
         if s.cond: self.log(f"Oggi: {s.cond['nome']}")
         # 24: il caldo abbassa anche l'energia che hai gia'; 1: salute bassa riduce il massimo
         s.energia = min(s.energia, self.energia_max_oggi())
         # guaio / opportunita'
         if s.galera == 0 and s.ospedale == 0:
-            p = P_GUAIO_BASE + (0.10 if s.classe == "Balcanico" else 0)
+            p = P_GUAIO_BASE + (GUAIO_BALCANICO_BONUS if s.classe == "Balcanico" else 0)
             if self.rng.random() < p:
                 self.evento_personale(self.rng.choice(GUAI))
 
@@ -367,64 +483,67 @@ class Gioco:
     def evento_personale(self, ev):
         s, r = self.s, self.rng
         pol = self.policy
+        E = GUAI_EFFETTI[ev]
+        # NB: le soglie di soldi (150 cuggino, 100 serata) sono della policy, non regole di gioco
         if ev == "cuggino_soldi":
             if s.soldi >= 150 and pol["generoso"]:
-                s.soldi -= 50; self.guadagna_rep(3); self.log("Il cuggino chiede 50€: paghi (+3 rep)")
+                s.soldi -= E["costo"]; self.guadagna_rep(E["rep_paga"]); self.log("Il cuggino chiede 50€: paghi (+3 rep)")
             else:
-                self.guadagna_rep(-3); self.log("Il cuggino chiede 50€: rifiuti (-3 rep)")
-                if r.random() < 0.2: self.attenziona(7, 0.05)
+                self.guadagna_rep(E["rep_rifiuta"]); self.log("Il cuggino chiede 50€: rifiuti (-3 rep)")
+                if r.random() < E["attenzionato_p"]: self.attenziona(E["attenzionato_giorni"], E["attenzionato_val"])
         elif ev == "sfida_piazza":
             if pol["accetta_sfide"] or s.classe == "Balcanico":
-                win = 0.5 * (1.3 if s.classe == "Balcanico" else 1)
-                if r.random() < win: self.guadagna_rep(8); self.log("Sfida in piazza: vinci (+8 rep)")
+                win = E["vittoria_p"] * (SFIDA_BALCANICO_MULT if s.classe == "Balcanico" else 1)
+                if r.random() < win: self.guadagna_rep(E["rep_vinci"]); self.log("Sfida in piazza: vinci (+8 rep)")
                 else:
-                    self.guadagna_rep(-5); self.log("Sfida in piazza: perdi (-5 rep)"); self.ricovero(self.rng.randint(*RICOVERO), 15)
+                    self.guadagna_rep(E["rep_perdi"]); self.log("Sfida in piazza: perdi (-5 rep)")
+                    self.ricovero(self.rng.randint(*RICOVERO), DANNO_RICOVERO["sfida_piazza"])
             else:
-                self.guadagna_rep(-6); self.log("Sfida in piazza: rifiuti (-6 rep)")
+                self.guadagna_rep(E["rep_rifiuta"]); self.log("Sfida in piazza: rifiuti (-6 rep)")
         elif ev == "posto_blocco":
-            if s.veicolo and r.random() < 0.3:
-                multa = 80
-                if r.random() < 0.2:
+            if s.veicolo and r.random() < E["p"]:
+                multa = E["multa"]
+                if r.random() < E["sequestro_p"]:
                     s.veicolo = 0; s.items.discard("monopattino"); s.items.discard("motorino")
                     self.log("Posto di blocco: veicolo sequestrato!")
                 else:
                     self.paga(multa); self.log("Posto di blocco: multa 80€")
         elif ev == "perquisizione":
-            if r.random() < 0.3:
-                perdita = 0.10 * s.soldi; self.perdi_soldi(perdita); self.log(f"Perquisizione all'alba: -{perdita:.0f}€")
+            if r.random() < E["p"]:
+                perdita = E["quota"] * s.soldi; self.perdi_soldi(perdita); self.log(f"Perquisizione all'alba: -{perdita:.0f}€")
         elif ev == "portafoglio":
-            v = r.uniform(20, 150)
-            if pol["onesto"]: self.guadagna_rep(5); self.log("Trovi un portafoglio: lo restituisci in video (+5 rep)")
+            v = r.uniform(*E["valore"])
+            if pol["onesto"]: self.guadagna_rep(E["rep_restituisci"]); self.log("Trovi un portafoglio: lo restituisci in video (+5 rep)")
             else: self.incassa(v); self.log(f"Trovi un portafoglio: +{v:.0f}€")
         elif ev == "boss_nota":
-            if s.rep >= 25:
+            if s.rep >= E["rep_min"]:
                 lt = dict(s.cond.get("loot_tag", {}))
-                for k in ("SPACCIO", "FORZA"): lt[k] = lt.get(k, 1.0) * 1.5   # 13: si somma alla condizione del giorno
+                for k in E["tag"]: lt[k] = lt.get(k, 1.0) * E["bottino_mult"]   # 13: si somma alla condizione del giorno
                 s.cond = dict(s.cond, loot_tag=lt); self.log("Il boss ti ha notato: lavori per lui x1.5 oggi")
         elif ev == "influencer":
-            self.guadagna_rep(5); s.energia = max(0, s.energia - 20); self.log("Un influencer ti mette nel video (+5 rep, -20 en)")
+            self.guadagna_rep(E["rep"]); s.energia = max(0, s.energia - E["energia"]); self.log("Un influencer ti mette nel video (+5 rep, -20 en)")
         elif ev == "furto_veicolo":
-            if s.veicolo == 1 and r.random() < 0.5:
+            if s.veicolo == NEGOZIO["monopattino"]["livello"] and r.random() < E["p"]:
                 s.veicolo = 0; s.items.discard("monopattino"); self.log("Ti hanno rubato il monopattino!")
         elif ev == "mamma_spesa":
-            s.energia = max(0, s.energia - 20); self.cambia_salute(+5); self.guadagna_rep(-1)
+            s.energia = max(0, s.energia - E["energia"]); self.cambia_salute(E["salute"]); self.guadagna_rep(E["rep"])
             self.log("Tua madre ti manda a fare la spesa (-20 en, +5 salute, -1 rep)")
         elif ev == "serata":
             if s.soldi >= 100 and pol["festaiolo"]:
-                s.soldi -= 40; self.guadagna_rep(4); s.energia = max(0, s.energia - 30); self.log("Serata in disco (-40€, +4 rep)")
+                s.soldi -= E["costo"]; self.guadagna_rep(E["rep"]); s.energia = max(0, s.energia - E["energia"]); self.log("Serata in disco (-40€, +4 rep)")
         elif ev == "sbirro_occhio":
-            self.attenziona(1, 0.10); self.log("Lo sbirro di quartiere ti tiene d'occhio (+10% gabbio oggi)")
+            self.attenziona(E["attenzionato_giorni"], E["attenzionato_val"]); self.log("Lo sbirro di quartiere ti tiene d'occhio (+10% gabbio oggi)")
         elif ev == "gratta_vinci":
-            v = r.choice([0,0,0,5,10,20,50,100]); self.incassa(v); self.log(f"Gratta e vinci trovato per terra: +{v}€")
+            v = r.choice(E["premi"]); self.incassa(v); self.log(f"Gratta e vinci trovato per terra: +{v}€")
         elif ev == "febbre":
-            s.energia = min(s.energia, s.energia_max * 0.5); self.cambia_salute(-5); self.log("Febbre: energia dimezzata, -5 salute")
+            s.energia = min(s.energia, s.energia_max * E["energia_max_quota"]); self.cambia_salute(E["salute"]); self.log("Febbre: energia dimezzata, -5 salute")
         elif ev == "giornalista":
             if pol["accetta_tv"]:
-                self.guadagna_rep(8); self.attenziona(7, 0.05); self.log("Intervista in TV (+8 rep, +5% gabbio per 7 giorni)")
+                self.guadagna_rep(E["rep"]); self.attenziona(E["attenzionato_giorni"], E["attenzionato_val"]); self.log("Intervista in TV (+8 rep, +5% gabbio per 7 giorni)")
         elif ev == "turno_kebab":
-            self.incassa(30); self.log("Il kebabbaro ti offre un turno: +30€")
+            self.incassa(E["soldi"]); self.log("Il kebabbaro ti offre un turno: +30€")
         elif ev == "rissa_subita":
-            if r.random() < 0.3: self.log("Ti saltano addosso per un vecchio screzio"); self.ricovero(self.rng.randint(*RICOVERO), 20)
+            if r.random() < E["p"]: self.log("Ti saltano addosso per un vecchio screzio"); self.ricovero(self.rng.randint(*RICOVERO), DANNO_RICOVERO["default"])
 
     # ------------------------------------------------------------------
     #  Economia
@@ -474,8 +593,8 @@ class Gioco:
 
     def incassa(self, importo, fonte="ricompensa"):
         s = self.s
-        if s.classe == "Pakistano": importo *= 1.10
-        if s.classe == "Africano": importo *= 0.90
+        if s.classe == "Pakistano": importo *= INCASSO_PAKISTANO_MULT
+        if s.classe == "Africano": importo *= INCASSO_AFRICANO_MULT
         s.soldi += importo; s.guadagni += importo
         if s.storico_guadagni: s.storico_guadagni[-1] += importo
         return importo
@@ -483,20 +602,20 @@ class Gioco:
     def guadagna_rep(self, punti):
         s = self.s
         if punti > 0:
-            if s.classe == "Magrebino" and s.drip_max() > 200: punti *= 1.10
-            if s.classe == "Zingaro": punti *= 0.90
+            if s.classe == "Magrebino" and s.drip_max() > TRAPPER_DRIP_MIN: punti *= TRAPPER_REP_MULT
+            if s.classe == "Zingaro": punti *= REP_ZINGARO_MULT
             punti *= max(0.0, 1.0 - s.rep / REP_DIMINUENTE)
         s.rep = max(REP_MIN, min(REP_MAX, s.rep + punti))
 
-    def rep_chill(self):
-        """Rep del 'chill in piazza': funziona solo fino a rep 60 (poi serve fare cose)."""
+    def rep_chill(self, a):
+        """Rep del 'chill in piazza': funziona solo fino a rep CHILL_CAP (poi serve fare cose)."""
         s = self.s
-        base = 0.5 + s.drip_tot() / 500.0
-        return base * max(0.0, 1.0 - s.rep / 60.0)
+        base = a["rep"] + s.drip_tot() / CHILL_DRIP_DIV
+        return base * max(0.0, 1.0 - s.rep / CHILL_CAP)
 
     def rep_tiktok(self, a):
         s = self.s
-        return a["rep"] * max(0.0, 1.0 - s.rep / 80.0)
+        return a["rep"] * max(0.0, 1.0 - s.rep / TIKTOK_CAP)
 
     # ------------------------------------------------------------------
     #  Rischi
@@ -509,14 +628,14 @@ class Gioco:
         if g == 0 and o == 0: return 0.0, 0.0
         mult = 1.0
         # classe
-        if s.classe == "Africano": g *= 0.90            # "fuga istantanea": solo essere beccato (19)
-        if s.classe == "Balcanico" and "FORZA" in a["tags"]: mult *= 0.70   # gabbio e ospedale
+        if s.classe == "Africano": g *= FUGA_AFRICANO_MULT            # "fuga istantanea": solo essere beccato (19)
+        if s.classe == "Balcanico" and "FORZA" in a["tags"]: mult *= FORZA_BRUTA_MULT   # gabbio e ospedale
         # veicolo (azioni di fuga)
-        if "VEICOLO" in a["tags"] and s.veicolo: g -= 0.05 * s.veicolo
-        if a["veicolo_req"] and s.veicolo == 2: g -= 0.05
+        if "VEICOLO" in a["tags"] and s.veicolo: g -= RISCHIO_FUGA_VEICOLO_PT * s.veicolo
+        if a["veicolo_req"] and s.veicolo == NEGOZIO["motorino"]["livello"]: g -= RISCHIO_VEICOLO_REQ_PT
         # tools
-        if "passamontagna" in s.items and "NOTTE" in a["tags"]: g -= 0.05
-        if "tronchese" in s.items and "EFFRAZIONE" in a["tags"]: g -= 0.05
+        if "passamontagna" in s.items and "NOTTE" in a["tags"]: g -= RISCHIO_TOOL_PT
+        if "tronchese" in s.items and "EFFRAZIONE" in a["tags"]: g -= RISCHIO_TOOL_PT
         # condizione del giorno
         c = s.cond
         g += c.get("gabbio_add", 0.0)
@@ -525,20 +644,20 @@ class Gioco:
         g *= c.get("risk_id", {}).get(a["id"], 1.0)
         # attenzionato
         if s.attenzionato > 0: g += s.attenzionato_val
-        g = max(0.0, min(0.95, g * mult)); o = max(0.0, min(0.95, o * mult))
+        g = max(0.0, min(RISCHIO_MAX, g * mult)); o = max(0.0, min(RISCHIO_MAX, o * mult))
         return g, o
 
     def bottino_atteso(self, a, t, spesa):
         if a["bottino_x"]:
             lo, hi = a["bottino_x"]; base = spesa * (lo + hi) / 2
         else:
-            lo, hi = a["bottino"]; base = (lo + 0.5 * t * (hi - lo) + hi) / 2
+            lo, hi = a["bottino"]; base = (lo + INVESTIMENTO_BOTTINO_MIN * t * (hi - lo) + hi) / 2
         return base * self.moltiplicatore_bottino(a)
 
     def moltiplicatore_bottino(self, a):
         s = self.s
         if "LEGALE" in a["tags"]: return 1.0
-        m = 1.0 + REP_LOOT_BONUS * s.rep / 100.0   # la rep fa alzare il bottino
+        m = 1.0 + REP_LOOT_BONUS * s.rep / REP_MAX   # la rep fa alzare il bottino
         m *= getattr(self, "_zc", None) or s.zona_calda(a["id"])
         for tag, x in s.cond.get("loot_tag", {}).items():
             if tag in a["tags"]: m *= x
@@ -550,7 +669,7 @@ class Gioco:
         if a["bottino_x"]:
             lo, hi = a["bottino_x"]; v = spesa * r.uniform(lo, hi)
         else:
-            lo, hi = a["bottino"]; v = r.uniform(lo + 0.5 * t * (hi - lo), hi)
+            lo, hi = a["bottino"]; v = r.uniform(lo + INVESTIMENTO_BOTTINO_MIN * t * (hi - lo), hi)
         return v * self.moltiplicatore_bottino(a)
 
     def costo_energia(self, a):
@@ -559,14 +678,14 @@ class Gioco:
         if "LEGALE" not in a["tags"] and "AZZARDO" not in a["tags"]:
             e += s.cond.get("energia_add", 0)
         if a["trasferta"]: e += s.cond.get("energia_add_trasferta", 0)
-        if s.galera > 0: e *= 2   # Zingaro "chiamata al cuggino"
+        if s.galera > 0: e *= CUGGINO_ENERGIA_MULT   # Zingaro "chiamata al cuggino"
         return e
 
     def slot_necessari(self, a):
         s = self.s
         if not a["trasferta"]: return 1
         if s.classe == "Magrebino" or s.veicolo: return 1
-        return 2
+        return TRASFERTA_SLOT
 
     def disponibile(self, a):
         s = self.s
@@ -579,10 +698,10 @@ class Gioco:
         if "LEGALE" in a["tags"] and a["bottino"] != (0, 0) and s.lavori_oggi >= LAVORI_AL_GIORNO: return False
         if s.classe == "Magrebino":
             if "AZZARDO" in a["tags"]: return False
-            if self.ramadan() and s.slot in (1, 2): return False
-        if s.classe == "Pakistano" and s.slot == 4:
+            if self.ramadan() and s.slot in RAMADAN_SLOT_VIETATI: return False
+        if s.classe == "Pakistano" and s.slot == VENTIQUATTROSETTE_SLOT:
             if s.notte_pak_sett == s.data.isocalendar()[1]: return False
-        if self.slot_necessari(a) == 2 and s.slot >= 3: return False   # 3: trasferta senza veicolo solo Mattina/Pomeriggio
+        if self.slot_necessari(a) == TRASFERTA_SLOT and s.slot >= TRASFERTA_SLOT_LIMITE: return False   # 3: trasferta senza veicolo solo Mattina/Pomeriggio
         if self.costo_energia(a) > s.energia: return False
         if a["spesa"][0] > s.soldi: return False
         if s.galera > 0:
@@ -602,7 +721,7 @@ class Gioco:
         s.azioni += 1; s.azioni_usate[a["id"]] += 1
         if "LEGALE" in a["tags"] and a["bottino"] != (0, 0): s.lavori_oggi += 1
         if a["cooldown"]: s.cooldown[a["id"]] = s.giorno + a["cooldown"]
-        if s.classe == "Pakistano" and s.slot == 4: s.notte_pak_sett = s.data.isocalendar()[1]
+        if s.classe == "Pakistano" and s.slot == VENTIQUATTROSETTE_SLOT: s.notte_pak_sett = s.data.isocalendar()[1]
         nslot = self.slot_necessari(a)
         if a["salute"]: self.cambia_salute(a["salute"])
 
@@ -610,18 +729,18 @@ class Gioco:
         rep_tag_mult = s.noia(a["id"])
         zc = s.zona_calda(a["id"])
         s.recenti.append((s.giorno, a["id"]))
-        if len(s.recenti) > 60: s.recenti = s.recenti[-60:]
+        if len(s.recenti) > RECENTI_MAX: s.recenti = s.recenti[-RECENTI_MAX:]
         for tag, m in s.cond.get("rep_tag", {}).items():
             if tag in a["tags"]: rep_tag_mult *= m
 
         # --- azioni speciali senza rischio (azzardo, chill) ---
         sp = a["speciale"]
         if sp == "chill":
-            self.guadagna_rep(self.rep_chill() * rep_tag_mult)   # 18: anche Virale/Halloween/Capodanno
+            self.guadagna_rep(self.rep_chill(a) * rep_tag_mult)   # 18: anche Virale/Halloween/Capodanno
         elif sp == "slot":
-            if r.random() < 0.30: self.incassa(spesa * 2.5)
+            if r.random() < SLOT_VINCITA_P: self.incassa(spesa * SLOT_VINCITA_MULT)
         elif sp == "scommessa":
-            if r.random() < 0.45: self.incassa(spesa * 2.0); self.guadagna_rep(2)
+            if r.random() < SCOMMESSA_VINCITA_P: self.incassa(spesa * SCOMMESSA_VINCITA_MULT); self.guadagna_rep(SCOMMESSA_REP)
 
         self._zc = zc
         g, o = self.rischi(a, t)
@@ -633,31 +752,33 @@ class Gioco:
 
         if esito == "ok":
             if sp == "poker":
-                if r.random() < 0.40 + s.rep / 500: self.incassa(spesa * 2.5); self.guadagna_rep(3)
-                else: self.guadagna_rep(-2)
+                if r.random() < POKER_VINCITA_P + s.rep / POKER_VINCITA_REP_DIV:
+                    self.incassa(spesa * POKER_VINCITA_MULT); self.guadagna_rep(POKER_REP["vinci"])
+                else: self.guadagna_rep(POKER_REP["perdi"])
             elif sp == "corsa":
-                if r.random() < 0.5 + (0.1 if s.classe == "Balcanico" else 0): self.incassa(spesa * 2.0); self.guadagna_rep(a["rep"])
+                if r.random() < CORSA_VINCITA_P + (CORSA_BALCANICO_BONUS if s.classe == "Balcanico" else 0):
+                    self.incassa(spesa * CORSA_VINCITA_MULT); self.guadagna_rep(a["rep"])
             elif sp in ("tiktok", "tag"):
                 rp = (self.rep_tiktok(a) if sp == "tiktok" else a["rep"]) * rep_tag_mult
-                if r.random() < 0.08: rp += 10
+                if r.random() < VIRALE_P: rp += VIRALE_REP
                 self.guadagna_rep(rp)
             elif sp == "chill":
                 pass
             else:
-                tieni = (sp == "monopattino" and s.veicolo == 0 and r.random() < 0.5)   # 17: o lo vendi o te lo tieni
+                tieni = (sp == "monopattino" and s.veicolo == 0 and r.random() < MONOPATTINO_TIENI_P)   # 17: o lo vendi o te lo tieni
                 if tieni:
-                    s.veicolo = 1; s.items.add("monopattino")
+                    s.veicolo = NEGOZIO["monopattino"]["livello"]; s.items.add("monopattino")
                 elif a["bottino"] != (0, 0) or a["bottino_x"]:
                     v = self.estrai_bottino(a, t, spesa)
                     self.incassa(v)
                 if sp == "cibo_gratis": s.cibo_gratis = True
-                if sp == "veicolo_bonus" and s.veicolo == 0 and r.random() < 0.5:   # rapina al rider: bottino + mezzo
-                    s.veicolo = 1; s.items.add("monopattino")
+                if sp == "veicolo_bonus" and s.veicolo == 0 and r.random() < VEICOLO_BONUS_P:   # rapina al rider: bottino + mezzo
+                    s.veicolo = NEGOZIO["monopattino"]["livello"]; s.items.add("monopattino")
                 self.guadagna_rep(a["rep"] * (rep_tag_mult if a["rep"] > 0 else 1.0))
             self.log(f"{a['nome']} (t={t:.1f}, spesa {spesa:.0f}) -> OK")
         elif esito == "ospedale":
             self.log(f"{a['nome']} -> finisce MALE: ospedale")
-            self.ricovero(r.randint(*RICOVERO), 30 if "FORZA" in a["tags"] else 20)
+            self.ricovero(r.randint(*RICOVERO), DANNO_RICOVERO["FORZA"] if "FORZA" in a["tags"] else DANNO_RICOVERO["default"])
         else:
             self.log(f"{a['nome']} -> BECCATO dagli sbirri")
             self.arresto(a)
@@ -682,7 +803,7 @@ class Gioco:
         s, r = self.s, self.rng
         s.arresti += 1
         self.perdi_soldi(min(SEQUESTRO_MAX, SEQUESTRO_ARRESTO * s.soldi))
-        if a["veicolo_req"] and r.random() < 0.5 and s.veicolo:
+        if a["veicolo_req"] and r.random() < VEICOLO_SEQUESTRO_ARRESTO and s.veicolo:
             s.veicolo = 0; s.items.discard("monopattino"); s.items.discard("motorino")
         pena_base = a["pena"] * (1 + RECIDIVA_PENA * min(s.condanne, RECIDIVA_MAX))
         if s.sorvegliato > 0: pena_base *= SORVEGLIATO_MULT
@@ -693,31 +814,33 @@ class Gioco:
             scelta = "ufficio"            # 4: una difesa che non puoi pagare non e' selezionabile
         giorni_multa = 0
         if scelta == "patteggia":
-            pena = pena_base * 0.6; esito = "patteggiamento"
+            pena = pena_base * TRIBUNALE_MULT["patteggiamento"]; esito = "patteggiamento"
             giorni_multa = self.paga_multa(multa); s.condanne += 1
         else:
             costo, bonus = AVVOCATI[scelta if scelta in AVVOCATI else "ufficio"]
-            if scelta == "spavaldo": costo, bonus = 0, -15; self.guadagna_rep(5)
+            if scelta == "spavaldo": costo, bonus = 0, SPAVALDO_TIRO; self.guadagna_rep(SPAVALDO_REP)
             self.paga(costo)
-            tiro = r.randint(1, 100) + bonus
-            if s.classe == "Africano": tiro += 10
-            if s.classe == "Italiano": tiro -= 10
+            tiro = r.randint(*TIRO_DADO) + bonus
+            if s.classe in TIRO_CLASSE: tiro += TIRO_CLASSE[s.classe]   # Africano +10, Italiano -10
             tiro -= RECIDIVA_TIRO * min(s.condanne, RECIDIVA_MAX)   # recidiva
             if s.giorno < TUTORIAL_GIORNI: tiro += TUTORIAL_BONUS     # "il giudice e' buono" (tutorial)
             if s.condanne == 0: tiro += INCENSURATO_BONUS
-            if s.rep > 60: tiro -= min(8, (s.rep - 60) / 5)       # "noto in questura": max -8
-            if tiro >= 85:
-                pena = 0; esito = "assolto"; self.guadagna_rep(2)
-            elif tiro >= 65:
-                pena = 0; esito = "messa alla prova"; s.sorvegliato = 30; giorni_multa = self.paga_multa(multa * 0.5)
-            elif tiro >= 40:
-                pena = pena_base * 0.5; esito = "pena ridotta"; giorni_multa = self.paga_multa(multa); s.condanne += 1
-            elif tiro >= 10:
-                pena = pena_base; esito = "pena piena"; giorni_multa = self.paga_multa(multa); s.condanne += 1
+            nq = NOTO_IN_QUESTURA
+            if s.rep > nq["da_rep"]: tiro -= min(nq["max"], (s.rep - nq["da_rep"]) / nq["per_punti"])   # "noto in questura": max -8
+            soglie, mult = TRIBUNALE_SOGLIE, TRIBUNALE_MULT
+            if tiro >= soglie["assolto"]:
+                pena = 0; esito = "assolto"; self.guadagna_rep(REP_ASSOLTO)
+            elif tiro >= soglie["messa_alla_prova"]:
+                pena = 0; esito = "messa alla prova"; s.sorvegliato = SORVEGLIATO_GIORNI
+                giorni_multa = self.paga_multa(multa * RISCHIO_MULTA_RIDOTTA_PROVA)
+            elif tiro >= soglie["ridotta"]:
+                pena = pena_base * mult["ridotta"]; esito = "pena ridotta"; giorni_multa = self.paga_multa(multa); s.condanne += 1
+            elif tiro >= soglie["piena"]:
+                pena = pena_base * mult["piena"]; esito = "pena piena"; giorni_multa = self.paga_multa(multa); s.condanne += 1
             else:
-                pena = pena_base * 1.5; esito = "aggravata"; giorni_multa = self.paga_multa(multa * 2); s.condanne += 1
+                pena = pena_base * mult["aggravata"]; esito = "aggravata"; giorni_multa = self.paga_multa(multa * MULTA_AGGRAVATA_MULT); s.condanne += 1
         # 28: arrotondamento "scolastico" (0,5 → 1) e minimo 1 giorno per ogni condanna
-        if pena > 0: pena = max(1, int(math.floor(pena + 0.5)))
+        if pena > 0: pena = max(PENA_MIN_GIORNI, int(math.floor(pena + PENA_ARROTONDAMENTO)))
         pena += giorni_multa   # 2: multa non pagata → giorni
         if giorni_multa: self.log(f"Multa non pagata: +{giorni_multa} giorni")
         self.log(f"TRIBUNALE ({scelta}): {esito}, {pena} giorni")
@@ -731,7 +854,7 @@ class Gioco:
     #  Riposo / cibo
     # ------------------------------------------------------------------
     def puo_dormire(self):
-        return self.s.abs_slot - self.s.ultimo_sonno >= 2
+        return self.s.abs_slot - self.s.ultimo_sonno >= SONNO_INTERVALLO
 
     def dormi(self):
         s = self.s
@@ -740,7 +863,7 @@ class Gioco:
             if s.cibo_gratis: costo = 0
             s.soldi -= costo; s.cibo_pagato = True
             self.cambia_salute(sal)
-        if s.classe == "Balcanico": rec = 1.0
+        if s.classe == "Balcanico": rec = RECUPERO_BALCANICO
         emax = self.energia_max_oggi()
         s.energia = min(emax, s.energia + rec * s.energia_max)
         s.ultimo_sonno = s.abs_slot
@@ -750,8 +873,8 @@ class Gioco:
     def paghetta_emergenza(self):
         s = self.s
         m = s.data.month
-        if s.classe == "Italiano" and s.soldi <= 5 and s.paghetta_em_mese != m:
-            s.soldi = 20; s.paghetta_em_mese = m; self.log("Paghetta d'emergenza: 20€")
+        if s.classe == "Italiano" and s.soldi <= PAGHETTA_EMERGENZA_SOGLIA and s.paghetta_em_mese != m:
+            s.soldi = PAGHETTA_EMERGENZA_IMPORTO; s.paghetta_em_mese = m; self.log("Paghetta d'emergenza: 20€")
 
     def negozio(self):
         """La policy decide gli acquisti (nessuno slot consumato)."""
@@ -774,7 +897,7 @@ class Gioco:
             self.nuovo_giorno()
             if s.ospedale > 0:
                 s.ospedale -= 1; s.giorno += 1
-                if s.ospedale == 0: s.energia = s.energia_max; self.cambia_salute(+20)
+                if s.ospedale == 0: s.energia = s.energia_max; self.cambia_salute(+OSPEDALE_SALUTE_USCITA)
                 continue
             if s.galera > 0:
                 s.galera -= 1
@@ -785,15 +908,15 @@ class Gioco:
                     if best: self.esegui(*best)
                 s.giorno += 1
                 if s.galera == 0:
-                    s.energia = s.energia_max; self.guadagna_rep(3)
+                    s.energia = s.energia_max; self.guadagna_rep(REP_USCITA_GALERA)
                 continue
             m = s.data.month
             dormito = False
             while s.slot <= 4 and s.vivo and s.galera == 0 and s.ospedale == 0:
                 self.paghetta_emergenza()   # 22: controllata a ogni slot
                 # Pakistano: instancabile
-                if s.classe == "Pakistano" and s.energia <= 15 and s.instancabile_mese != m:
-                    s.energia = 100; s.instancabile_mese = m; self.log("Instancabile: energia a 100")
+                if s.classe == "Pakistano" and s.energia <= INSTANCABILE_SOGLIA and s.instancabile_mese != m:
+                    s.energia = INSTANCABILE_ENERGIA; s.instancabile_mese = m; self.log("Instancabile: energia a 100")
                 self.negozio()
                 deve_dormire = (s.slot == 4 and not dormito)
                 scelta = None if deve_dormire else self.policy["scegli"](self)
@@ -825,20 +948,20 @@ def _ev(g: Gioco, a, t, peso_rischio, soglia_rischio, valore_rep):
     if pena_peggiore >= GAME_OVER_PENA / 1.5 and peso_rischio >= 1.5: return None
     sp = a["speciale"]
     loot = 0.0
-    if sp == "slot": loot = spesa * 2.5 * 0.30
-    elif sp == "scommessa": loot = spesa * 2.0 * 0.45
-    elif sp == "poker": loot = spesa * 2.5 * (0.40 + s.rep / 500)
-    elif sp == "corsa": loot = spesa * 2.0 * 0.5
+    if sp == "slot": loot = spesa * SLOT_VINCITA_MULT * SLOT_VINCITA_P
+    elif sp == "scommessa": loot = spesa * SCOMMESSA_VINCITA_MULT * SCOMMESSA_VINCITA_P
+    elif sp == "poker": loot = spesa * POKER_VINCITA_MULT * (POKER_VINCITA_P + s.rep / POKER_VINCITA_REP_DIV)
+    elif sp == "corsa": loot = spesa * CORSA_VINCITA_MULT * CORSA_VINCITA_P
     elif a["bottino"] != (0, 0) or a["bottino_x"]: loot = g.bottino_atteso(a, t, spesa)
-    if s.classe == "Pakistano": loot *= 1.1
-    if s.classe == "Africano": loot *= 0.9
+    if s.classe == "Pakistano": loot *= INCASSO_PAKISTANO_MULT
+    if s.classe == "Africano": loot *= INCASSO_AFRICANO_MULT
     ps = (1 - gb) * (1 - os_)
     reddito = s.reddito_giornaliero()
     giorni_pena = a["pena"] * (1 + RECIDIVA_PENA * min(s.condanne, RECIDIVA_MAX)) * 0.6
     costo_gabbio = gb * (giorni_pena * reddito + min(SEQUESTRO_MAX, SEQUESTRO_ARRESTO * s.soldi) + 100 + a["multa"] * 0.7)
     costo_osp = os_ * (4 * reddito + FURTO_OSPEDALE * s.soldi + 60)
     rep = a["rep"]
-    if sp == "chill": rep = g.rep_chill()
+    if sp == "chill": rep = g.rep_chill(a)
     elif sp == "tiktok": rep = g.rep_tiktok(a)
     if rep > 0: rep *= max(0.0, 1.0 - s.rep / REP_DIMINUENTE) * s.noia(a["id"])
     rep_ev = rep * valore_rep * (ps if rep > 0 else 1.0)

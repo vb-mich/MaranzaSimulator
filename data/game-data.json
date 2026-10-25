@@ -193,7 +193,153 @@
     "CHILL_CAP": 60,
     "TIKTOK_CAP": 80,
     "CHILL_DRIP_DIV": 500,
-    "MONOPATTINO_TIENI_P": 0.5
+    "MONOPATTINO_TIENI_P": 0.5,
+    "NOIA_GIORNI": 7,
+    "ZONA_CALDA_GIORNI": 7,
+    "ZONA_CALDA_MIN": 0.5,
+    "RECENTI_MAX": 60,
+    "INVESTIMENTO_BOTTINO_MIN": 0.5,
+    "SONNO_INTERVALLO": 2,
+    "TRASFERTA_SLOT": 2,
+    "TRASFERTA_SLOT_LIMITE": 3,
+    "ULTIMO_SONNO_INIZIALE": -10,
+    "COND_SEME_OFFSET": 1000000007,
+    "RISCHIO_MAX": 0.95,
+    "RISCHIO_VEICOLO_REQ_PT": 0.05,
+    "SLOT_VINCITA_P": 0.3,
+    "SLOT_VINCITA_MULT": 2.5,
+    "SCOMMESSA_VINCITA_P": 0.45,
+    "SCOMMESSA_VINCITA_MULT": 2.0,
+    "SCOMMESSA_REP": 2,
+    "POKER_VINCITA_P": 0.4,
+    "POKER_VINCITA_REP_DIV": 500,
+    "POKER_VINCITA_MULT": 2.5,
+    "CORSA_VINCITA_P": 0.5,
+    "CORSA_VINCITA_MULT": 2.0,
+    "VEICOLO_BONUS_P": 0.5,
+    "TIRO_DADO": [
+      1,
+      100
+    ],
+    "PENA_ARROTONDAMENTO": 0.5,
+    "PENA_MIN_GIORNI": 1,
+    "TRAPPER_DRIP_MIN": 200,
+    "TRAPPER_REP_MULT": 1.1,
+    "RAMADAN_INIZIO": [
+      2,
+      15
+    ],
+    "RAMADAN_FINE": [
+      3,
+      16
+    ],
+    "RAMADAN_SLOT_VIETATI": [
+      1,
+      2
+    ],
+    "INSTANCABILE_SOGLIA": 15,
+    "INSTANCABILE_ENERGIA": 100,
+    "INCASSO_PAKISTANO_MULT": 1.1,
+    "VENTIQUATTROSETTE_SLOT": 4,
+    "FUGA_AFRICANO_MULT": 0.9,
+    "INCASSO_AFRICANO_MULT": 0.9,
+    "REP_ZINGARO_MULT": 0.9,
+    "CUGGINO_ENERGIA_MULT": 2,
+    "FORZA_BRUTA_MULT": 0.7,
+    "RECUPERO_BALCANICO": 1.0,
+    "GUAIO_BALCANICO_BONUS": 0.1,
+    "PAGHETTA_IMPORTO": 50,
+    "PAGHETTA_GIORNO_SETTIMANA": 0,
+    "PAGHETTA_EMERGENZA_SOGLIA": 5,
+    "PAGHETTA_EMERGENZA_IMPORTO": 20,
+    "GUAI_EFFETTI": {
+      "cuggino_soldi": {
+        "costo": 50,
+        "rep_paga": 3,
+        "rep_rifiuta": -3,
+        "attenzionato_p": 0.2,
+        "attenzionato_giorni": 7,
+        "attenzionato_val": 0.05
+      },
+      "sfida_piazza": {
+        "vittoria_p": 0.5,
+        "rep_vinci": 8,
+        "rep_perdi": -5,
+        "rep_rifiuta": -6
+      },
+      "posto_blocco": {
+        "p": 0.3,
+        "multa": 80,
+        "sequestro_p": 0.2
+      },
+      "perquisizione": {
+        "p": 0.3,
+        "quota": 0.1
+      },
+      "portafoglio": {
+        "valore": [
+          20,
+          150
+        ],
+        "rep_restituisci": 5
+      },
+      "boss_nota": {
+        "rep_min": 25,
+        "tag": [
+          "SPACCIO",
+          "FORZA"
+        ],
+        "bottino_mult": 1.5
+      },
+      "influencer": {
+        "rep": 5,
+        "energia": 20
+      },
+      "furto_veicolo": {
+        "p": 0.5
+      },
+      "mamma_spesa": {
+        "energia": 20,
+        "salute": 5,
+        "rep": -1
+      },
+      "serata": {
+        "costo": 40,
+        "rep": 4,
+        "energia": 30
+      },
+      "sbirro_occhio": {
+        "attenzionato_giorni": 1,
+        "attenzionato_val": 0.1
+      },
+      "gratta_vinci": {
+        "premi": [
+          0,
+          0,
+          0,
+          5,
+          10,
+          20,
+          50,
+          100
+        ]
+      },
+      "febbre": {
+        "energia_max_quota": 0.5,
+        "salute": -5
+      },
+      "giornalista": {
+        "rep": 8,
+        "attenzionato_giorni": 7,
+        "attenzionato_val": 0.05
+      },
+      "turno_kebab": {
+        "soldi": 30
+      },
+      "rissa_subita": {
+        "p": 0.3
+      }
+    }
   },
   "classi": {
     "Magrebino": {
