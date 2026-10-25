@@ -92,6 +92,45 @@
   }
 }
 
+@keyframes rotola {
+  0% {
+    transform: rotate(0deg) translateY(0);
+  }
+  25% {
+    transform: rotate(90deg) translateY(-14px);
+  }
+  50% {
+    transform: rotate(180deg) translateY(0);
+  }
+  75% {
+    transform: rotate(270deg) translateY(-10px);
+  }
+  100% {
+    transform: rotate(360deg) translateY(0);
+  }
+}
+
+@keyframes atterra {
+  0% {
+    transform: scale(1.4) rotate(-20deg);
+  }
+  60% {
+    transform: scale(0.9) rotate(6deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes riempi {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 @utility anim-entra-su {
   animation: entra-su 0.25s ease-out both;
 }
@@ -102,6 +141,14 @@
 
 @utility anim-pulsa {
   animation: pulsa 1.4s ease-in-out infinite;
+}
+
+@utility anim-rotola {
+  animation: rotola 0.45s linear infinite;
+}
+
+@utility anim-atterra {
+  animation: atterra 0.35s ease-out both;
 }
 
 @utility pb-sicuro {

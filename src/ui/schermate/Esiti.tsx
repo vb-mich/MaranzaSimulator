@@ -1,6 +1,6 @@
 // Full-screen outcome cards: one sentence, the result, one button (GDD §Interfaccia, "Esito").
 
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { C } from '../../data/gameData';
 import { TESTI, nomeAzione, scegliRiga } from '../../data/testi';
 import type { Stato } from '../../engine';
@@ -11,6 +11,7 @@ import { euroDelta, giorni, numero, segno } from '../formato';
 import type { Carta } from '../gioco/esiti';
 import { useGioco } from '../gioco/contesto';
 import { AvatarBoss, Fumetto } from '../pannelli/Chat';
+import { movimentoRidotto } from '../movimento';
 import { percentuale } from '../vista';
 
 /** Rep changes smaller than this are noise (decay, rounding) and get no chip. */
@@ -103,19 +104,67 @@ function CartaAzione({ carta, s, onAvanti }: { carta: Extract<Carta, { tipo: 'az
   );
 }
 
+/** How long the judge's die tumbles before the verdict shows. */
+const DURATA_DADO = 1300;
+
+/** Die colour once it lands: the verdict in a glance, the roll itself stays behind the (?). */
+const COLORE_DADO: Record<string, string> = {
+  assolto: 'bg-rischio-basso',
+  messa_alla_prova: 'bg-ciano',
+  ridotta: 'bg-sole',
+  piena: 'bg-rischio-alto',
+  aggravata: 'bg-rischio-estremo',
+};
+
 function CartaVerdetto({ carta, s, onAvanti }: { carta: Extract<Carta, { tipo: 'verdetto' }>; s: Stato; onAvanti: () => void }) {
   const v = carta.verdetto;
   const V = TESTI.verdetto;
   const testo = TESTI.verdetti[v.esito]!;
   const buono = v.esito === 'assolto' || v.esito === 'messa_alla_prova';
   const S = C.TRIBUNALE_SOGLIE;
+  // plea-bargaining has no roll; with reduced motion the die lands at once
+  const [fermo, setFermo] = useState(() => v.dado === null || movimentoRidotto());
+  useEffect(() => {
+    if (fermo) return;
+    const t = setTimeout(() => setFermo(true), DURATA_DADO);
+    return () => clearTimeout(t);
+  }, [fermo]);
+
+  if (!fermo)
+    return (
+      <Cornice
+        s={s}
+        onAvanti={() => setFermo(true)}
+        bottone={V.subito}
+        tono="boss"
+        sotto={TESTI.tribunale.imputato(nomeAzione(carta.azione))}
+        immagine={<Immagine src={ritratto('giudice')?.src ?? null} nome="giudice" className="aspect-square w-40 rounded-2xl" />}
+      >
+        <div className="grid size-24 place-items-center rounded-3xl bg-white/10 text-6xl">
+          <span className="anim-rotola inline-block" aria-hidden>
+            🎲
+          </span>
+        </div>
+        <Titolo>{V.tira}</Titolo>
+      </Cornice>
+    );
+
   return (
     <Cornice
       s={s}
       onAvanti={onAvanti}
       tono={buono ? 'bene' : 'male'}
       sotto={TESTI.tribunale.imputato(nomeAzione(carta.azione))}
-      immagine={<Immagine src={ritratto(buono ? 'giudice-assolto' : 'giudice-condanna')?.src ?? null} nome="giudice" className="aspect-square w-40 rounded-2xl" />}
+      immagine={
+        <div className="relative">
+          <Immagine src={ritratto(buono ? 'giudice-assolto' : 'giudice-condanna')?.src ?? null} nome="giudice" className="aspect-square w-40 rounded-2xl" />
+          {v.dado !== null && (
+            <span className={`anim-atterra absolute -right-4 -bottom-3 grid size-14 place-items-center rounded-2xl text-3xl shadow-lg ring-2 ring-white/40 ${COLORE_DADO[v.esito] ?? 'bg-white/20'}`} aria-hidden>
+              🎲
+            </span>
+          )}
+        </div>
+      }
       numeri={
         <Info titolo={TESTI.tribunale.tiro}>
           <Riga etichetta={TESTI.difese[v.difesa]} valore="" />
@@ -191,6 +240,7 @@ function Cornice({
   tono,
   numeri,
   sotto,
+  bottone = TESTI.esito.avanti,
 }: {
   s: Stato;
   immagine: ReactNode;
@@ -199,6 +249,7 @@ function Cornice({
   tono: Tono;
   numeri?: ReactNode;
   sotto?: string;
+  bottone?: string;
 }) {
   return (
     <div data-schermo="carta" className="fixed inset-0 z-[70] overflow-y-auto bg-notte-950/96 backdrop-blur-sm" role="dialog" aria-modal="true">
@@ -215,7 +266,7 @@ function Cornice({
           {children}
         </div>
         <button type="button" className="bottone-primario mt-4 mb-2 w-full text-xl" onClick={onAvanti} autoFocus>
-          {TESTI.esito.avanti}
+          {bottone}
         </button>
       </div>
     </div>

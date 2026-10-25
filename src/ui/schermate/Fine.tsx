@@ -4,6 +4,7 @@ import { C } from '../../data/gameData';
 import { TESTI, nomeAzione } from '../../data/testi';
 import { patrimonio, punti, type Stato } from '../../engine';
 import { arte } from '../arte';
+import { ListaClassifica } from '../componenti/Classifica';
 import { Immagine } from '../componenti/Immagine';
 import { Info, Riga } from '../componenti/Info';
 import { abbrevia, euro, numero } from '../formato';
@@ -51,6 +52,10 @@ export function Fine({ s }: { s: Stato }) {
         <Riga etichetta={F.ricoveri} valore={s.ricoveri} />
         <Riga etichetta={F.bottino} valore={euro(s.guadagni)} />
         <Riga etichetta={F.preferita} valore={preferita ? nomeAzione(preferita[0]) : F.nessuna} />
+      </section>
+      <section className="pannello p-3">
+        <h2 className="mb-2 text-sm font-black tracking-wider text-white/60 uppercase">🏆 {F.classifica}</h2>
+        <ListaClassifica evidenzia={(v) => v.nome === s.nome && v.classe === s.classe && v.punti === p && v.fine === s.fine} />
       </section>
       <button
         type="button"

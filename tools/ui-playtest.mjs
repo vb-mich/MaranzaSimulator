@@ -3,7 +3,10 @@
 //
 //   npm run build && npx vite preview --port 4173 &
 //   node tools/ui-playtest.mjs [--url http://localhost:4173/] [--seme 42] [--giorni 7] [--classe Italiano]
-//                              [--out docs/screenshots] [--rischio] [--scala 2] [--jpg]
+//                              [--out docs/screenshots] [--rischio] [--scala 2] [--jpg] [--movimento]
+//
+// --movimento keeps the animations (the judge's die, the days going by in the cell); without it the
+// browser asks for reduced motion, so every screen settles at once.
 //
 // Playwright must be installed (it isn't a project dependency); in the cloud container it is global.
 
@@ -26,13 +29,14 @@ const OUT = arg('out', 'docs/screenshots');
 const SCALA = Number(arg('scala', 2));
 const RISCHIO = process.argv.includes('--rischio');
 const JPG = process.argv.includes('--jpg');
+const MOVIMENTO = process.argv.includes('--movimento');
 mkdirSync(OUT, { recursive: true });
 
 let r = SEME >>> 0;
 const caso = () => ((r = (Math.imul(r ^ (r >>> 15), 0x2c1b3c6d) + 0x6d2b79f5) >>> 0) / 2 ** 32);
 
 const browser = await chromium.launch();
-const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: SCALA, isMobile: true, hasTouch: true, locale: 'it-IT', reducedMotion: 'reduce' });
+const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: SCALA, isMobile: true, hasTouch: true, locale: 'it-IT', reducedMotion: MOVIMENTO ? 'no-preference' : 'reduce' });
 const page = await ctx.newPage();
 const errori = [];
 page.on('console', (m) => m.type() === 'error' && errori.push(m.text()));
@@ -58,9 +62,11 @@ const foto = async (nome, sempre = false) => {
   console.log('📸', nome);
 };
 const schermo = () => page.locator('[data-schermo]').first().getAttribute('data-schermo');
-const clicca = async (loc) => {
-  await loc.scrollIntoViewIfNeeded();
-  await loc.click();
+const clicca = async (loc, timeout) => {
+  // pulsing buttons never stand still: skip the stability checks when animations are on
+  if (MOVIMENTO) return loc.click({ timeout, force: true });
+  await loc.scrollIntoViewIfNeeded({ timeout });
+  await loc.click({ timeout });
 };
 
 await page.goto(URL);
@@ -82,6 +88,11 @@ while (passi++ < 800) {
   giorno = await giornoSalvato();
   if (sc === 'carta') {
     const testo = (await page.locator('[data-schermo=carta]').textContent()) ?? '';
+    if (/tira il dado/.test(testo)) {
+      await foto('carta-dado');
+      await page.getByRole('button', { name: 'Avanti' }).waitFor();
+      continue;
+    }
     const tipo = /Beccato!/.test(testo)
       ? 'arresto'
       : /Finita male/.test(testo)
@@ -114,7 +125,9 @@ while (passi++ < 800) {
   }
   if (sc === 'cella') {
     await foto('cella');
-    await clicca(page.getByRole('button', { name: /Giorno dopo/ }));
+    if ((await page.locator('[data-schermo=cella] ol li').count()) >= 3) await foto('cella-diario');
+    // the days go by on their own: a tap only skips the wait, and the stay may end before it lands
+    await clicca(page.getByRole('button', { name: /Giorno dopo/ }), 2000).catch(() => {});
     continue;
   }
   if (sc !== 'principale') throw new Error(`schermo inatteso: ${sc}`);

@@ -735,6 +735,8 @@ export const TESTI = {
     libero: 'Libero',
     dado: 'Dado',
     tiro: 'Tiro finale',
+    tira: 'Il giudice tira il dado…',
+    subito: 'Vedi subito',
   },
 
   cella: {
