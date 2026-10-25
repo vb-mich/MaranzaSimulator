@@ -358,6 +358,7 @@
     "rischio": "ui/rischio.webp",
     "salute": "ui/salute.webp",
     "soldi": "ui/soldi.webp",
+    "splash": "ui/splash.webp",
     "tooltip": "ui/tooltip.webp"
   }
 }

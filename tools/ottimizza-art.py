@@ -6,11 +6,10 @@ Uso (dalla radice del progetto, serve Pillow: pip install pillow):
     python3 tools/ottimizza-art.py --anteprima generated/anteprima-drip.png
                                               # in piu' salva i ritratti con tutti i layer, per controllare le ancore
 
-Regole:
-* ritratti delle classi: ridimensionati a 768x1152 senza ritagli (le ancore dei layer dipendono dall'inquadratura);
+* ritratti delle classi e layer dedicati a una classe: 768x1152 con il 7% di aria in alto, senza ritagli (le ancore dipendono dall'inquadratura);
 * icone (oggetti, azioni, ui) e avatar: ritagliati sul contenuto e rimessi al centro di un quadrato;
 * layer del drip: ritagliati sul contenuto, cosi' l'ancora descrive l'oggetto e non il margine vuoto;
-* luoghi: 1200x800, opachi.
+* luoghi: 1200x800, opachi; splash (ui/splash.png, 4:3): 1200x900.
 Le ancore dei layer sono scritte a mano in tools/ancore-drip.json e copiate nel manifest.
 I file in public/art/ e il manifest sono generati: non si modificano a mano.
 """
@@ -103,9 +102,12 @@ def converti(png):
         else:
             if cartella == "ui" and slug in UI_GRANDI:
                 misura = 512
-            if not opaco:
-                im = ritaglia(im)
-            im = im.resize((misura, misura), Image.LANCZOS)
+            if opaco and im.width != im.height:  # splash: resta 4:3, largo 1200
+                im.thumbnail((1200, 1200), Image.LANCZOS)
+            else:
+                if not opaco:
+                    im = ritaglia(im)
+                im = im.resize((misura, misura), Image.LANCZOS)
     dest = DST / cartella / f"{slug}.webp"
     peso = salva_webp(im, dest, opaco)
     return dest, im.size, peso
