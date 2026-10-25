@@ -1,0 +1,1838 @@
+{
+  "_readme": "Generato da sim/export_data.py. Non modificare a mano: cambiare maranza_sim.py e rigenerare.",
+  "costanti": {
+    "GIORNI": 365,
+    "DATA_INIZIO": "2026-05-01",
+    "SLOT_NOMI": {
+      "1": "Mattina",
+      "2": "Pomeriggio",
+      "3": "Sera",
+      "4": "Notte"
+    },
+    "REP_DECAY": 0.99,
+    "REP_DIMINUENTE": 100.0,
+    "REP_LOOT_BONUS": 0.3,
+    "REP_MIN": 1.0,
+    "REP_MAX": 100.0,
+    "REP_INIZIALE": 5.0,
+    "SEQUESTRO_ARRESTO": 0.1,
+    "SEQUESTRO_MAX": 500,
+    "FURTO_OSPEDALE": 0.1,
+    "NOIA_PIAZZA": 0.5,
+    "ZONA_CALDA": 0.85,
+    "GAME_OVER_PENA": 90,
+    "GAME_OVER_GALERA_TOT": 240,
+    "RECIDIVA_MAX": 5,
+    "RECIDIVA_PENA": 0.1,
+    "RECIDIVA_TIRO": 3,
+    "SORVEGLIATO_MULT": 1.25,
+    "SORVEGLIATO_GIORNI": 30,
+    "TUTORIAL_GIORNI": 7,
+    "TUTORIAL_BONUS": 15,
+    "INCENSURATO_BONUS": 10,
+    "LAVORI_AL_GIORNO": 1,
+    "RICOVERO": [
+      1,
+      3
+    ],
+    "SALUTE_MAX": 100,
+    "PRESTANOME": 0.4,
+    "P_GUAIO_BASE": 0.15,
+    "TIER_REP": [
+      0,
+      10,
+      20,
+      35,
+      45,
+      50,
+      70
+    ],
+    "GRADI_REP": [
+      [
+        0,
+        "Sconosciuto"
+      ],
+      [
+        10,
+        "Zanza"
+      ],
+      [
+        20,
+        "Conosciuto"
+      ],
+      [
+        35,
+        "Rispettato"
+      ],
+      [
+        50,
+        "Boss di zona"
+      ],
+      [
+        70,
+        "Leggenda"
+      ]
+    ],
+    "RISCHIO_COLORI": [
+      [
+        0.08,
+        "basso"
+      ],
+      [
+        0.15,
+        "medio"
+      ],
+      [
+        0.3,
+        "alto"
+      ],
+      [
+        1.0,
+        "estremo"
+      ]
+    ],
+    "PATRIMONIO_DRIP": 0.5,
+    "GAME_OVER_PENALITA": 0.5,
+    "MULTA_CONVERSIONE_EURO_GIORNO": 25,
+    "RISCHIO_MULTA_RIDOTTA_PROVA": 0.5,
+    "MULTA_AGGRAVATA_MULT": 2.0,
+    "TRIBUNALE_SOGLIE": {
+      "assolto": 85,
+      "messa_alla_prova": 65,
+      "ridotta": 40,
+      "piena": 10
+    },
+    "TRIBUNALE_MULT": {
+      "assolto": 0,
+      "messa_alla_prova": 0,
+      "ridotta": 0.5,
+      "piena": 1.0,
+      "aggravata": 1.5,
+      "patteggiamento": 0.6
+    },
+    "TIRO_CLASSE": {
+      "Africano": 10,
+      "Italiano": -10
+    },
+    "NOTO_IN_QUESTURA": {
+      "da_rep": 60,
+      "per_punti": 5,
+      "max": 8
+    },
+    "REP_USCITA_GALERA": 3,
+    "REP_ASSOLTO": 2,
+    "SPAVALDO_REP": 5,
+    "SPAVALDO_TIRO": -15,
+    "VEICOLO_SEQUESTRO_ARRESTO": 0.5,
+    "OSPEDALE_SALUTE_USCITA": 20,
+    "SALUTE_GIORNO": 1,
+    "SALUTE_BASSA_SOGLIA": 30,
+    "SALUTE_BASSA_ENERGIA_MULT": 0.8,
+    "DANNO_RICOVERO": {
+      "default": 20,
+      "FORZA": 30
+    },
+    "RISCHIO_FUGA_VEICOLO_PT": 0.05,
+    "RISCHIO_TOOL_PT": 0.05,
+    "VIRALE_P": 0.08,
+    "VIRALE_REP": 10,
+    "CHILL_CAP": 60,
+    "TIKTOK_CAP": 80,
+    "CHILL_DRIP_DIV": 500,
+    "MONOPATTINO_TIENI_P": 0.5
+  },
+  "classi": {
+    "Magrebino": {
+      "soldi": 60,
+      "energia": 135
+    },
+    "Pakistano": {
+      "soldi": 70,
+      "energia": 150
+    },
+    "Africano": {
+      "soldi": 40,
+      "energia": 170
+    },
+    "Zingaro": {
+      "soldi": 120,
+      "energia": 115
+    },
+    "Balcanico": {
+      "soldi": 50,
+      "energia": 160
+    },
+    "Italiano": {
+      "soldi": 200,
+      "energia": 120
+    }
+  },
+  "abilita_classi": {
+    "Magrebino": [
+      "trasferta_gratis",
+      "trapper_di_quartiere(+10% rep se drip>200)",
+      "no_azzardo",
+      "ramadan(15feb-16mar: no azioni mattina/pomeriggio)"
+    ],
+    "Pakistano": [
+      "instancabile(energia<=15 -> 100, 1/mese)",
+      "business(+10% incassi)",
+      "ventiquattrosette(1 azione di notte a settimana)"
+    ],
+    "Africano": [
+      "giudice(+10 al tiro)",
+      "fuga(rischio x0.9)",
+      "famiglia(-10% incassi)"
+    ],
+    "Zingaro": [
+      "prestanome(40% perdite azzerate)",
+      "cuggino(1 azione senza rischio al giorno in galera, energia x2)",
+      "carovana(-10% guadagni rep)"
+    ],
+    "Balcanico": [
+      "forza_bruta(rischio x0.7 in FORZA)",
+      "recupero(cibo sempre 100%)",
+      "arroganza(+10% guai)"
+    ],
+    "Italiano": [
+      "paghetta(50 ogni lunedi)",
+      "paghetta_emergenza(<=5 -> 20, 1/mese)",
+      "giudice(-10 al tiro)"
+    ]
+  },
+  "cibo": [
+    {
+      "nome": "Mensa",
+      "costo": 15,
+      "recupero": 1.0,
+      "salute": 3
+    },
+    {
+      "nome": "Kebabbaro",
+      "costo": 10,
+      "recupero": 0.8,
+      "salute": 1
+    },
+    {
+      "nome": "Lidl",
+      "costo": 5,
+      "recupero": 0.5,
+      "salute": 0
+    },
+    {
+      "nome": "Caritas",
+      "costo": 0,
+      "recupero": 0.2,
+      "salute": -1
+    }
+  ],
+  "negozio": {
+    "passamontagna": {
+      "nome": "Passamontagna Nike",
+      "prezzo": 15,
+      "tipo": "tool",
+      "effetto": "notte",
+      "valore": 0
+    },
+    "tronchese": {
+      "nome": "Tronchese del cuggino",
+      "prezzo": 30,
+      "tipo": "tool",
+      "effetto": "effrazione",
+      "valore": 0
+    },
+    "cappello": {
+      "nome": "Cappello North Face",
+      "prezzo": 90,
+      "tipo": "drip",
+      "valore": 90
+    },
+    "tuta": {
+      "nome": "Tuta Nike Tech",
+      "prezzo": 180,
+      "tipo": "drip",
+      "valore": 180
+    },
+    "catena": {
+      "nome": "Catena placcata 'oro'",
+      "prezzo": 250,
+      "tipo": "drip",
+      "valore": 250
+    },
+    "monopattino": {
+      "nome": "Monopattino truccato",
+      "prezzo": 350,
+      "tipo": "veicolo",
+      "valore": 350,
+      "livello": 1
+    },
+    "telefono": {
+      "nome": "iPhone ultimo modello",
+      "prezzo": 1200,
+      "tipo": "drip",
+      "valore": 1200
+    },
+    "motorino": {
+      "nome": "Motorino elaborato",
+      "prezzo": 1500,
+      "tipo": "veicolo",
+      "valore": 1500,
+      "livello": 2
+    },
+    "orologio": {
+      "nome": "Orologio 'svizzero' di Napoli",
+      "prezzo": 2500,
+      "tipo": "drip",
+      "valore": 2500
+    }
+  },
+  "avvocati": {
+    "ufficio": {
+      "costo": 0,
+      "bonus": 0
+    },
+    "quartiere": {
+      "costo": 150,
+      "bonus": 10
+    },
+    "grido": {
+      "costo": 600,
+      "bonus": 25
+    }
+  },
+  "azioni": [
+    {
+      "id": "L01",
+      "nome": "Chillare in piazza",
+      "tags": [
+        "LEGALE",
+        "SOCIAL"
+      ],
+      "slots": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 10,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.0,
+        0.0
+      ],
+      "ospedale": 0.0,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": null,
+      "rep": 0.5,
+      "pena": 1,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": "chill",
+      "tier": 1
+    },
+    {
+      "id": "L02",
+      "nome": "TikTok brainrot in piazza",
+      "tags": [
+        "LEGALE",
+        "SOCIAL"
+      ],
+      "slots": [
+        1,
+        2,
+        3
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 20,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.0,
+        0.0
+      ],
+      "ospedale": 0.0,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": null,
+      "rep": 1.5,
+      "pena": 1,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": "tiktok",
+      "tier": 1
+    },
+    {
+      "id": "L03",
+      "nome": "Turno al minimarket",
+      "tags": [
+        "LEGALE"
+      ],
+      "slots": [
+        1,
+        2,
+        3
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 40,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.0,
+        0.0
+      ],
+      "ospedale": 0.0,
+      "bottino": [
+        20,
+        30
+      ],
+      "bottino_x": null,
+      "rep": -1,
+      "pena": 1,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 1
+    },
+    {
+      "id": "L04",
+      "nome": "Rider delle consegne",
+      "tags": [
+        "LEGALE",
+        "VEICOLO"
+      ],
+      "slots": [
+        1,
+        2,
+        3
+      ],
+      "trasferta": true,
+      "rep_min": 0,
+      "energia": 50,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.0,
+        0.0
+      ],
+      "ospedale": 0.0,
+      "bottino": [
+        20,
+        30
+      ],
+      "bottino_x": null,
+      "rep": 0,
+      "pena": 1,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 1
+    },
+    {
+      "id": "L05",
+      "nome": "Calisthenics al parco",
+      "tags": [
+        "LEGALE"
+      ],
+      "slots": [
+        1,
+        2,
+        3
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 30,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.0,
+        0.0
+      ],
+      "ospedale": 0.0,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": null,
+      "rep": 1,
+      "pena": 1,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 8,
+      "speciale": null,
+      "tier": 1
+    },
+    {
+      "id": "G01",
+      "nome": "Slot al bar del cinese",
+      "tags": [
+        "AZZARDO"
+      ],
+      "slots": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 10,
+      "spesa": [
+        10,
+        200
+      ],
+      "gabbio": [
+        0.0,
+        0.0
+      ],
+      "ospedale": 0.0,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": null,
+      "rep": 0,
+      "pena": 1,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": "slot",
+      "tier": 1
+    },
+    {
+      "id": "G02",
+      "nome": "Scommessa clandestina",
+      "tags": [
+        "AZZARDO"
+      ],
+      "slots": [
+        1,
+        2,
+        3
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 15,
+      "spesa": [
+        20,
+        500
+      ],
+      "gabbio": [
+        0.0,
+        0.0
+      ],
+      "ospedale": 0.0,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": null,
+      "rep": 0,
+      "pena": 1,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": "scommessa",
+      "tier": 1
+    },
+    {
+      "id": "G03",
+      "nome": "Poker nel retrobottega",
+      "tags": [
+        "AZZARDO"
+      ],
+      "slots": [
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 30,
+      "spesa": [
+        50,
+        300
+      ],
+      "gabbio": [
+        0.05,
+        0.05
+      ],
+      "ospedale": 0.0,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": null,
+      "rep": 0,
+      "pena": 2,
+      "multa": 200,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": "poker",
+      "tier": 1
+    },
+    {
+      "id": "G04",
+      "nome": "Corsa clandestina in monopattino",
+      "tags": [
+        "AZZARDO",
+        "VEICOLO"
+      ],
+      "slots": [
+        3,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 30,
+      "spesa": [
+        20,
+        100
+      ],
+      "gabbio": [
+        0.1,
+        0.1
+      ],
+      "ospedale": 0.15,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": null,
+      "rep": 4,
+      "pena": 1,
+      "multa": 150,
+      "cooldown": 0,
+      "veicolo_req": true,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": "corsa",
+      "tier": 1
+    },
+    {
+      "id": "C01",
+      "nome": "Truffa dell'anello d'oro",
+      "tags": [
+        "TRUFFA"
+      ],
+      "slots": [
+        1,
+        2,
+        3
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 20,
+      "spesa": [
+        1,
+        1
+      ],
+      "gabbio": [
+        0.04,
+        0.04
+      ],
+      "ospedale": 0.04,
+      "bottino": [
+        25,
+        100
+      ],
+      "bottino_x": null,
+      "rep": 2,
+      "pena": 1,
+      "multa": 100,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 1
+    },
+    {
+      "id": "C02",
+      "nome": "Portoghese sul regionale",
+      "tags": [
+        "FURTO",
+        "VEICOLO"
+      ],
+      "slots": [
+        1,
+        2,
+        3
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 15,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.05,
+        0.05
+      ],
+      "ospedale": 0.0,
+      "bottino": [
+        10,
+        20
+      ],
+      "bottino_x": null,
+      "rep": 1,
+      "pena": 1,
+      "multa": 100,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 1
+    },
+    {
+      "id": "C03",
+      "nome": "Taccheggio al Lidl",
+      "tags": [
+        "FURTO"
+      ],
+      "slots": [
+        1,
+        2,
+        3
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 20,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.06,
+        0.06
+      ],
+      "ospedale": 0.04,
+      "bottino": [
+        15,
+        50
+      ],
+      "bottino_x": null,
+      "rep": 1,
+      "pena": 1,
+      "multa": 100,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": "cibo_gratis",
+      "tier": 1
+    },
+    {
+      "id": "C04",
+      "nome": "Rubare alcool all'alimentari",
+      "tags": [
+        "FURTO"
+      ],
+      "slots": [
+        1,
+        2,
+        3
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 25,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.08,
+        0.08
+      ],
+      "ospedale": 0.05,
+      "bottino": [
+        20,
+        60
+      ],
+      "bottino_x": null,
+      "rep": 3,
+      "pena": 2,
+      "multa": 100,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 1
+    },
+    {
+      "id": "C05",
+      "nome": "Borseggio al mercato",
+      "tags": [
+        "FURTO"
+      ],
+      "slots": [
+        1
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 30,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.08,
+        0.08
+      ],
+      "ospedale": 0.1,
+      "bottino": [
+        25,
+        160
+      ],
+      "bottino_x": null,
+      "rep": -3,
+      "pena": 3,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 1
+    },
+    {
+      "id": "C06",
+      "nome": "Tag sui muri del quartiere",
+      "tags": [
+        "SOCIAL"
+      ],
+      "slots": [
+        3,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 25,
+      "spesa": [
+        5,
+        20
+      ],
+      "gabbio": [
+        0.08,
+        0.05
+      ],
+      "ospedale": 0.0,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": null,
+      "rep": 4,
+      "pena": 1,
+      "multa": 150,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": "tag",
+      "tier": 1
+    },
+    {
+      "id": "C07",
+      "nome": "Fumo nascosto nel parchetto",
+      "tags": [
+        "FURTO"
+      ],
+      "slots": [
+        3,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 30,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.06,
+        0.06
+      ],
+      "ospedale": 0.15,
+      "bottino": [
+        0,
+        200
+      ],
+      "bottino_x": null,
+      "rep": 5,
+      "pena": 4,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 1
+    },
+    {
+      "id": "C08",
+      "nome": "Truffa Vinted (sneakers fulle)",
+      "tags": [
+        "TRUFFA"
+      ],
+      "slots": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 20,
+      "spesa": [
+        15,
+        60
+      ],
+      "gabbio": [
+        0.06,
+        0.06
+      ],
+      "ospedale": 0.0,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": [
+        1.8,
+        3.5
+      ],
+      "rep": 2,
+      "pena": 3,
+      "multa": 300,
+      "cooldown": 4,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 1
+    },
+    {
+      "id": "C09",
+      "nome": "Ruba monopattino elettrico",
+      "tags": [
+        "EFFRAZIONE",
+        "FURTO"
+      ],
+      "slots": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 35,
+      "spesa": [
+        0,
+        30
+      ],
+      "gabbio": [
+        0.15,
+        0.08
+      ],
+      "ospedale": 0.05,
+      "bottino": [
+        50,
+        260
+      ],
+      "bottino_x": null,
+      "rep": 4,
+      "pena": 4,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": "monopattino",
+      "tier": 1
+    },
+    {
+      "id": "C10",
+      "nome": "Parkour sui tetti per TikTok",
+      "tags": [
+        "SOCIAL"
+      ],
+      "slots": [
+        1,
+        2,
+        3
+      ],
+      "trasferta": false,
+      "rep_min": 0,
+      "energia": 40,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.03,
+        0.03
+      ],
+      "ospedale": 0.15,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": null,
+      "rep": 6,
+      "pena": 1,
+      "multa": 200,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": "tiktok",
+      "tier": 1
+    },
+    {
+      "id": "C11",
+      "nome": "Scippo in stazione (bici)",
+      "tags": [
+        "FURTO",
+        "VEICOLO"
+      ],
+      "slots": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 10,
+      "energia": 40,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.15,
+        0.15
+      ],
+      "ospedale": 0.1,
+      "bottino": [
+        45,
+        380
+      ],
+      "bottino_x": null,
+      "rep": 4,
+      "pena": 6,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 2
+    },
+    {
+      "id": "C12",
+      "nome": "Scippo al centro commerciale",
+      "tags": [
+        "FURTO"
+      ],
+      "slots": [
+        1,
+        2
+      ],
+      "trasferta": true,
+      "rep_min": 10,
+      "energia": 35,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.12,
+        0.12
+      ],
+      "ospedale": 0.05,
+      "bottino": [
+        75,
+        600
+      ],
+      "bottino_x": null,
+      "rep": 4,
+      "pena": 6,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 2
+    },
+    {
+      "id": "C13",
+      "nome": "Scassinare auto",
+      "tags": [
+        "EFFRAZIONE",
+        "FURTO",
+        "NOTTE"
+      ],
+      "slots": [
+        3,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 10,
+      "energia": 45,
+      "spesa": [
+        0,
+        20
+      ],
+      "gabbio": [
+        0.15,
+        0.08
+      ],
+      "ospedale": 0.05,
+      "bottino": [
+        15,
+        450
+      ],
+      "bottino_x": null,
+      "rep": 4,
+      "pena": 6,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 2
+    },
+    {
+      "id": "C14",
+      "nome": "Truffa dello specchietto",
+      "tags": [
+        "TRUFFA"
+      ],
+      "slots": [
+        1,
+        2,
+        3
+      ],
+      "trasferta": false,
+      "rep_min": 10,
+      "energia": 40,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.12,
+        0.12
+      ],
+      "ospedale": 0.1,
+      "bottino": [
+        75,
+        300
+      ],
+      "bottino_x": null,
+      "rep": 4,
+      "pena": 5,
+      "multa": 300,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 2
+    },
+    {
+      "id": "C15",
+      "nome": "Parcheggiatore abusivo",
+      "tags": [
+        "TRUFFA"
+      ],
+      "slots": [
+        2,
+        3
+      ],
+      "trasferta": true,
+      "rep_min": 10,
+      "energia": 40,
+      "spesa": [
+        0,
+        10
+      ],
+      "gabbio": [
+        0.12,
+        0.08
+      ],
+      "ospedale": 0.1,
+      "bottino": [
+        30,
+        180
+      ],
+      "bottino_x": null,
+      "rep": 3,
+      "pena": 1,
+      "multa": 200,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": "evento",
+      "salute": 0,
+      "speciale": null,
+      "tier": 2
+    },
+    {
+      "id": "C16",
+      "nome": "Bagarinaggio allo stadio",
+      "tags": [
+        "TRUFFA"
+      ],
+      "slots": [
+        2,
+        3
+      ],
+      "trasferta": true,
+      "rep_min": 10,
+      "energia": 45,
+      "spesa": [
+        90,
+        300
+      ],
+      "gabbio": [
+        0.08,
+        0.08
+      ],
+      "ospedale": 0.05,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": [
+        1.5,
+        3.0
+      ],
+      "rep": 3,
+      "pena": 2,
+      "multa": 500,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": "evento",
+      "salute": 0,
+      "speciale": null,
+      "tier": 2
+    },
+    {
+      "id": "C17",
+      "nome": "Rissa per collana/cappello drip",
+      "tags": [
+        "FORZA"
+      ],
+      "slots": [
+        2,
+        3
+      ],
+      "trasferta": false,
+      "rep_min": 10,
+      "energia": 50,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.12,
+        0.12
+      ],
+      "ospedale": 0.2,
+      "bottino": [
+        60,
+        380
+      ],
+      "bottino_x": null,
+      "rep": 6,
+      "pena": 7,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 2
+    },
+    {
+      "id": "C18",
+      "nome": "Rapina al rider",
+      "tags": [
+        "FORZA",
+        "VEICOLO"
+      ],
+      "slots": [
+        3,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 10,
+      "energia": 45,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.12,
+        0.12
+      ],
+      "ospedale": 0.15,
+      "bottino": [
+        45,
+        220
+      ],
+      "bottino_x": null,
+      "rep": -2,
+      "pena": 9,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": "monopattino",
+      "tier": 2
+    },
+    {
+      "id": "C19",
+      "nome": "Rame al cantiere",
+      "tags": [
+        "EFFRAZIONE",
+        "FURTO",
+        "NOTTE"
+      ],
+      "slots": [
+        4
+      ],
+      "trasferta": true,
+      "rep_min": 20,
+      "energia": 70,
+      "spesa": [
+        0,
+        50
+      ],
+      "gabbio": [
+        0.15,
+        0.08
+      ],
+      "ospedale": 0.12,
+      "bottino": [
+        120,
+        600
+      ],
+      "bottino_x": null,
+      "rep": 5,
+      "pena": 9,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 3
+    },
+    {
+      "id": "C20",
+      "nome": "Rapina alla lucciola sulla statale",
+      "tags": [
+        "FORZA",
+        "NOTTE"
+      ],
+      "slots": [
+        3,
+        4
+      ],
+      "trasferta": true,
+      "rep_min": 20,
+      "energia": 50,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.12,
+        0.12
+      ],
+      "ospedale": 0.25,
+      "bottino": [
+        150,
+        750
+      ],
+      "bottino_x": null,
+      "rep": -6,
+      "pena": 12,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 3
+    },
+    {
+      "id": "C21",
+      "nome": "Spaccio fuori dalla discoteca",
+      "tags": [
+        "NOTTE",
+        "SPACCIO"
+      ],
+      "slots": [
+        3,
+        4
+      ],
+      "trasferta": true,
+      "rep_min": 20,
+      "energia": 60,
+      "spesa": [
+        50,
+        300
+      ],
+      "gabbio": [
+        0.22,
+        0.22
+      ],
+      "ospedale": 0.06,
+      "bottino": [
+        0,
+        0
+      ],
+      "bottino_x": [
+        2.0,
+        4.0
+      ],
+      "rep": 8,
+      "pena": 15,
+      "multa": 0,
+      "cooldown": 0,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 3
+    },
+    {
+      "id": "C22",
+      "nome": "Topino d'appartamento",
+      "tags": [
+        "EFFRAZIONE",
+        "FURTO"
+      ],
+      "slots": [
+        1,
+        2,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 35,
+      "energia": 80,
+      "spesa": [
+        0,
+        100
+      ],
+      "gabbio": [
+        0.25,
+        0.12
+      ],
+      "ospedale": 0.1,
+      "bottino": [
+        200,
+        2500
+      ],
+      "bottino_x": null,
+      "rep": 7,
+      "pena": 24,
+      "multa": 0,
+      "cooldown": 3,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 4
+    },
+    {
+      "id": "C23",
+      "nome": "Corriere per il boss",
+      "tags": [
+        "SPACCIO"
+      ],
+      "slots": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "trasferta": true,
+      "rep_min": 35,
+      "energia": 50,
+      "spesa": [
+        0,
+        30
+      ],
+      "gabbio": [
+        0.25,
+        0.15
+      ],
+      "ospedale": 0.05,
+      "bottino": [
+        150,
+        800
+      ],
+      "bottino_x": null,
+      "rep": 8,
+      "pena": 21,
+      "multa": 0,
+      "cooldown": 2,
+      "veicolo_req": true,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 4
+    },
+    {
+      "id": "C24",
+      "nome": "Spedizione punitiva per il boss",
+      "tags": [
+        "FORZA"
+      ],
+      "slots": [
+        3,
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 45,
+      "energia": 70,
+      "spesa": [
+        0,
+        0
+      ],
+      "gabbio": [
+        0.2,
+        0.2
+      ],
+      "ospedale": 0.2,
+      "bottino": [
+        100,
+        600
+      ],
+      "bottino_x": null,
+      "rep": 12,
+      "pena": 18,
+      "multa": 0,
+      "cooldown": 7,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 4
+    },
+    {
+      "id": "C25",
+      "nome": "Spaccata al Compro Oro",
+      "tags": [
+        "EFFRAZIONE",
+        "FURTO",
+        "NOTTE"
+      ],
+      "slots": [
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 50,
+      "energia": 60,
+      "spesa": [
+        0,
+        200
+      ],
+      "gabbio": [
+        0.25,
+        0.12
+      ],
+      "ospedale": 0.1,
+      "bottino": [
+        150,
+        1200
+      ],
+      "bottino_x": null,
+      "rep": 10,
+      "pena": 30,
+      "multa": 0,
+      "cooldown": 14,
+      "veicolo_req": true,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 4
+    },
+    {
+      "id": "C26",
+      "nome": "Furto del BANCOMAT",
+      "tags": [
+        "EFFRAZIONE",
+        "FURTO",
+        "NOTTE"
+      ],
+      "slots": [
+        4
+      ],
+      "trasferta": false,
+      "rep_min": 70,
+      "energia": 80,
+      "spesa": [
+        300,
+        5000
+      ],
+      "gabbio": [
+        0.6,
+        0.08
+      ],
+      "ospedale": 0.15,
+      "bottino": [
+        4000,
+        30000
+      ],
+      "bottino_x": null,
+      "rep": 5,
+      "pena": 60,
+      "multa": 0,
+      "cooldown": 30,
+      "veicolo_req": false,
+      "solo_evento": null,
+      "salute": 0,
+      "speciale": null,
+      "tier": 5
+    }
+  ],
+  "condizioni": [
+    {
+      "id": "pioggia",
+      "nome": "Piove a dirotto",
+      "p": 0.12,
+      "energia_add": 10,
+      "blocca": [
+        "C10",
+        "L02"
+      ]
+    },
+    {
+      "id": "blitz",
+      "nome": "Operazione Alto Impatto",
+      "p": 0.06,
+      "gabbio_add": 0.1
+    },
+    {
+      "id": "derby",
+      "nome": "Derby in citta'",
+      "p": 0.05,
+      "abilita": "evento",
+      "loot_tag": {
+        "TRUFFA": 1.3
+      },
+      "risk_tag": {
+        "FORZA": 1.2
+      }
+    },
+    {
+      "id": "concerto",
+      "nome": "Concerto al palazzetto",
+      "p": 0.05,
+      "abilita": "evento"
+    },
+    {
+      "id": "blackout",
+      "nome": "Blackout di quartiere",
+      "p": 0.04,
+      "risk_tag": {
+        "NOTTE": 0.75
+      },
+      "loot_tag": {
+        "EFFRAZIONE": 1.3
+      }
+    },
+    {
+      "id": "mercatone",
+      "nome": "Mercato straordinario",
+      "p": 0.05,
+      "loot_tag": {
+        "FURTO": 1.3
+      }
+    },
+    {
+      "id": "sciopero",
+      "nome": "Sciopero dei mezzi",
+      "p": 0.04,
+      "energia_add_trasferta": 15
+    },
+    {
+      "id": "polfer",
+      "nome": "Controlli Polfer",
+      "p": 0.04,
+      "risk_id": {
+        "C02": 2.0
+      }
+    },
+    {
+      "id": "nebbia",
+      "nome": "Nebbia fitta",
+      "p": 0.05,
+      "risk_tag": {
+        "VEICOLO": 0.85,
+        "NOTTE": 0.85
+      },
+      "stagione": [
+        1,
+        2,
+        11,
+        12
+      ]
+    },
+    {
+      "id": "caldo",
+      "nome": "Caldo bestiale",
+      "p": 0.08,
+      "energia_max_mult": 0.85,
+      "stagione": [
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "id": "viral",
+      "nome": "Il quartiere e' virale",
+      "p": 0.04,
+      "rep_tag": {
+        "SOCIAL": 2.0
+      }
+    },
+    {
+      "id": "paga",
+      "nome": "Giorno di paga in citta'",
+      "p": 1.0,
+      "loot_tag": {
+        "FURTO": 1.3,
+        "TRUFFA": 1.2
+      },
+      "solo_giorno_mese": 27
+    }
+  ],
+  "feste": [
+    {
+      "mese": 8,
+      "giorno": 15,
+      "id": "ferragosto",
+      "nome": "Ferragosto, citta' vuota",
+      "loot_id": {
+        "C22": 2.0
+      },
+      "risk_id": {
+        "C22": 0.7
+      },
+      "blocca": [
+        "C05",
+        "C11",
+        "C12"
+      ]
+    },
+    {
+      "mese": 10,
+      "giorno": 31,
+      "id": "halloween",
+      "nome": "Halloween",
+      "risk_tag": {
+        "NOTTE": 0.85
+      },
+      "rep_tag": {
+        "SOCIAL": 1.5
+      }
+    },
+    {
+      "mese": 12,
+      "giorno": 24,
+      "id": "natale",
+      "nome": "Vigilia di Natale",
+      "loot_tag": {
+        "FURTO": 1.5
+      },
+      "gabbio_add": 0.05
+    },
+    {
+      "mese": 12,
+      "giorno": 31,
+      "id": "capodanno",
+      "nome": "Capodanno",
+      "rep_tag": {
+        "SOCIAL": 2.0
+      },
+      "risk_tag": {
+        "FORZA": 1.3
+      }
+    },
+    {
+      "mese": 2,
+      "giorno": 16,
+      "id": "carnevale",
+      "nome": "Carnevale",
+      "gabbio_add": -0.1
+    }
+  ],
+  "guai": [
+    "cuggino_soldi",
+    "sfida_piazza",
+    "posto_blocco",
+    "perquisizione",
+    "portafoglio",
+    "boss_nota",
+    "influencer",
+    "furto_veicolo",
+    "mamma_spesa",
+    "serata",
+    "sbirro_occhio",
+    "gratta_vinci",
+    "febbre",
+    "giornalista",
+    "turno_kebab",
+    "rissa_subita"
+  ]
+}

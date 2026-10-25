@@ -1,0 +1,20 @@
+[
+  {
+    "prompt": "Item icon: a tuned 50cc scooter with oversized chrome exhaust and neon underglow, side view, isolated on transparent background, no floor, no shadow",
+    "out": "assets/art/items/motorino-tuned.png",
+    "background": "transparent",
+    "quality": "medium"
+  },
+  {
+    "prompt": "Item icon: a thick fake gold chain with a huge medallion, isolated on transparent background, no floor, no shadow",
+    "out": "assets/art/items/catena-oro.png",
+    "background": "transparent",
+    "quality": "medium"
+  },
+  {
+    "prompt": "Scene background: provincial Italian 'Bar Sport' facade at dusk, plastic chairs outside, slot machine glow through the window, slight top-down side view, centre of frame uncluttered for characters to stand in",
+    "out": "assets/art/locations/bar-sport.png",
+    "size": "1536x1024",
+    "quality": "high"
+  }
+]
