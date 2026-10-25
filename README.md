@@ -46,12 +46,16 @@ aggiornano da soli alla prossima apertura dopo un rilascio.
   sempre la stessa cosa annoia la piazza.
 * **Se ti beccano** c'e' il Tribunale di quartiere: scegli la difesa e il giudice tira il dado. Puo'
   finire con l'assoluzione, la messa alla prova o qualche giorno di galera. Se invece l'azione va
-  storta, finisci in ospedale.
+  storta, finisci in ospedale. In cella e in ospedale i giorni scorrono da soli (tocca per fermarli);
+  lo Zingaro in galera puo' chiamare il cuggino e va avanti a mano.
 * **Il Boss** ti scrive in chat la prima volta che succede qualcosa di nuovo. Ogni notte arriva il teaser
   della condizione di domani, e ci sono feste del calendario e guai con una scelta da fare.
 * **A schermo solo parole, icone e colori**: i numeri veri stanno dietro ogni (?).
 * **Fine partita**: al 365° giorno contano i MARANZA POINTS (patrimonio × reputazione). Marcire in galera
-  o restare piantati all'ospedale chiude la run prima, e conta molto meno.
+  o restare piantati all'ospedale chiude la run prima, e conta molto meno. Le run finite vanno nella
+  classifica locale (schermata finale e menu).
+* **Salvataggio**: la partita si salva da sola dopo ogni mossa, in questo browser. Dal menu puoi esportarla
+  in un file JSON e importarla su un altro dispositivo (utile anche per allegarla a una segnalazione).
 
 Tutte le regole sono in [`docs/GDD.md`](docs/GDD.md).
 
@@ -64,6 +68,7 @@ sim/                  simulatore Python di riferimento, giocatori automatici, ex
 src/engine/           motore puro e deterministico: applica(stato, comando) -> { stato, esiti }
 src/data/             dati tipizzati e testi di gioco (testi.ts)
 src/ui/               interfaccia React + Tailwind
+src/save/             salvataggio locale, export/import, classifica locale
 scripts/              harness autoplay e giocatori automatici in TypeScript
 tests/                test vitest, fixture e tracce generate dal Python
 assets/art/           PNG sorgente della grafica e manifest

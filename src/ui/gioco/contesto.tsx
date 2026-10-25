@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react';
 import { C } from '../../data/gameData';
 import { punti, type Comando } from '../../engine';
 import { localStorageAdapter } from '../../save/localStorageAdapter';
@@ -40,13 +40,34 @@ export function GiocoProvider({ children, salvataggi = localStorageAdapter }: { 
     invia({ tipo: 'IN_CLASSIFICA' });
   }, [ui.partita, ui.meta.inClassifica, salvataggi]);
 
-  // toasts go away on their own
+  // toasts go away on their own, each on its own clock: a new toast (or a fast player, whose every
+  // command rebuilds the list) must not restart the clock of the ones already on screen
+  const timer = useRef(new Map<number, ReturnType<typeof setTimeout>>());
   useEffect(() => {
-    const timer = ui.toast.map((t) =>
-      setTimeout(() => invia({ tipo: 'TOGLI_TOAST', id: t.id }), t.boss ? DURATA_TOAST_BOSS : DURATA_TOAST),
-    );
-    return () => timer.forEach(clearTimeout);
+    const attivi = timer.current;
+    const presenti = new Set(ui.toast.map((t) => t.id));
+    for (const [id, h] of attivi)
+      if (!presenti.has(id)) {
+        clearTimeout(h);
+        attivi.delete(id);
+      }
+    for (const t of ui.toast)
+      if (!attivi.has(t.id))
+        attivi.set(
+          t.id,
+          setTimeout(() => {
+            attivi.delete(t.id);
+            invia({ tipo: 'TOGLI_TOAST', id: t.id });
+          }, t.boss ? DURATA_TOAST_BOSS : DURATA_TOAST),
+        );
   }, [ui.toast]);
+  useEffect(() => {
+    const attivi = timer.current;
+    return () => {
+      for (const h of attivi.values()) clearTimeout(h);
+      attivi.clear();
+    };
+  }, []);
 
   const comando = useCallback((c: Comando) => invia({ tipo: 'COMANDO', comando: c }), []);
   const valore = useMemo(() => ({ ui, invia, comando, salvataggi }), [ui, comando, salvataggi]);

@@ -17,6 +17,8 @@ const LUOGO_PER_SLOT: Record<number, string> = { 1: 'piazza', 2: 'piazza', 3: 'p
 const INDOSSATI = new Set(['cappello', 'tuta', 'catena', 'orologio']);
 
 export function luogoDelGiorno(s: Stato): string {
+  // a guaio comes at the start of a free day, while `modo` still says where yesterday was
+  if (s.attesa?.tipo === 'EVENTO') return LUOGO_PER_SLOT[1]!;
   if (s.modo === 'galera') return 'galera';
   if (s.modo === 'ospedale') return 'ospedale';
   return LUOGO_PER_SLOT[Math.min(s.slot, 4)] ?? 'piazza';
