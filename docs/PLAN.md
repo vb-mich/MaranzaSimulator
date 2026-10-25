@@ -137,5 +137,6 @@ assets/art/ PNG sorgente + manifest.json (thread grafica)
 | 1 | fatta | il port del motore e' gia' completo: 312 partite del simulatore (6 classi × 4 policy × 13 semi) rigiocate nel motore TS identiche passo per passo (`tests/tracce.test.ts`, seme 0 in `npm test`, altri con `TRACCE_SEMI`). Le policy e l'harness sono gia' scritti. |
 | 2 | fatta | esiti `BOSS` e `stato.boss` (la chat), query per i (?) (`bottinoIntervallo`, `penaRichiesta`, `modificatoriRischio`, `difese`, `modificatoriTiro`, `prossimoGrado`, `anteprimaSonno`), verificate contro i numeri del motore; tracce e harness ancora identici. I testi del Boss li scrive il thread UI in `testi.ts`. |
 | 3 | fatta | `npm run autoplay`: 4800 partite (200 per classe × policy) in circa 90 secondi, tabella **identica byte per byte** a `sim/results/batch_finale.txt`. La UI si puo' unire. |
-| 4–5, 7 | da fare | |
-| 6 | in corso | grafica pronta sul branch `claude/project-thread-3yj1pf` (92 immagini, WebP, manifest), stile B in attesa di conferma; la unisco io in fase 6 |
+| 4–5 | in corso | thread UI sul branch `claude/project-thread-kxd08u`; lo unisco io con l'harness verde |
+| 6 | in corso | grafica unita su main (92 immagini WebP in `public/art/`, manifest in `assets/art/`), stile B in attesa di conferma; l'aggancio ai componenti arriva con la UI |
+| 7 | in corso | PWA fatta: manifest (`start_url` e `scope` = base di Pages), icone 192/512/maskable e apple-touch da `tools/icone-pwa.py`, service worker con cache offline di app, dati e grafica (104 file, circa 5,4 MB), aggiornamento automatico. Restano export/import del salvataggio (con la UI) e `README.md`. |
