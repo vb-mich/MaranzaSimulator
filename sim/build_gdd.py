@@ -33,6 +33,7 @@ def tabella_azioni(ids):
         if sp == "poker": b = "40% (+rep/500): ×2,5 la puntata"
         if sp == "corsa": b = "50%: ×2 la puntata"
         rep = f"{a['rep']:+g}" if a["rep"] else "0"
+        if sp == "poker": rep = "+3 vinci / −2 perdi"
         if sp == "chill": rep = "+0,5 (+drip/500) fino a rep 60"
         if sp == "tiktok": rep = f"+{a['rep']:g} fino a rep 80 (8%: +10)"
         if sp == "tag": rep = f"+{a['rep']:g} (8%: +10)"

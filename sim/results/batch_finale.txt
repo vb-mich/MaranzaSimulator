@@ -1,66 +1,66 @@
 
-=== CLASSI — policy prudente (60 run) ===
+=== CLASSI — policy prudente (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino        100%    5,993,561    79,377  77.9     32    18  10.0    906  365 giorni:52, 365 giorni (finiti in cella):8
-Pakistano        100%    6,851,710    88,984  77.0     31    19   9.0    905  365 giorni:49, 365 giorni (finiti in cella):11
-Africano         100%    6,105,285    77,744  77.4     14    20  10.0    976  365 giorni:51, 365 giorni (finiti in cella):9
-Zingaro          100%    6,914,204    90,880  75.9     22    18  10.0    963  365 giorni:53, 365 giorni (finiti in cella):7
-Balcanico        100%    5,385,581    67,262  78.9     27    24   8.0    928  365 giorni:47, 365 giorni (finiti in cella):13
-Italiano         100%    5,494,162    74,295  75.5     46    18   9.0    881  365 giorni:45, 365 giorni (finiti in cella):15
+Magrebino        100%    6,153,050    79,764  77.0     29    16   9.5    913  365 giorni:172, 365 giorni (finiti in cella):28
+Pakistano        100%    6,516,898    86,928  75.2     34    17  11.0    906  365 giorni:150, 365 giorni (finiti in cella):50
+Africano         100%    5,635,084    74,314  75.7     15    20  10.0    966  365 giorni:174, 365 giorni (finiti in cella):26
+Zingaro          100%    6,908,410    91,665  74.8     28    18  10.0    948  365 giorni:152, 365 giorni (finiti in cella):48
+Balcanico        100%    5,415,635    71,117  76.1     33    22  10.0    910  365 giorni:165, 365 giorni (finiti in cella):35
+Italiano         100%    5,811,713    77,453  75.5     44    18  10.0    888  365 giorni:151, 365 giorni (finiti in cella):49
 
-=== CLASSI — policy bilanciato (60 run) ===
+=== CLASSI — policy bilanciato (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino        100%    7,073,025    84,521  84.9     84    32  13.5    711  365 giorni:42, 365 giorni (finiti in cella):18
-Pakistano        100%    8,186,317    97,923  82.9     83    28  14.0    703  365 giorni:37, 365 giorni (finiti in cella):23
-Africano         100%    7,412,605    86,451  84.6     58    31  15.0    804  365 giorni:48, 365 giorni (finiti in cella):12
-Zingaro          100%    8,941,390   108,383  83.0     86    31  17.0    740  365 giorni:37, 365 giorni (finiti in cella):23
-Balcanico        100%    7,166,063    83,858  85.5     81    31  14.0    741  365 giorni:42, 365 giorni (finiti in cella):18
-Italiano         100%    6,913,085    83,176  83.4     92    30  14.0    707  365 giorni:37, 365 giorni (finiti in cella):23
+Magrebino        100%    6,867,987    82,711  83.7     84    33  15.0    695  365 giorni:139, 365 giorni (finiti in cella):61
+Pakistano        100%    7,768,543    94,939  82.3     84    30  16.0    702  365 giorni:133, 365 giorni (finiti in cella):67
+Africano         100%    6,495,766    77,994  82.6     60    33  16.0    776  365 giorni:139, 365 giorni (finiti in cella):61
+Zingaro          100%    8,636,298   106,728  81.9     84    33  16.5    734  365 giorni:119, 365 giorni (finiti in cella):81
+Balcanico        100%    6,576,326    79,927  82.0     90    31  15.0    696  365 giorni:123, 365 giorni (finiti in cella):77
+Italiano         100%    6,595,807    80,273  82.1    106    31  15.0    653  365 giorni:110, 365 giorni (finiti in cella):90
 
-=== CLASSI — policy yolo (60 run) ===
+=== CLASSI — policy yolo (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino         95%   14,261,069   158,450  90.2    181    25  19.0    452  365 giorni (finiti in cella):31, 365 giorni:26, marcito in galera:3
-Pakistano         87%   14,488,084   158,938  88.6    183    24  20.0    404  365 giorni (finiti in cella):26, 365 giorni:26, marcito in galera:8
-Africano          97%    9,777,508   109,274  88.8    166    27  24.0    478  365 giorni (finiti in cella):34, 365 giorni:24, marcito in galera:2
-Zingaro           83%   13,788,700   161,850  87.1    184    24  21.0    424  365 giorni (finiti in cella):28, 365 giorni:22, marcito in galera:10
-Balcanico         85%   11,490,468   128,250  90.2    182    24  20.0    418  365 giorni (finiti in cella):29, 365 giorni:22, marcito in galera:9
-Italiano          77%   11,885,916   139,861  87.3    200    21  19.0    369  365 giorni (finiti in cella):26, 365 giorni:20, marcito in galera:14
+Magrebino         86%   13,446,985   156,109  88.5    178    25  20.0    424  365 giorni:90, 365 giorni (finiti in cella):83, marcito in galera:27
+Pakistano         80%   12,971,043   158,404  86.9    187    24  21.0    402  365 giorni (finiti in cella):89, 365 giorni:70, marcito in galera:41
+Africano          96%    9,115,477   106,389  86.9    168    31  23.0    460  365 giorni (finiti in cella):108, 365 giorni:83, marcito in galera:9
+Zingaro           83%   14,108,968   168,397  86.4    185    27  22.0    427  365 giorni (finiti in cella):102, 365 giorni:64, marcito in galera:34
+Balcanico         78%    9,970,294   119,268  87.5    189    25  21.0    400  365 giorni (finiti in cella):93, 365 giorni:64, marcito in galera:43
+Italiano          76%   11,233,673   136,639  87.0    202    24  19.0    370  365 giorni (finiti in cella):93, 365 giorni:59, marcito in galera:48
 
-=== CLASSI — policy casuale (60 run) ===
+=== CLASSI — policy casuale (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino         90%    1,132,744    15,148  77.7    169    29  19.0    460  365 giorni:34, 365 giorni (finiti in cella):20, marcito in galera:6
-Pakistano         98%    1,147,597    15,283  75.3    136    30  17.0    555  365 giorni (finiti in cella):30, 365 giorni:29, marcito in galera:1
-Africano          98%      965,930    12,842  74.4    122    31  18.0    613  365 giorni:32, 365 giorni (finiti in cella):27, marcito in galera:1
-Zingaro          100%    1,365,291    18,828  73.5    132    32  18.0    600  365 giorni:38, 365 giorni (finiti in cella):22
-Balcanico         98%    1,027,821    13,947  75.9    143    27  18.0    558  365 giorni:33, 365 giorni (finiti in cella):26, marcito in galera:1
-Italiano          93%      918,823    12,859  73.1    156    28  16.0    507  365 giorni:30, 365 giorni (finiti in cella):26, marcito in galera:4
+Magrebino         90%    1,047,459    15,197  73.4    168    28  19.0    466  365 giorni:97, 365 giorni (finiti in cella):84, marcito in galera:19
+Pakistano         99%    1,012,278    14,764  69.3    148    28  18.0    534  365 giorni:100, 365 giorni (finiti in cella):98, marcito in galera:2
+Africano         100%      746,551    10,847  70.1    123    32  18.0    600  365 giorni:123, 365 giorni (finiti in cella):77
+Zingaro           96%    1,112,530    16,679  68.1    134    30  18.0    598  365 giorni:109, 365 giorni (finiti in cella):84, marcito in galera:7
+Balcanico         96%      854,035    12,212  72.0    144    28  18.0    549  365 giorni:116, 365 giorni (finiti in cella):76, marcito in galera:8
+Italiano          96%      817,320    12,063  69.9    153    28  17.0    522  365 giorni:101, 365 giorni (finiti in cella):90, marcito in galera:9
 
 === USO DELLE AZIONI (policy bilanciato, tutte le classi) ===
-  L04 Rider delle consegne                    18.5%
-  C02 Portoghese sul regionale                18.4%
-  L05 Calisthenics al parco                   12.7%
-  C13 Scassinare auto                          9.6%
-  C06 Tag sui muri del quartiere               9.2%
-  C22 Topino d'appartamento                    9.0%
-  C08 Truffa Vinted (sneakers fulle)           6.7%
-  L01 Chillare in piazza                       3.9%
-  C09 Ruba monopattino elettrico               2.7%
-  G03 Poker nel retrobottega                   2.3%
+  C02 Portoghese sul regionale                16.7%
+  L04 Rider delle consegne                    16.6%
+  L05 Calisthenics al parco                   14.0%
+  C06 Tag sui muri del quartiere              10.0%
+  C13 Scassinare auto                          9.8%
+  C22 Topino d'appartamento                    9.2%
+  C08 Truffa Vinted (sneakers fulle)           7.0%
+  L01 Chillare in piazza                       3.8%
+  C09 Ruba monopattino elettrico               3.4%
   C25 Spaccata al Compro Oro                   2.2%
-  C16 Bagarinaggio allo stadio                 1.6%
-  C23 Corriere per il boss                     1.1%
-  C19 Rame al cantiere                         0.7%
-  C12 Scippo al centro commerciale             0.5%
+  C16 Bagarinaggio allo stadio                 1.9%
+  G03 Poker nel retrobottega                   1.4%
+  C23 Corriere per il boss                     1.3%
+  C19 Rame al cantiere                         0.8%
+  L02 TikTok brainrot in piazza                0.7%
+  C12 Scippo al centro commerciale             0.6%
   C01 Truffa dell'anello d'oro                 0.3%
-  L02 TikTok brainrot in piazza                0.2%
   C11 Scippo in stazione (bici)                0.2%
   C21 Spaccio fuori dalla discoteca            0.1%
   C04 Rubare alcool all'alimentari             0.1%
   C17 Rissa per collana/cappello drip          0.0%
-  C14 Truffa dello specchietto                 0.0%
   C07 Fumo nascosto nel parchetto              0.0%
-  C15 Parcheggiatore abusivo                   0.0%
+  C14 Truffa dello specchietto                 0.0%
   C10 Parkour sui tetti per TikTok             0.0%
+  C15 Parcheggiatore abusivo                   0.0%
   MAI usate: L03, G01, G02, G04, C03, C05, C18, C20, C24, C26
 
-Grafico salvato: bilanciamento_v02.png
+Grafico salvato: results/bilanciamento.png

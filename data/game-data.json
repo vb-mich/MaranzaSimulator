@@ -94,6 +94,55 @@
     "PATRIMONIO_DRIP": 0.5,
     "GAME_OVER_PENALITA": 0.5,
     "MULTA_CONVERSIONE_EURO_GIORNO": 25,
+    "SALUTE_BASSA_SOGLIA": 30,
+    "SALUTE_BASSA_ENERGIA_MULT": 0.8,
+    "UI_FULMINI": [
+      [
+        20,
+        1
+      ],
+      [
+        40,
+        2
+      ],
+      [
+        60,
+        3
+      ],
+      [
+        9999,
+        4
+      ]
+    ],
+    "UI_BOTTINO_SIMBOLI": [
+      [
+        100,
+        "€"
+      ],
+      [
+        500,
+        "€€"
+      ],
+      [
+        999999,
+        "€€€"
+      ]
+    ],
+    "UI_SLIDER_TACCHE": [
+      [
+        0.0,
+        "Alla buona"
+      ],
+      [
+        0.5,
+        "Preparato"
+      ],
+      [
+        1.0,
+        "Da professionista"
+      ]
+    ],
+    "UI_RISCHIO_SU": "gabbio+ospedale, alla tacca selezionata, con i modificatori di oggi",
     "RISCHIO_MULTA_RIDOTTA_PROVA": 0.5,
     "MULTA_AGGRAVATA_MULT": 2.0,
     "TRIBUNALE_SOGLIE": {
@@ -126,11 +175,16 @@
     "VEICOLO_SEQUESTRO_ARRESTO": 0.5,
     "OSPEDALE_SALUTE_USCITA": 20,
     "SALUTE_GIORNO": 1,
-    "SALUTE_BASSA_SOGLIA": 30,
-    "SALUTE_BASSA_ENERGIA_MULT": 0.8,
     "DANNO_RICOVERO": {
       "default": 20,
-      "FORZA": 30
+      "FORZA": 30,
+      "sfida_piazza": 15
+    },
+    "CORSA_BALCANICO_BONUS": 0.1,
+    "SFIDA_BALCANICO_MULT": 1.3,
+    "POKER_REP": {
+      "vinci": 3,
+      "perdi": -2
     },
     "RISCHIO_FUGA_VEICOLO_PT": 0.05,
     "RISCHIO_TOOL_PT": 0.05,
@@ -228,7 +282,7 @@
   ],
   "negozio": {
     "passamontagna": {
-      "nome": "Passamontagna Nike",
+      "nome": "Passamontagna Naik",
       "prezzo": 15,
       "tipo": "tool",
       "effetto": "notte",
@@ -242,13 +296,13 @@
       "valore": 0
     },
     "cappello": {
-      "nome": "Cappello North Face",
+      "nome": "Cappello Nord Faccia",
       "prezzo": 90,
       "tipo": "drip",
       "valore": 90
     },
     "tuta": {
-      "nome": "Tuta Nike Tech",
+      "nome": "Tuta Naik Tech",
       "prezzo": 180,
       "tipo": "drip",
       "valore": 180
@@ -267,7 +321,7 @@
       "livello": 1
     },
     "telefono": {
-      "nome": "iPhone ultimo modello",
+      "nome": "aiFon ultimo modello",
       "prezzo": 1200,
       "tipo": "drip",
       "valore": 1200
@@ -1332,7 +1386,7 @@
       "veicolo_req": false,
       "solo_evento": null,
       "salute": 0,
-      "speciale": "monopattino",
+      "speciale": "veicolo_bonus",
       "tier": 2
     },
     {

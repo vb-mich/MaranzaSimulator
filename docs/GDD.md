@@ -55,7 +55,7 @@ Il gioco inizia con **una sola scelta**: la Classe del personaggio, piu' il nome
   * **Entra nei MARANZA POINTS** come moltiplicatore.
   * **Decade dell'1% ogni giorno** ("la piazza dimentica"). Chi smette di fare bravate scende; chi va in galera la congela.
   * **Rendimenti decrescenti**: ogni guadagno positivo e' moltiplicato per `(1 − rep/100)`. A rep 80 un +10 diventa +2. In pratica la rep si stabilizza tra 75 e 90 solo per chi resta attivo; arrivare a 100 e restarci e' quasi impossibile.
-  * **Noia della piazza**: ripetere la *stessa* azione entro 7 giorni dimezza la rep che rende, ogni volta (×0,5, ×0,25, ×0,125…). Per essere rispettati bisogna variare.
+  * **Noia della piazza**: ripetere la *stessa* azione entro 7 giorni dimezza la rep che rende, ogni volta (×0,5, ×0,25, ×0,125…). Per essere rispettati bisogna variare. Vale solo sui guadagni: la rep persa con le azioni infami si perde per intero ogni volta.
   * Le azioni "infami" (borseggio alle vecchiette, rapina alle lucciole, rapina al rider) **tolgono** rep anche se riescono.
   $ Perche' decadimento, rendimenti decrescenti e noia: senza di essi la simulazione porta la rep a 100 nella seconda settimana e da li' in poi non conta piu' nulla. Con tutti e tre, la rep si stabilizza tra 75 e 90 solo per chi resta attivo e vario, e un giocatore fermo la perde.
 * **Energia** — da 0 al massimo della classe. Ogni azione ne consuma una quota; si recupera dormendo. E' il collo di bottiglia delle azioni giornaliere: 2–3 azioni al giorno per tutti gli archetipi.
@@ -91,15 +91,15 @@ Tra parentesi quadre, dove serve, l'interpretazione precisa da implementare (e' 
 * **Pakistano** — Sempre aperto 24/7 anche sotto le bombe. Nel suo minimarket abusivo ti vende di tutto: dalle birre calde alle 4 di mattina fino alle SIM intestate a suo cugino.
   * *Instancabile*: quando l'energia e' pari o inferiore a 15, viene riportata a 100. Max 1 volta al mese, reset il primo del mese.
   * *Business is business*: +10% su ogni somma di denaro incassata.
-  * *Ventiquattrosette*: puo' compiere una sola azione di Notte alla settimana [settimana di calendario].
+  * *Ventiquattrosette*: puo' compiere una sola azione di Notte alla settimana [settimana di calendario, da lunedi' a domenica].
   $ Nel simulatore questa e' la classe piu' penalizzata dal malus notturno (scassinare auto, rame, spaccio sono azioni di Notte); l'energia a 150 e il +10% lo compensano. Se il playtest mostra frustrazione, trasformare il malus in "le azioni di Notte costano +20 energia".
 * **Africano** — Parla 4 lingue e 5 dialetti per trattare su qualsiasi cosa. Se lo guardi negli occhi per più di due secondi ti ha già infilato 3 braccialetti della fortuna al polso e pretende 10€.
   * *Rifugiato climatico*: +10 al tiro del giudice.
-  * *Fuga istantanea*: −10% probabilita' di essere beccato [moltiplicativo: 20% diventa 18%].
+  * *Fuga istantanea*: −10% probabilita' di essere beccato [moltiplicativo: 20% diventa 18%; solo sul Gabbio, non sull'Ospedale].
   * *Soldi alla famiglia*: −10% su ogni somma di denaro incassata.
 * **Zingaro** — Catene d'oro spesse tre dita, 5 auto di lusso in garage, 8 figli, nullatenente.
   * *Prestanome*: qualunque perdita di soldi (multa, sequestro, furto in ospedale, avvocato) ha il **40%** di probabilita' di essere azzerata.
-  * *Chiamata al cuggino*: anche in Galera puo' compiere una singola azione al giorno [tra quelle senza rischio], al doppio del costo in Energia.
+  * *Chiamata al cuggino*: anche in Galera puo' compiere una singola azione al giorno [solo tra quelle senza alcun rischio di Gabbio o Ospedale], al doppio del costo in Energia.
   * *Vita di carovana*: −10% sui guadagni di reputazione.
 * **Balcanico** — BMW del 2004 con i chilometri scalati, braccia come pilastri e forte passione per il rame ed i metalli pesanti.
   * *Forza bruta*: nelle azioni di Forza il rischio (gabbio e ospedale) e' ×0,7.
@@ -107,7 +107,7 @@ Tra parentesi quadre, dove serve, l'interpretazione precisa da implementare (e' 
   * *Arroganza balcanica*: +10% di probabilita' giornaliera di un evento "Guaio" (25% invece di 15%).
 * **Italiano** — Soldi dei genitori, tute da 400€ e dice 'fra' ogni due parole. Posto gia' assegnato nella fabbrichetta del papi.
   * *Paghetta*: ogni Lunedi' riceve 50€ dal papi (non in galera).
-  * *Paghetta d'emergenza*: quando i soldi sono ≤ 5€ vengono riportati a 20€. Max 1 volta al mese.
+  * *Paghetta d'emergenza*: quando i soldi sono ≤ 5€ vengono riportati a 20€ [controllato a ogni slot]. Max 1 volta al mese.
   * *La legge e' uguale per tutti*: −10 al tiro del giudice.
   $ "Paghetta d'emergenza" non consente comunque di effettuare spese che porterebbero il totale sotto zero.
 
@@ -118,7 +118,7 @@ La partita dura un intero Anno Virtuale (365 giorni). Il gioco segue il calendar
 Ogni giorno e' diviso in 4 slot temporali: **1. Mattina, 2. Pomeriggio, 3. Sera, 4. Notte.** Un nuovo giorno parte dalla Mattina.
 
 ### Avanzamento
-Qualsiasi azione consuma 1 slot temporale (2 se richiede una *trasferta* e il personaggio non ha un veicolo e non e' Magrebino), una quota di energia ed eventualmente soldi. Le azioni con trasferta non si possono iniziare di Notte senza veicolo (non ci sarebbe il secondo slot).
+Qualsiasi azione consuma 1 slot temporale (2 se richiede una *trasferta* e il personaggio non ha un veicolo e non e' Magrebino), una quota di energia ed eventualmente soldi. Senza veicolo (e senza essere Magrebino) le azioni con trasferta si possono iniziare solo di Mattina e Pomeriggio: di Sera finirebbero nella Notte, che e' riservata al sonno.
 
 Il negozio, l'inventario e la scelta del cibo non consumano slot.
 
@@ -153,13 +153,13 @@ Accessibile in qualsiasi momento senza consumare slot. Gli oggetti sono visibili
 
 | Oggetto | Prezzo | Tipo | Effetto |
 |---|---|---|---|
-| Passamontagna Nike | 15€ | tool | −5 punti di rischio Gabbio nelle azioni di Notte |
+| Passamontagna Naik | 15€ | tool | −5 punti di rischio Gabbio nelle azioni di Notte |
 | Tronchese del cuggino | 30€ | tool | −5 punti di rischio Gabbio nelle azioni con Effrazione |
-| Cappello North Face | 90€ | drip | Drip 90 (conta per il Chill e per il Patrimonio) |
-| Tuta Nike Tech | 180€ | drip | Drip 180 |
+| Cappello Nord Faccia | 90€ | drip | Drip 90 (conta per il Chill e per il Patrimonio) |
+| Tuta Naik Tech | 180€ | drip | Drip 180 |
 | Catena placcata 'oro' | 250€ | drip | Drip 250 — sblocca 'Trapper di quartiere' (Magrebino) |
 | Monopattino truccato | 350€ | veicolo | Veicolo liv. 1: trasferte senza slot extra; −5 pt Gabbio nelle azioni di Fuga; sblocca le azioni che richiedono un veicolo |
-| iPhone ultimo modello | 1.200€ | drip | Drip 1.200 |
+| aiFon ultimo modello | 1.200€ | drip | Drip 1.200 |
 | Motorino elaborato | 1.500€ | veicolo | Veicolo liv. 2: come il monopattino ma −10 pt Gabbio nelle azioni di Fuga e −5 pt in quelle che richiedono veicolo |
 | Orologio 'svizzero' di Napoli | 2.500€ | drip | Drip 2.500 |
 
@@ -199,7 +199,7 @@ Ordine di risoluzione: si paga spesa ed energia → tiro Gabbio → se no, tiro 
 | Veicolo liv. 1 / 2 in azioni di **Fuga** | −5 / −10 punti |
 | Motorino in azioni che richiedono veicolo | −5 punti |
 | Passamontagna (Notte) / Tronchese (Effrazione) | −5 punti |
-| Condizione del giorno | vedi §Eventi (es. Blitz +10 punti, Nebbia ×0,85 di notte) |
+| Condizione del giorno | vedi §Eventi (es. Blitz +10 punti, Nebbia ×0,85 di notte). I moltiplicatori (×) valgono su Gabbio e Ospedale, i punti (+/−) solo sul Gabbio |
 | "Attenzionato" (sbirro di quartiere, TV, cuggino offeso) | +5/+10 punti per N giorni |
 
 Tag usati nelle tabelle: Furto, Truffa, Forza, Spaccio, Azzardo, Social, Legale, Fuga (bonus veicolo), Effrazione, Notte.
@@ -216,7 +216,7 @@ $ Scala dei rischi: il giocatore medio fa ~700 azioni l'anno. A 5% di rischio so
 | L04 | Rider delle consegne | Mat/Pom/Ser | sì | — | 50 | — | — | — | 20€–30€ | 0 | 1 gg | — | — |
 | L05 | Calisthenics al parco | Mat/Pom/Ser | — | — | 30 | — | — | — | — | +1 | 1 gg | — | — |
 
-* **L01 Chillare in piazza** — Muretto, cassa bluetooth, sguardo da duro. Serve solo a farsi conoscere: oltre rep 60 non rende piu' nulla.
+* **L01 Chillare in piazza** — Muretto, cassa bluetooth, sguardo da duro. Serve solo a farsi conoscere: la rep che rende scende linearmente fino a zero a rep 60. Il bonus drip (+1 ogni 500€) conta anche i veicoli: il motorino in piazza si vede. Le condizioni Social del giorno (Virale, Halloween, Capodanno) valgono anche qui.
 * **L02 TikTok brainrot in piazza** — Balletto davanti al kebabbaro con sottofondo trap. 8% di diventare virale (+10 rep). Non si gira sotto la pioggia.
 * **L03 Turno al minimarket** — Otto ore a riempire il frigo delle birre. Paga poco e la piazza ti prende in giro.
 * **L04 Rider delle consegne** — Zaino termico e poke per i fighetti del centro. Onesto, stanco, triste. E' la rete di sicurezza di chi e' al verde.
@@ -229,13 +229,13 @@ $ Scala dei rischi: il giocatore medio fa ~700 azioni l'anno. A 5% di rischio so
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | G01 | Slot al bar del cinese | tutti | — | — | 10 | 10€–200€ | — | — | 30%: ×2,5 la puntata | 0 | 1 gg | — | — |
 | G02 | Scommessa clandestina | Mat/Pom/Ser | — | — | 15 | 20€–500€ | — | — | 45%: ×2 la puntata | 0 | 1 gg | — | — |
-| G03 | Poker nel retrobottega | Not | — | — | 30 | 50€–300€ | 5% | — | 40% (+rep/500): ×2,5 la puntata | 0 | 2 gg | 200€ | — |
+| G03 | Poker nel retrobottega | Not | — | — | 30 | 50€–300€ | 5% | — | 40% (+rep/500): ×2,5 la puntata | +3 vinci / −2 perdi | 2 gg | 200€ | — |
 | G04 | Corsa clandestina in monopattino *(veicolo)* | Ser/Not | — | — | 30 | 20€–100€ | 10% | 15% | 50%: ×2 la puntata | +4 | 1 gg | 150€ | — |
 
 * **G01 Slot al bar del cinese** — La macchinetta sotto casa. Valore atteso 75%: un pozzo di soldi per chi non resiste.
 * **G02 Scommessa clandestina** — Punti sulla partita con il bookmaker abusivo del bar. Vincere da' anche +2 rep.
-* **G03 Poker nel retrobottega** — Texas hold'em nel retro della sala scommesse. Piu' hai rep, piu' il tuo bluff regge (+rep/500 alla probabilita' di vincere). La bisca puo' essere chiusa dagli sbirri (5%).
-* **G04 Corsa clandestina in monopattino** *(richiede veicolo)* — Monopattini sbloccati a 60 km/h sulla tangenziale. Vinci la puntata e +4 rep, o finisci sull'asfalto.
+* **G03 Poker nel retrobottega** — Texas hold'em nel retro della sala scommesse. Piu' hai rep, piu' il tuo bluff regge (+rep/500 alla probabilita' di vincere). Vincere da' +3 rep, perdere −2. La bisca puo' essere chiusa dagli sbirri (5%).
+* **G04 Corsa clandestina in monopattino** *(richiede veicolo)* — Monopattini sbloccati a 60 km/h sulla tangenziale. Vinci la puntata (50%, 60% per il Balcanico) e +4 rep, o finisci sull'asfalto.
 
 ### Reati — Tier 1 (rep 0+): la gavetta
 
@@ -260,7 +260,7 @@ $ Scala dei rischi: il giocatore medio fa ~700 azioni l'anno. A 5% di rischio so
 * **C06 Tag sui muri del quartiere** — Bombolette e il tuo nome su ogni saracinesca. Pura rep. Piu' bombolette compri, piu' grande e' il pezzo e meno tempo stai esposto.
 * **C07 Fumo nascosto nel parchetto** — Setacci cespugli e tubi della luce del parco per scovare le "stecche" nascoste dagli spacciatori di zona. Il rischio vero non e' la madama, sono i proprietari.
 * **C08 Truffa Vinted (sneakers fulle)** — Metti in vendita scarpe tarocche prese dai cinesi spacciandole per "Edizione Limitata intonsa" con scontrino finto. Piu' paia compri, piu' incassi. Il profilo viene bannato per 4 giorni dopo ogni colpo (cooldown).
-* **C09 Ruba monopattino elettrico** — Tranci il lucchetto di un monopattino in sharing e te lo porti via. Con un tronchese vero (30€) e' tutto piu' veloce. Se non hai un veicolo, il 50% delle volte te lo tieni invece di venderlo.
+* **C09 Ruba monopattino elettrico** — Tranci il lucchetto di un monopattino in sharing e te lo porti via. Con un tronchese vero (30€) e' tutto piu' veloce. Se non hai un veicolo, il 50% delle volte te lo tieni *invece* di venderlo (niente bottino, ma hai un mezzo).
 * **C10 Parkour sui tetti per TikTok** — Salti tra i tetti dei capannoni con il telefono in mano. Rep alta, rischio di gabbio quasi nullo, ma un piede in fallo e' un mese di gesso.
 
 ### Reati — Tier 2 (rep 10+): il quartiere ti conosce
@@ -283,7 +283,7 @@ $ Scala dei rischi: il giocatore medio fa ~700 azioni l'anno. A 5% di rischio so
 * **C15 Parcheggiatore abusivo** *(solo giorni evento)* — Gilet catarifrangente trovato nei cespugli e "un'offerta per la custodia" nel piazzale dello stadio o della discoteca.
 * **C16 Bagarinaggio allo stadio** *(solo giorni evento)* — Compri biglietti col bot dell'amico e li rivendi al triplo ai disperati rimasti fuori. L'investimento decide il guadagno.
 * **C17 Rissa per collana/cappello drip** — Punti un ragazzetto in piazza con il cappello introvabile e glielo strappi, scatenando un parapiglia. Se la sua compagnia reagisce in blocco, ospedale.
-* **C18 Rapina al rider** — Gli blocchi la strada e gli prendi lo zaino e, se va bene, il motorino (50% di ottenere un veicolo se non ne hai). Mossa infame: il rider e' un poveraccio come te (−2 rep).
+* **C18 Rapina al rider** — Gli blocchi la strada e gli prendi lo zaino e, se va bene, il motorino (bottino sempre, piu' il 50% di ottenere un veicolo se non ne hai). Mossa infame: il rider e' un poveraccio come te (−2 rep).
 
 ### Reati — Tier 3 (rep 20+): lavori seri
 
@@ -346,7 +346,7 @@ Il giocatore vede la **pena richiesta** (pena base dell'azione, aumentata del 10
 * **Tutorial**: +15 nei primi 7 giorni di gioco.
 * **Incensurato**: +10 se non ci sono condanne precedenti.
 * Recidiva: −3 per ogni condanna precedente (max −15).
-* "Noto in questura": −1 ogni 5 punti di rep oltre 60 (max −8).
+* "Noto in questura": −(rep − 60)/5, continuo, fino a −8.
 
 | Risultato | Esito | Pena | Multa | Altro |
 |---|---|---|---|---|
@@ -358,7 +358,7 @@ Il giocatore vede la **pena richiesta** (pena base dell'azione, aumentata del 10
 
 Con avvocato d'ufficio: **primo arresto in tutorial** (+25): 41% assolto, 20% messa alla prova, 25% ridotta, 14% piena, 0% aggravata (pena media ≈ 0,27 × richiesta). **Primo arresto dopo il tutorial** (+10): 26% / 20% / 25% / 29% / 0% (≈ 0,42). **Alla quinta condanna** (−15): 1% / 20% / 25% / 30% / 24% (≈ 0,79). La curva e' voluta: i primi guai si perdonano, i recidivi pagano tutto.
 
-Multa non pagabile per intero: il resto si converte in 1 giorno di galera ogni 25€.
+Multa non pagabile per intero: il resto si converte in 1 giorno di galera ogni 25€ (arrotondato per eccesso), sommato alla pena. Una difesa che non ci si puo' permettere non e' selezionabile. Le pene si arrotondano al giorno intero (0,5 → 1) e ogni condanna vale almeno 1 giorno.
 
 ### Galera
 * I giorni passano automaticamente (schermata "cella" con un contatore e un diario di bordo di tre righe al giorno: e' un momento di respiro, non di noia; dura al massimo un paio di minuti reali).
@@ -369,7 +369,7 @@ Multa non pagabile per intero: il resto si converte in 1 giorno di galera ogni 2
 ### Ospedale
 * Ricovero di **1–3 giorni**; Salute −20 (−30 per le risse); il 10% dei contanti "sparisce" dal comodino.
 * All'uscita: energia 100%, Salute +20.
-* Sotto Salute 30 il massimo di energia e' ridotto del 20% (mostrato come personaggio fasciato).
+* Sotto Salute 30 il massimo di energia e' ridotto del 20% (mostrato come personaggio fasciato). La Salute puo' arrivare a zero anche fuori dall'ospedale (febbre, Caritas): la run finisce comunque.
 
 ## Fine partita
 
@@ -387,11 +387,11 @@ $ Con le pene attuali l'unica azione che puo' produrre da sola una condanna ≥ 
 ## Eventi
 
 ### Condizioni del giorno
-All'inizio di ogni giorno c'e' il 60% circa di probabilita' che il giorno abbia una condizione, annunciata la Notte prima come **teaser** ("Domani: Operazione Alto Impatto. Occhio."). E' la ragione per cui il giocatore vuole vedere il giorno dopo.
+All'inizio di ogni giorno si fa **una sola estrazione**: la probabilita' che il giorno abbia una condizione e' la somma delle probabilita' della tabella (circa il 50%, di piu' d'estate e d'inverno) e la condizione e' scelta in proporzione. Le condizioni a data fissa (Giorno di paga, Feste) hanno la precedenza. La condizione e' annunciata la Notte prima come **teaser** annunciata la Notte prima come **teaser** ("Domani: Operazione Alto Impatto. Occhio."). E' la ragione per cui il giocatore vuole vedere il giorno dopo.
 
 | Condizione | Prob./giorno | Effetto |
 |---|---|---|
-| Piove a dirotto | 12% | +10 energia su tutte le azioni all'aperto; niente TikTok ne' parkour |
+| Piove a dirotto | 12% | +10 energia su tutti i reati (le azioni legali e l'azzardo sono al coperto); niente TikTok ne' parkour |
 | Operazione Alto Impatto | 6% | +10 punti di rischio Gabbio su tutto |
 | Derby in citta' | 5% | Sblocca bagarinaggio e parcheggiatore; Truffe ×1,3 bottino; Forza ×1,2 rischio |
 | Concerto al palazzetto | 5% | Sblocca bagarinaggio e parcheggiatore |
@@ -400,7 +400,7 @@ All'inizio di ogni giorno c'e' il 60% circa di probabilita' che il giorno abbia 
 | Sciopero dei mezzi | 4% | Trasferte: +15 energia |
 | Controlli Polfer | 4% | Portoghese: rischio ×2 |
 | Nebbia fitta (Nov–Feb) | 5% | Fuga e Notte: rischio ×0,85 |
-| Caldo bestiale (Giu–Ago) | 8% | Energia massima −15% per oggi |
+| Caldo bestiale (Giu–Ago) | 8% | Energia massima −15% per oggi (anche quella che hai gia') |
 | Il quartiere e' virale | 4% | Azioni Social: rep ×2 |
 | Giorno di paga in citta' | il 27 di ogni mese | Furti ×1,3, Truffe ×1,2 bottino |
 
@@ -418,12 +418,12 @@ All'inizio di ogni giorno c'e' il 60% circa di probabilita' che il giorno abbia 
 $ Da aggiungere in seguito: Black Friday (centro commerciale), Pasqua (gite fuori porta → appartamenti vuoti), fine scuola (9 giugno, piazze piene), maturita', Sanremo (Social ×2 per una settimana).
 
 ### Guai & Opportunita' (eventi personali con scelta)
-Ogni giorno c'e' il 15% di probabilita' (25% per il Balcanico) che succeda qualcosa **al personaggio**. Si apre una card con 1–2 scelte; alcune non lasciano scelta. Nessuno di questi eventi consuma uno slot.
+Ogni giorno c'e' il 15% di probabilita' (25% per il Balcanico) che succeda qualcosa **al personaggio**. Si apre una card con 1–2 scelte; alcune non lasciano scelta. Nessuno di questi eventi consuma uno slot. La rep dei guai segue le stesse regole delle azioni (rendimenti decrescenti, bonus di classe) e i soldi incassati seguono i bonus di classe (+10% Pakistano, −10% Africano). Un "attenzionato" nuovo non accorcia uno gia' attivo: si tiene il valore e la durata maggiori.
 
 | Evento | Scelte / Esito |
 |---|---|
 | Il cuggino ha bisogno di 50€ | **Paga** (−50€, +3 rep) / **Rifiuta** (−3 rep; 20%: il cuggino spiffera → +5 punti di rischio per 7 giorni) |
-| Un rivale ti sfida in piazza | **Accetta** (50% vinci: +8 rep; perdi: −5 rep e 1–3 giorni di ospedale; il Balcanico ha un bonus) / **Rifiuta** (−6 rep) |
+| Un rivale ti sfida in piazza | **Accetta** (50% vinci, 65% per il Balcanico: +8 rep; perdi: −5 rep, −15 salute e 1–3 giorni di ospedale) / **Rifiuta** (−6 rep) |
 | Posto di blocco a sorpresa | Se hai un veicolo: 30% ti fermano → multa 80€, o 20% sequestro del veicolo |
 | Perquisizione all'alba | 30%: trovano il 10% dei contanti |
 | Trovi un portafoglio | **Tienilo** (+20–150€) / **Restituiscilo in video** (+5 rep) |
@@ -437,7 +437,7 @@ Ogni giorno c'e' il 15% di probabilita' (25% per il Balcanico) che succeda qualc
 | Febbre | Energia dimezzata, −5 salute |
 | Un giornalista vuole intervistarti sui maranza | **Accetta** (+8 rep, +5 punti di rischio per 7 giorni: sei in TV) / **Rifiuta** |
 | Il kebabbaro ti offre un turno | +30€ |
-| Ti saltano addosso per un vecchio screzio | 30%: 2 giorni di ospedale |
+| Ti saltano addosso per un vecchio screzio | 30%: 1–3 giorni di ospedale (−20 salute) |
 
 $ Il sistema eventi e' una tabella dati (vedi `GUAI` e `CONDIZIONI` nel simulatore): aggiungere eventi e' un lavoro da content designer, non da programmatore. Obiettivo v1.0: 40 guai e 25 condizioni, con almeno 10 eventi a catena (es. il rivale sconfitto torna con la banda due settimane dopo).
 
@@ -449,10 +449,10 @@ Regola unica: **a schermo solo parole, icone e colori; i numeri stanno dietro il
 |---|---|---|
 | Soldi | "1.240 €" | Patrimonio = contanti + 50% drip; lista oggetti con valore |
 | Reputazione | Barra + etichetta: *Sconosciuto* (0–9), *Zanza* (10–19), *Conosciuto* (20–34), *Rispettato* (35–49), *Boss di zona* (50–69), *Leggenda* (70+) | Valore %, cosa sblocca il prossimo grado, "−1%/giorno se non fai niente", "ripetere la stessa cosa annoia la piazza" |
-| Energia | Barra con fulmine | Valore / massimo, cosa recupera ogni cibo |
+| Energia | Barra con fulmine | Valore / massimo di oggi (caldo e salute bassa lo abbassano), cosa recupera ogni cibo |
 | Salute | Barra con siringa, nessun numero | "Ogni ricovero la abbassa; parco e mensa la alzano; a zero finisce la run" |
-| Bottone azione | Nome, icona, **pallino rischio** (🟢 basso < 8%, 🟡 medio 8–15%, 🔴 alto 16–30%, 💀 estremo > 30%), costo energia come fulmini (1–4), bottino come "€/€€/€€€" | Percentuali esatte di gabbio e ospedale, intervallo del bottino, pena base e multa, rep, modificatori attivi oggi (es. "Blitz: +10%", "Passamontagna: −5%") |
-| Slider investimento | Tre tacche: *Alla buona / Preparato / Da professionista* con il costo in € | Come cambia il rischio e il bottino tacca per tacca |
+| Bottone azione | Nome, icona, **pallino rischio** (🟢 basso < 8%, 🟡 medio 8–15%, 🔴 alto 16–30%, 💀 estremo > 30%), costo energia come fulmini (1: fino a 20, 2: fino a 40, 3: fino a 60, 4: oltre), bottino atteso alla tacca scelta come "€" (< 100€), "€€" (< 500€), "€€€" (da 500€). Il pallino usa **Gabbio + Ospedale** alla tacca selezionata (di default *Alla buona*) con tutti i modificatori di oggi | Percentuali esatte di gabbio e ospedale, intervallo del bottino, pena base e multa, rep, modificatori attivi oggi (es. "Blitz: +10%", "Passamontagna: −5%") |
+| Slider investimento | Tre tacche: *Alla buona / Preparato / Da professionista* (t = 0 / 0,5 / 1) con il costo in € | Come cambia il rischio e il bottino tacca per tacca |
 | Giorno | Data, slot con icona (☀️🌤️🌆🌙), riga della condizione ("Oggi piove") | Effetto numerico della condizione |
 | Tribunale | Pena richiesta in giorni, 5 bottoni di difesa con il prezzo | Bonus al tiro di ogni difesa, modificatori attivi (incensurato, recidiva, classe), tabella degli esiti |
 | Esito | Card con una frase e il risultato ("+340 €", "Assolto!", "3 giorni di ospedale") | Il tiro effettuato e la soglia |
@@ -478,7 +478,7 @@ Linee guida:
 
 # Appendice A — Risultati della simulazione
 
-Simulatore: `sim/maranza_sim.py` (Python 3, nessuna dipendenza oltre matplotlib per i grafici). Ogni riga = 60 partite complete con i valori di questo documento. Colonne: sopravvivenza al giorno 365, mediana di MARANZA POINTS, patrimonio, rep finale, giorni di galera, giorni di ospedale, arresti, azioni totali, e come sono finite le partite.
+Simulatore: `sim/maranza_sim.py` (Python 3, nessuna dipendenza oltre matplotlib per i grafici). Ogni riga = 200 partite complete con i valori di questo documento. Colonne: sopravvivenza al giorno 365, mediana di MARANZA POINTS, patrimonio, rep finale, giorni di galera, giorni di ospedale, arresti, azioni totali, e come sono finite le partite.
 
 Le quattro policy automatiche:
 * **prudente**: non tocca azioni con rischio combinato > 30%, pesa i costi della galera il doppio, avvocato migliore sempre.
@@ -487,77 +487,77 @@ Le quattro policy automatiche:
 * **casuale**: non calcola nulla; sceglie a caso tra le azioni disponibili con probabilita' inversamente proporzionale al rischio mostrato dal pallino colorato, e il 20% delle volte in modo del tutto uniforme. E' il modello del giocatore tipico e **il riferimento principale del bilanciamento**.
 
 ```
-=== CLASSI — policy prudente (60 run) ===
+=== CLASSI — policy prudente (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino        100%    5,993,561    79,377  77.9     32    18  10.0    906  365 giorni:52, 365 giorni (finiti in cella):8
-Pakistano        100%    6,851,710    88,984  77.0     31    19   9.0    905  365 giorni:49, 365 giorni (finiti in cella):11
-Africano         100%    6,105,285    77,744  77.4     14    20  10.0    976  365 giorni:51, 365 giorni (finiti in cella):9
-Zingaro          100%    6,914,204    90,880  75.9     22    18  10.0    963  365 giorni:53, 365 giorni (finiti in cella):7
-Balcanico        100%    5,385,581    67,262  78.9     27    24   8.0    928  365 giorni:47, 365 giorni (finiti in cella):13
-Italiano         100%    5,494,162    74,295  75.5     46    18   9.0    881  365 giorni:45, 365 giorni (finiti in cella):15
+Magrebino        100%    6,153,050    79,764  77.0     29    16   9.5    913  365 giorni:172, 365 giorni (finiti in cella):28
+Pakistano        100%    6,516,898    86,928  75.2     34    17  11.0    906  365 giorni:150, 365 giorni (finiti in cella):50
+Africano         100%    5,635,084    74,314  75.7     15    20  10.0    966  365 giorni:174, 365 giorni (finiti in cella):26
+Zingaro          100%    6,908,410    91,665  74.8     28    18  10.0    948  365 giorni:152, 365 giorni (finiti in cella):48
+Balcanico        100%    5,415,635    71,117  76.1     33    22  10.0    910  365 giorni:165, 365 giorni (finiti in cella):35
+Italiano         100%    5,811,713    77,453  75.5     44    18  10.0    888  365 giorni:151, 365 giorni (finiti in cella):49
 
-=== CLASSI — policy bilanciato (60 run) ===
+=== CLASSI — policy bilanciato (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino        100%    7,073,025    84,521  84.9     84    32  13.5    711  365 giorni:42, 365 giorni (finiti in cella):18
-Pakistano        100%    8,186,317    97,923  82.9     83    28  14.0    703  365 giorni:37, 365 giorni (finiti in cella):23
-Africano         100%    7,412,605    86,451  84.6     58    31  15.0    804  365 giorni:48, 365 giorni (finiti in cella):12
-Zingaro          100%    8,941,390   108,383  83.0     86    31  17.0    740  365 giorni:37, 365 giorni (finiti in cella):23
-Balcanico        100%    7,166,063    83,858  85.5     81    31  14.0    741  365 giorni:42, 365 giorni (finiti in cella):18
-Italiano         100%    6,913,085    83,176  83.4     92    30  14.0    707  365 giorni:37, 365 giorni (finiti in cella):23
+Magrebino        100%    6,867,987    82,711  83.7     84    33  15.0    695  365 giorni:139, 365 giorni (finiti in cella):61
+Pakistano        100%    7,768,543    94,939  82.3     84    30  16.0    702  365 giorni:133, 365 giorni (finiti in cella):67
+Africano         100%    6,495,766    77,994  82.6     60    33  16.0    776  365 giorni:139, 365 giorni (finiti in cella):61
+Zingaro          100%    8,636,298   106,728  81.9     84    33  16.5    734  365 giorni:119, 365 giorni (finiti in cella):81
+Balcanico        100%    6,576,326    79,927  82.0     90    31  15.0    696  365 giorni:123, 365 giorni (finiti in cella):77
+Italiano         100%    6,595,807    80,273  82.1    106    31  15.0    653  365 giorni:110, 365 giorni (finiti in cella):90
 
-=== CLASSI — policy yolo (60 run) ===
+=== CLASSI — policy yolo (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino         95%   14,261,069   158,450  90.2    181    25  19.0    452  365 giorni (finiti in cella):31, 365 giorni:26, marcito in galera:3
-Pakistano         87%   14,488,084   158,938  88.6    183    24  20.0    404  365 giorni (finiti in cella):26, 365 giorni:26, marcito in galera:8
-Africano          97%    9,777,508   109,274  88.8    166    27  24.0    478  365 giorni (finiti in cella):34, 365 giorni:24, marcito in galera:2
-Zingaro           83%   13,788,700   161,850  87.1    184    24  21.0    424  365 giorni (finiti in cella):28, 365 giorni:22, marcito in galera:10
-Balcanico         85%   11,490,468   128,250  90.2    182    24  20.0    418  365 giorni (finiti in cella):29, 365 giorni:22, marcito in galera:9
-Italiano          77%   11,885,916   139,861  87.3    200    21  19.0    369  365 giorni (finiti in cella):26, 365 giorni:20, marcito in galera:14
+Magrebino         86%   13,446,985   156,109  88.5    178    25  20.0    424  365 giorni:90, 365 giorni (finiti in cella):83, marcito in galera:27
+Pakistano         80%   12,971,043   158,404  86.9    187    24  21.0    402  365 giorni (finiti in cella):89, 365 giorni:70, marcito in galera:41
+Africano          96%    9,115,477   106,389  86.9    168    31  23.0    460  365 giorni (finiti in cella):108, 365 giorni:83, marcito in galera:9
+Zingaro           83%   14,108,968   168,397  86.4    185    27  22.0    427  365 giorni (finiti in cella):102, 365 giorni:64, marcito in galera:34
+Balcanico         78%    9,970,294   119,268  87.5    189    25  21.0    400  365 giorni (finiti in cella):93, 365 giorni:64, marcito in galera:43
+Italiano          76%   11,233,673   136,639  87.0    202    24  19.0    370  365 giorni (finiti in cella):93, 365 giorni:59, marcito in galera:48
 
-=== CLASSI — policy casuale (60 run) ===
+=== CLASSI — policy casuale (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino         90%    1,132,744    15,148  77.7    169    29  19.0    460  365 giorni:34, 365 giorni (finiti in cella):20, marcito in galera:6
-Pakistano         98%    1,147,597    15,283  75.3    136    30  17.0    555  365 giorni (finiti in cella):30, 365 giorni:29, marcito in galera:1
-Africano          98%      965,930    12,842  74.4    122    31  18.0    613  365 giorni:32, 365 giorni (finiti in cella):27, marcito in galera:1
-Zingaro          100%    1,365,291    18,828  73.5    132    32  18.0    600  365 giorni:38, 365 giorni (finiti in cella):22
-Balcanico         98%    1,027,821    13,947  75.9    143    27  18.0    558  365 giorni:33, 365 giorni (finiti in cella):26, marcito in galera:1
-Italiano          93%      918,823    12,859  73.1    156    28  16.0    507  365 giorni:30, 365 giorni (finiti in cella):26, marcito in galera:4
+Magrebino         90%    1,047,459    15,197  73.4    168    28  19.0    466  365 giorni:97, 365 giorni (finiti in cella):84, marcito in galera:19
+Pakistano         99%    1,012,278    14,764  69.3    148    28  18.0    534  365 giorni:100, 365 giorni (finiti in cella):98, marcito in galera:2
+Africano         100%      746,551    10,847  70.1    123    32  18.0    600  365 giorni:123, 365 giorni (finiti in cella):77
+Zingaro           96%    1,112,530    16,679  68.1    134    30  18.0    598  365 giorni:109, 365 giorni (finiti in cella):84, marcito in galera:7
+Balcanico         96%      854,035    12,212  72.0    144    28  18.0    549  365 giorni:116, 365 giorni (finiti in cella):76, marcito in galera:8
+Italiano          96%      817,320    12,063  69.9    153    28  17.0    522  365 giorni:101, 365 giorni (finiti in cella):90, marcito in galera:9
 
 === USO DELLE AZIONI (policy bilanciato, tutte le classi) ===
-  L04 Rider delle consegne                    18.5%
-  C02 Portoghese sul regionale                18.4%
-  L05 Calisthenics al parco                   12.7%
-  C13 Scassinare auto                          9.6%
-  C06 Tag sui muri del quartiere               9.2%
-  C22 Topino d'appartamento                    9.0%
-  C08 Truffa Vinted (sneakers fulle)           6.7%
-  L01 Chillare in piazza                       3.9%
-  C09 Ruba monopattino elettrico               2.7%
-  G03 Poker nel retrobottega                   2.3%
+  C02 Portoghese sul regionale                16.7%
+  L04 Rider delle consegne                    16.6%
+  L05 Calisthenics al parco                   14.0%
+  C06 Tag sui muri del quartiere              10.0%
+  C13 Scassinare auto                          9.8%
+  C22 Topino d'appartamento                    9.2%
+  C08 Truffa Vinted (sneakers fulle)           7.0%
+  L01 Chillare in piazza                       3.8%
+  C09 Ruba monopattino elettrico               3.4%
   C25 Spaccata al Compro Oro                   2.2%
-  C16 Bagarinaggio allo stadio                 1.6%
-  C23 Corriere per il boss                     1.1%
-  C19 Rame al cantiere                         0.7%
-  C12 Scippo al centro commerciale             0.5%
+  C16 Bagarinaggio allo stadio                 1.9%
+  G03 Poker nel retrobottega                   1.4%
+  C23 Corriere per il boss                     1.3%
+  C19 Rame al cantiere                         0.8%
+  L02 TikTok brainrot in piazza                0.7%
+  C12 Scippo al centro commerciale             0.6%
   C01 Truffa dell'anello d'oro                 0.3%
-  L02 TikTok brainrot in piazza                0.2%
   C11 Scippo in stazione (bici)                0.2%
   C21 Spaccio fuori dalla discoteca            0.1%
   C04 Rubare alcool all'alimentari             0.1%
   C17 Rissa per collana/cappello drip          0.0%
-  C14 Truffa dello specchietto                 0.0%
   C07 Fumo nascosto nel parchetto              0.0%
-  C15 Parcheggiatore abusivo                   0.0%
+  C14 Truffa dello specchietto                 0.0%
   C10 Parkour sui tetti per TikTok             0.0%
+  C15 Parcheggiatore abusivo                   0.0%
   MAI usate: L03, G01, G02, G04, C03, C05, C18, C20, C24, C26
 
-Grafico salvato: bilanciamento_v02.png
+Grafico salvato: results/bilanciamento.png
 ```
 
 ### Lettura dei risultati
 * **Il giocatore casuale** (il riferimento): sopravvive nel 90–100% delle partite, finisce l'anno con 13–19 mila euro e circa 1M di punti. Fa 16–19 arresti e passa 120–170 giorni in cella: tanti, ma in brevi tratti (mediana 7 giorni) e senza game over. Il 40% delle sue partite finisce l'anno in cella per una condanna tardiva: va mostrato come un finale ("hai finito l'anno al gabbio: 1,1M"), non come una sconfitta.
-* **Equita' tra classi**: con la policy bilanciata le sei classi stanno in una forbice di ±13% (6,9M–8,9M) e con la prudente di ±13% (5,4M–6,9M), tutte al 100% di sopravvivenza. Lo Zingaro e' il piu' forte in entrambe (Prestanome), l'Italiano e il Balcanico i piu' deboli. Nessuna classe domina in tutti gli stili: con lo yolo vincono Pakistano e Magrebino.
-* **Curva di difficolta'**: prudente ≈ 6M, bilanciato ≈ 8M, yolo ≈ 12M con sopravvivenza 77–97%. Lo yolo vince la classifica quando sopravvive, ma passa 180 giorni in cella e perde la run nel 3–23% dei casi (bancomat da recidivo, tetto dei 240 giorni). E' la forma voluta: il rischio paga, ma costa tempo e puo' costare tutto.
+* **Equita' tra classi**: con la policy bilanciata le sei classi stanno in una forbice di ±14% (6,5M–8,6M) e con la prudente di ±12% (5,4M–6,9M), tutte al 100% di sopravvivenza. Lo Zingaro e' il piu' forte in entrambe (Prestanome), l'Italiano e il Balcanico i piu' deboli. Nessuna classe domina in tutti gli stili: con lo yolo vincono Pakistano e Magrebino.
+* **Curva di difficolta'**: prudente ≈ 6M, bilanciato ≈ 7M, yolo ≈ 9–14M con sopravvivenza 76–96%. Lo yolo vince la classifica quando sopravvive, ma passa 180 giorni in cella e perde la run nel 3–23% dei casi (bancomat da recidivo, tetto dei 240 giorni). E' la forma voluta: il rischio paga, ma costa tempo e puo' costare tutto.
 * **Galera**: bilanciato 14–17 arresti, 60–90 giorni; il Tribunale e' una scena ogni 3 settimane. Circa un terzo delle partite bilanciate finisce l'anno in cella: la policy automatica accetta rischi piu' alti negli ultimi mesi perche' "ha meno da perdere"; un giocatore umano fara' lo stesso, ed e' una dinamica da sfruttare (badge "Finale col botto").
 * **Azioni usate** (bilanciato): rider e portoghese sono i riempitivi (18% ciascuno), poi calisthenics (per curare la Salute), scassinare auto, tag, topino, Vinted. Compro Oro e bancomat compaiono solo nelle policy aggressive. Le azioni mai scelte dalle policy (borseggio alle vecchiette, rapina al rider, lucciola, spedizione punitiva) hanno rep negativa o rischio-ospedale alto: esistono per il sapore e per il giocatore umano, non per l'ottimizzatore.
 
@@ -581,6 +581,6 @@ python3 export_data.py                      # esporta tutti i dati di gioco in d
 python3 build_gdd.py                        # rigenera docs/GDD.md dalle tabelle dati del simulatore
 ```
 
-Tutte le costanti stanno nella sezione `DATI` del file: classi, cibo, negozio, avvocati, azioni (`_a(...)`), condizioni, feste, guai. Il motore non contiene numeri di gioco. Per provare un'idea (una nuova azione, una pena diversa) si modifica la riga dati e si rilancia: 60 run per combinazione richiedono circa 5 minuti su 2 core.
+Tutte le costanti stanno nella sezione `DATI` del file: classi, cibo, negozio, avvocati, azioni (`_a(...)`), condizioni, feste, guai. Il motore non contiene numeri di gioco. Per provare un'idea (una nuova azione, una pena diversa) si modifica la riga dati e si rilancia: 200 run per combinazione richiedono circa 35 minuti su 2 core (60 run: 10 minuti).
 
 $ Il simulatore e' anche la specifica di riferimento per il motore di gioco: le funzioni `rischi()`, `estrai_bottino()`, `esegui()`, `arresto()` (tribunale), `ricovero()`, `dormi()`, `nuovo_giorno()` ed `evento_personale()` sono da portare 1:1 in TypeScript (`data/game-data.json` contiene tutti i dati gia' esportati), e i test del motore devono confrontare le distribuzioni degli esiti con quelle del simulatore (stesse policy automatiche, stessi ordini di grandezza).
