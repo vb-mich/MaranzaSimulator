@@ -34,6 +34,27 @@ export type Attesa =
       valore?: number;
     };
 
+/**
+ * The Boss's chat messages (GDD §Tutorial): each is sent once, the first time it applies.
+ * `tier_<rep>` announces every rep threshold of TIER_REP that unlocks new actions.
+ */
+export type MessaggioBoss =
+  | 'primo_giorno'
+  | 'primo_arresto'
+  | 'prima_messa_alla_prova'
+  | 'primo_ricovero'
+  | 'zero_euro'
+  | `tier_${number}`;
+
+/** Terms of the judge's roll other than the d100 and the defence (negative = against you). */
+export interface ModificatoriTiro {
+  classe: number;
+  recidiva: number;
+  tutorial: number;
+  incensurato: number;
+  noto_in_questura: number;
+}
+
 export interface OpzioneEvento {
   id: string;
   /** False when the option can't be afforded right now (shown disabled). */
@@ -107,6 +128,8 @@ export interface Stato {
   /** Slept at least once today. */
   dormito: boolean;
   attesa: Attesa | null;
+  /** Boss messages already sent, in order: the chat history. */
+  boss: MessaggioBoss[];
 }
 
 export type Comando =
@@ -156,6 +179,7 @@ export type Esito =
   | { tipo: 'COMPRA'; item: string; prezzo: number }
   | { tipo: 'USCITA'; da: 'galera' | 'ospedale' }
   | { tipo: 'FINE'; fine: Fine; punti: number }
+  | { tipo: 'BOSS'; id: MessaggioBoss }
   | { tipo: 'RIFIUTATO'; motivo: string };
 
 export interface Risultato {

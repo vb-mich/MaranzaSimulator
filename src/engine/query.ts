@@ -1,9 +1,9 @@
 // Read-only views of a game state, for the UI and the harness. None of these changes `stato`.
 
-import { AZIONI, C, azione, haSpesa, type Azione } from '../data/gameData';
+import { AZIONI, C, DATI, azione, haBottino, haSpesa, type Azione } from '../data/gameData';
 import { dataDelGiorno, type Data } from './calendario';
-import { Motore, spesaDi } from './motore';
-import type { Stato } from './tipi';
+import { Motore, clona, spesaDi } from './motore';
+import type { Difesa, ModificatoriTiro, Stato } from './tipi';
 
 const leggi = (s: Stato) => new Motore(s);
 const az = (a: Azione | string) => (typeof a === 'string' ? azione(a) : a);
@@ -137,4 +137,132 @@ export function fulmini(energia: number): number {
 export function simboliBottino(euro: number): string {
   for (const [soglia, simboli] of C.UI_BOTTINO_SIMBOLI) if (euro < (soglia as number)) return simboli as string;
   return C.UI_BOTTINO_SIMBOLI[C.UI_BOTTINO_SIMBOLI.length - 1]![1] as string;
+}
+
+// --- details behind the (?) (GDD §Interfaccia) ---------------------------------------------------
+
+/** Class factor applied to every income (Pakistano, Africano), already in `bottinoIntervallo`. */
+export function moltiplicatoreIncasso(s: Stato): number {
+  return leggi(s).moltiplicatore_incasso();
+}
+
+/**
+ * What the action can put in your pocket at slider position t: [min, max] with every multiplier
+ * of today (rep, hot zone, condition) and the class factor; null for actions without loot.
+ */
+export function bottinoIntervallo(s: Stato, a: Azione | string, t: number): [number, number] | null {
+  const m = leggi(s);
+  const A = az(a);
+  const molt = m.moltiplicatore_bottino(A) * m.moltiplicatore_incasso();
+  if (A.bottino_x) {
+    const [lo, hi] = A.bottino_x as [number, number];
+    const sp = spesaDi(A, t);
+    return [sp * lo * molt, sp * hi * molt];
+  }
+  if (!haBottino(A)) return null;
+  const [lo, hi] = A.bottino as [number, number];
+  return [(lo + C.INVESTIMENTO_BOTTINO_MIN * t * (hi - lo)) * molt, hi * molt];
+}
+
+/** Sentence the judge would ask if caught now (days before rounding, recidivism included) and the fine. */
+export function penaRichiesta(s: Stato, a: Azione | string): { giorni: number; multa: number } {
+  const A = az(a);
+  return { giorni: leggi(s).pena_base(A), multa: A.multa };
+}
+
+/** One modifier of today on an action's risk, for lines like "Blitz: +10%" or "Passamontagna: −5%". */
+export interface VoceRischio {
+  fonte: 'classe' | 'veicolo' | 'attrezzo' | 'condizione' | 'attenzionato';
+  /** Class, shop item, condition id, or 'attenzionato'. */
+  id: string;
+  /** 'piu': adds `valore` to the probability; 'per': multiplies it by `valore`. */
+  effetto: 'piu' | 'per';
+  valore: number;
+  su: 'gabbio' | 'gabbio_ospedale';
+}
+
+/**
+ * The modifiers `rischi` applies today, in its order, with the base values and the final ones.
+ * An action without risk has none.
+ */
+export function modificatoriRischio(
+  s: Stato,
+  a: Azione | string,
+  t: number,
+): { base: [number, number]; voci: VoceRischio[]; finale: [number, number] } {
+  const A = az(a);
+  const tags = A.tags as string[];
+  const base: [number, number] = [A.gabbio[0] + t * (A.gabbio[1] - A.gabbio[0]), A.ospedale];
+  const voci: VoceRischio[] = [];
+  const finale = rischi(s, A, t);
+  if (base[0] === 0 && base[1] === 0) return { base, voci, finale };
+  const v = (fonte: VoceRischio['fonte'], id: string, effetto: VoceRischio['effetto'], valore: number, su: VoceRischio['su']) =>
+    voci.push({ fonte, id, effetto, valore, su });
+  if (s.classe === 'Africano') v('classe', s.classe, 'per', C.FUGA_AFRICANO_MULT, 'gabbio');
+  if (s.classe === 'Balcanico' && tags.includes('FORZA')) v('classe', s.classe, 'per', C.FORZA_BRUTA_MULT, 'gabbio_ospedale');
+  const mezzo = s.items.find((i) => {
+    const o = DATI.negozio[i as keyof typeof DATI.negozio];
+    return o.tipo === 'veicolo' && 'livello' in o && o.livello === s.veicolo;
+  });
+  if (tags.includes('VEICOLO') && s.veicolo)
+    v('veicolo', mezzo ?? '', 'piu', -C.RISCHIO_FUGA_VEICOLO_PT * s.veicolo, 'gabbio');
+  if (A.veicolo_req && s.veicolo === DATI.negozio.motorino.livello)
+    v('veicolo', 'motorino', 'piu', -C.RISCHIO_VEICOLO_REQ_PT, 'gabbio');
+  if (s.items.includes('passamontagna') && tags.includes('NOTTE')) v('attrezzo', 'passamontagna', 'piu', -C.RISCHIO_TOOL_PT, 'gabbio');
+  if (s.items.includes('tronchese') && tags.includes('EFFRAZIONE')) v('attrezzo', 'tronchese', 'piu', -C.RISCHIO_TOOL_PT, 'gabbio');
+  const c = s.cond;
+  if (c) {
+    if (c.gabbio_add) v('condizione', c.id, 'piu', c.gabbio_add, 'gabbio');
+    for (const [tag, m] of Object.entries(c.risk_tag ?? {})) if (tags.includes(tag)) v('condizione', c.id, 'per', m, 'gabbio_ospedale');
+    const rid = c.risk_id?.[A.id];
+    if (rid !== undefined) v('condizione', c.id, 'per', rid, 'gabbio');
+  }
+  if (s.attenzionato > 0) v('attenzionato', 'attenzionato', 'piu', s.attenzionato_val, 'gabbio');
+  return { base, voci, finale };
+}
+
+/** The five defences with their price and roll bonus; `disponibile` is false for a lawyer you can't pay. */
+export function difese(s: Stato): { id: Difesa; costo: number; bonus: number | null; disponibile: boolean }[] {
+  const avv = DATI.avvocati as Record<string, { costo: number; bonus: number }>;
+  return [
+    ...Object.entries(avv).map(([id, { costo, bonus }]) => ({
+      id: id as Difesa,
+      costo,
+      bonus,
+      disponibile: s.soldi >= costo,
+    })),
+    { id: 'patteggia', costo: 0, bonus: null, disponibile: true },
+    { id: 'spavaldo', costo: 0, bonus: C.SPAVALDO_TIRO, disponibile: true },
+  ];
+}
+
+/**
+ * Terms of the judge's roll today besides the d100 and the defence. With the defence "spavaldo"
+ * the rep it gives is counted before the roll, so "noto in questura" can grow by a little.
+ */
+export function modificatoriTiro(s: Stato): ModificatoriTiro {
+  return leggi(s).modificatori_tiro();
+}
+
+/** The next reputation grade above `rep`, or null at the top. */
+export function prossimoGrado(rep: number): { soglia: number; nome: string } | null {
+  for (const [soglia, nome] of C.GRADI_REP) if ((soglia as number) > rep) return { soglia: soglia as number, nome: nome as string };
+  return null;
+}
+
+/** What a sleep with this food would do now: energy afterwards, price paid, health afterwards. */
+export function anteprimaSonno(s: Stato, cibo: string): { energia: number; costo: number; salute: number } {
+  const m = new Motore(clona(s));
+  m.dormi(cibo);
+  return { energia: m.s.energia, costo: s.soldi - m.s.soldi, salute: m.s.salute };
+}
+
+/** Energy after sleeping with this food (Balcanico, heat and low health included). */
+export function recuperoSonno(s: Stato, cibo: string): number {
+  return anteprimaSonno(s, cibo).energia;
+}
+
+/** What the food costs now: 0 if today's food is already paid or free (Lidl shoplifting). */
+export function costoCibo(s: Stato, cibo: string): number {
+  return anteprimaSonno(s, cibo).costo;
 }

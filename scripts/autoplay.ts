@@ -20,6 +20,7 @@ import {
   punti,
   type Comando,
   type Esito,
+  type Risultato,
   type Fine,
   type Stato,
 } from '../src/engine';
@@ -53,24 +54,31 @@ export interface Riga {
   azioni_usate: Record<string, number>;
 }
 
-function invia(s: Stato, c: Comando, log?: (e: Esito) => void): Stato {
+/** Optional hooks to watch a game: every outcome, and every command with the state before it. */
+export interface Spia {
+  esito?: (e: Esito) => void;
+  passo?: (prima: Stato, comando: Comando, dopo: Risultato) => void;
+}
+
+function invia(s: Stato, c: Comando, log?: Spia): Stato {
   const r = applica(s, c);
   const rif = r.esiti.find((e) => e.tipo === 'RIFIUTATO');
   if (rif) throw new Error(`comando rifiutato ${JSON.stringify(c)}: ${rif.tipo === 'RIFIUTATO' ? rif.motivo : ''}`);
-  if (log) r.esiti.forEach(log);
+  log?.passo?.(s, c, r);
+  if (log?.esito) r.esiti.forEach(log.esito);
   return r.stato;
 }
 
-function compra(s: Stato, pol: Policy, log?: (e: Esito) => void): Stato {
+function compra(s: Stato, pol: Policy, log?: Spia): Stato {
   for (const item of pol.acquisti(s)) if (puoComprare(s, item)) s = invia(s, { type: 'COMPRA', item }, log);
   return s;
 }
 
 /** Python `Gioco.gioca`, driven through commands like the UI would. */
-export function giocaPartita(classe: Classe, nomePolicy: string, seme: number, log?: (e: Esito) => void): Stato {
+export function giocaPartita(classe: Classe, nomePolicy: string, seme: number, log?: Spia): Stato {
   const pol = POLICIES[nomePolicy]!;
   const inizio = nuovaPartita(nomePolicy, classe, seme);
-  if (log) inizio.esiti.forEach(log);
+  if (log?.esito) inizio.esiti.forEach(log.esito);
   let s = inizio.stato;
   while (s.modo !== 'fine') {
     const att = s.attesa;
@@ -260,7 +268,9 @@ async function main(): Promise<void> {
   const classe = arg('classe') as Classe | undefined;
   if (classe) {
     const policy = arg('policy') ?? 'bilanciato';
-    const s = giocaPartita(classe, policy, Number(arg('seme') ?? 42), (e) => console.log(JSON.stringify(e)));
+    const s = giocaPartita(classe, policy, Number(arg('seme') ?? 42), {
+      esito: (e) => console.log(JSON.stringify(e)),
+    });
     console.log(`\nFINE: ${FINE_SIM[s.fine]} | giorno ${s.giorno} | patrimonio ${fixed(patrimonio(s), 0)} | ` +
       `rep ${fixed(s.rep, 1)} | MARANZA POINTS ${migliaia(punti(s), 0)}`);
     return;

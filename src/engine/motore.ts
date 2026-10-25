@@ -25,7 +25,18 @@ import {
 import { dataDelGiorno, type Data } from './calendario';
 import { potenza } from './pymath';
 import { Rng, rngDaSeme } from './rng';
-import type { Attesa, Comando, Difesa, Esito, EsitoTribunale, OpzioneEvento, Risultato, Stato } from './tipi';
+import type {
+  Attesa,
+  Comando,
+  Difesa,
+  Esito,
+  EsitoTribunale,
+  MessaggioBoss,
+  ModificatoriTiro,
+  OpzioneEvento,
+  Risultato,
+  Stato,
+} from './tipi';
 
 const GIORNI = C.GIORNI;
 const SLOT_PER_GIORNO = Object.keys(C.SLOT_NOMI).length;
@@ -87,10 +98,13 @@ export function nuovaPartita(nome: string, classe: Classe, seme: number): Risult
     modo: 'slot',
     dormito: false,
     attesa: null,
+    boss: [],
   };
   const m = new Motore(s);
   s.cond_domani = m.estrai_condizione(0);
   m.iniziaGiorno();
+  m.boss('primo_giorno');
+  m.controlliBoss();
   return { stato: s, esiti: m.esiti };
 }
 
@@ -104,12 +118,13 @@ export function applica(stato: Stato, comando: Comando): Risultato {
   const s = clona(stato);
   const m = new Motore(s);
   m.esegui_comando(comando);
+  m.controlliBoss();
   return { stato: s, esiti: m.esiti };
 }
 
 /** Deep copy of plain JSON data: the state has no class instances, dates or cycles. Much faster
  *  than structuredClone, which the harness would otherwise spend most of its time in. */
-function clona<T>(x: T): T {
+export function clona<T>(x: T): T {
   if (Array.isArray(x)) {
     const a: unknown[] = x.slice();
     for (let i = 0; i < a.length; i++) if (typeof a[i] === 'object' && a[i] !== null) a[i] = clona(a[i]);
@@ -527,10 +542,16 @@ export class Motore {
     this.paga(importo);
   }
 
+  /** Class factor on every income: Pakistano "business", Africano "famiglia". */
+  moltiplicatore_incasso(): number {
+    if (this.s.classe === 'Pakistano') return C.INCASSO_PAKISTANO_MULT;
+    if (this.s.classe === 'Africano') return C.INCASSO_AFRICANO_MULT;
+    return 1;
+  }
+
   incassa(importo: number): number {
     const s = this.s;
-    if (s.classe === 'Pakistano') importo *= C.INCASSO_PAKISTANO_MULT;
-    if (s.classe === 'Africano') importo *= C.INCASSO_AFRICANO_MULT;
+    importo *= this.moltiplicatore_incasso();
     s.soldi += importo;
     s.guadagni += importo;
     if (s.storico_guadagni.length) s.storico_guadagni[s.storico_guadagni.length - 1]! += importo;
@@ -808,6 +829,7 @@ export class Motore {
     const soldi0 = s.soldi;
     this.perdi_soldi(C.FURTO_OSPEDALE * s.soldi);
     this.esiti.push({ tipo: 'RICOVERO', giorni, danno, furto: soldi0 - s.soldi });
+    this.boss('primo_ricovero');
   }
 
   // --- court -----------------------------------------------------------------------------------
@@ -826,10 +848,31 @@ export class Motore {
         veicolo_sequestrato = true;
       }
     }
-    let pena_base = a.pena * (1 + C.RECIDIVA_PENA * Math.min(s.condanne, C.RECIDIVA_MAX));
-    if (s.sorvegliato > 0) pena_base *= C.SORVEGLIATO_MULT;
+    const pena_base = this.pena_base(a);
     this.esiti.push({ tipo: 'ARRESTO', azione: a.id, sequestro: soldi0 - s.soldi, veicolo_sequestrato });
+    this.boss('primo_arresto');
     s.attesa = { tipo: 'TRIBUNALE', azione: a.id, pena_base, multa: a.multa, nslot };
+  }
+
+  /** Requested sentence before rounding: recidivism, and probation if under it. */
+  pena_base(a: Azione): number {
+    const s = this.s;
+    let pena = a.pena * (1 + C.RECIDIVA_PENA * Math.min(s.condanne, C.RECIDIVA_MAX));
+    if (s.sorvegliato > 0) pena *= C.SORVEGLIATO_MULT;
+    return pena;
+  }
+
+  /** Modifiers of the judge's roll besides the dice and the defence (all but the last are integers). */
+  modificatori_tiro(): ModificatoriTiro {
+    const s = this.s;
+    const NQ = C.NOTO_IN_QUESTURA;
+    return {
+      classe: C.TIRO_CLASSE[s.classe as keyof typeof C.TIRO_CLASSE] ?? 0,
+      recidiva: -C.RECIDIVA_TIRO * Math.min(s.condanne, C.RECIDIVA_MAX),
+      tutorial: s.giorno < C.TUTORIAL_GIORNI ? C.TUTORIAL_BONUS : 0,
+      incensurato: s.condanne === 0 ? C.INCENSURATO_BONUS : 0,
+      noto_in_questura: s.rep > NQ.da_rep ? -Math.min(NQ.max, (s.rep - NQ.da_rep) / NQ.per_punti) : 0,
+    };
   }
 
   /** The rest of `arresto` once the defence is chosen. */
@@ -866,13 +909,14 @@ export class Motore {
       }
       this.paga(costo);
       dado = r.randint(C.TIRO_DADO[0]!, C.TIRO_DADO[1]!);
+      // same order as the simulator; the integer terms are exact, "noto in questura" comes last
+      const mt = this.modificatori_tiro();
       let t = dado + bonus;
-      t += C.TIRO_CLASSE[s.classe as keyof typeof C.TIRO_CLASSE] ?? 0;
-      t -= C.RECIDIVA_TIRO * Math.min(s.condanne, C.RECIDIVA_MAX);
-      if (s.giorno < C.TUTORIAL_GIORNI) t += C.TUTORIAL_BONUS;
-      if (s.condanne === 0) t += C.INCENSURATO_BONUS;
-      const NQ = C.NOTO_IN_QUESTURA;
-      if (s.rep > NQ.da_rep) t -= Math.min(NQ.max, (s.rep - NQ.da_rep) / NQ.per_punti);
+      t += mt.classe;
+      t += mt.recidiva;
+      t += mt.tutorial;
+      t += mt.incensurato;
+      t += mt.noto_in_questura;
       tiro = t;
       const S = C.TRIBUNALE_SOGLIE;
       if (t >= S.assolto) {
@@ -915,6 +959,7 @@ export class Motore {
       soldi: s.soldi - soldi0,
       rep: s.rep - rep0,
     });
+    if (esito === 'messa_alla_prova') this.boss('prima_messa_alla_prova');
     if (pena >= C.GAME_OVER_PENA || (C.GAME_OVER_GALERA_TOT && s.g_galera + pena > C.GAME_OVER_GALERA_TOT)) {
       s.vivo = false;
       s.fine = 'galera';
@@ -985,6 +1030,23 @@ export class Motore {
     s.items.push(id);
     if (it.tipo === 'veicolo' && 'livello' in it) s.veicolo = it.livello;
     this.esiti.push({ tipo: 'COMPRA', item: id, prezzo: it.prezzo });
+  }
+
+  // --- the Boss's chat (GDD §Tutorial; not in the simulator, no random draws) --------------------
+
+  /** Sends a Boss message, only the first time. */
+  boss(id: MessaggioBoss): void {
+    if (this.s.boss.includes(id)) return;
+    this.s.boss.push(id);
+    this.esiti.push({ tipo: 'BOSS', id });
+  }
+
+  /** After every command: rep thresholds reached and the first time at 0€. */
+  controlliBoss(): void {
+    const s = this.s;
+    if (s.modo === 'fine') return;
+    for (const soglia of C.TIER_REP) if (soglia > 0 && s.rep >= soglia) this.boss(`tier_${soglia}`);
+    if (Math.round(s.soldi) <= 0) this.boss('zero_euro');
   }
 
   // --- game loop (Python `gioca`, unrolled into commands) ----------------------------------------
