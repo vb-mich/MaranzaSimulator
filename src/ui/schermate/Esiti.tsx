@@ -60,9 +60,12 @@ export function CartaEsito({ carta, s }: { carta: Carta; s: Stato }) {
   }
 }
 
-/** How long the breath is held before the outcome, by risk band: a safe shift barely pauses. */
-const DURATA_SUSPENSE: Record<string, number> = { basso: 700, medio: 1400, alto: 2000, estremo: 2500 };
-const DURATA_SUSPENSE_AZZARDO = 1900;
+/** How long the breath is held before the outcome, the same for every action (a tap skips it). */
+const DURATA_SUSPENSE = 4000;
+
+/** Heartbeat period by risk band: the riskier, the faster the heart (and the tremble) goes. */
+const BATTITO_FASCIA: Record<string, number> = { basso: 1, medio: 0.85, alto: 0.65, estremo: 0.5 };
+const BATTITO_AZZARDO = 0.7;
 
 /** Colour of the heartbeat glow while waiting, the same as the risk dots of the action list. */
 const BAGLIORE_FASCIA: Record<string, string> = {
@@ -82,21 +85,20 @@ function CartaAzione({ carta, s, onAvanti }: { carta: Extract<Carta, { tipo: 'az
 
 /**
  * The held breath after "Fallo": the action art trembles, a heartbeat glows in the colour of the
- * risk and a bar fills; riskier actions make you wait longer. A tap skips it.
+ * risk (faster the riskier it is) and a bar fills. A tap skips it.
  */
 function Suspense({ carta, s, onFine }: { carta: Extract<Carta, { tipo: 'azione' }>; s: Stato; onFine: () => void }) {
   const e = carta.azione;
   const azzardo = e.vinto !== null;
   const fascia = fasciaRischio(carta.rischi[0] + carta.rischi[1]);
-  const durata = azzardo ? DURATA_SUSPENSE_AZZARDO : (DURATA_SUSPENSE[fascia] ?? DURATA_SUSPENSE.basso!);
+  const durata = DURATA_SUSPENSE;
   const righe = TESTI.suspense.righe[azzardo ? 'azzardo' : fascia] ?? TESTI.suspense.righe.basso!;
   useEffect(() => {
     const t = setTimeout(onFine, durata);
     return () => clearTimeout(t);
   }, [durata, onFine]);
   const colore = azzardo ? 'var(--color-sole)' : (BAGLIORE_FASCIA[fascia] ?? BAGLIORE_FASCIA.basso!);
-  // the heart beats faster the riskier it gets
-  const battito = `${Math.max(0.45, 1.1 - durata / 5000)}s`;
+  const battito = `${azzardo ? BATTITO_AZZARDO : (BATTITO_FASCIA[fascia] ?? BATTITO_FASCIA.basso!)}s`;
   return (
     <Cornice
       s={s}
