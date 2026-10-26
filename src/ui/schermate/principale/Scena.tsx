@@ -28,11 +28,11 @@ export function Scena({ s }: { s: Stato }) {
   const icone = s.items.filter((i) => !INDOSSATI.has(i));
   return (
     <section className="relative overflow-hidden">
-      <Immagine src={arte('luoghi', luogoDelGiorno(s))} nome={luogoDelGiorno(s)} className="absolute inset-0 size-full opacity-80" />
+      <Immagine src={arte('luoghi', luogoDelGiorno(s))} nome={luogoDelGiorno(s)} className="anim-panoramica absolute inset-0 size-full opacity-80" />
       <div className="absolute inset-0 bg-gradient-to-r from-notte-950/10 via-notte-950/30 to-notte-950/85" />
       <div className="relative flex items-end gap-2 px-3 pt-2">
         <div className="relative w-[38%] shrink-0">
-          <Personaggio classe={s.classe} items={s.items} salute={s.salute} className="w-full drop-shadow-[0_6px_10px_rgb(0_0_0/0.6)]" />
+          <Personaggio classe={s.classe} items={s.items} salute={s.salute} vivo className="w-full drop-shadow-[0_6px_10px_rgb(0_0_0/0.6)]" />
           {icone.length > 0 && (
             <div className="absolute bottom-1 left-0 flex flex-wrap gap-1">
               {icone.map((i) => (

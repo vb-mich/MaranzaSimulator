@@ -31,7 +31,15 @@ export function Inizio() {
   return (
     <main data-schermo="inizio" className="mx-auto flex min-h-dvh max-w-md flex-col">
       <div className="relative">
-        <Immagine src={arte('ui', 'splash')} nome="splash" alt={TESTI.titolo} className="aspect-[4/3] w-full" />
+      <div className="relative overflow-hidden">
+        <Immagine src={arte('ui', 'splash')} nome="splash" alt={TESTI.titolo} className="anim-avvicina aspect-[4/3] w-full" />
+        {/* a sweep of light across the chrome title, which sits in the top half of the splash */}
+        {arte('ui', 'splash') && (
+          <div className="pointer-events-none absolute inset-x-0 top-[8%] h-[34%] overflow-hidden mix-blend-overlay" aria-hidden>
+            <div className="anim-riflesso h-full w-full bg-[linear-gradient(105deg,transparent_35%,rgb(255_255_255/0.75)_50%,transparent_65%)]" />
+          </div>
+        )}
+      </div>
         {!arte('ui', 'splash') && (
           <h1 className="titolo-neon absolute inset-x-0 top-[18%] text-center text-5xl leading-none font-black tracking-tight uppercase italic">
             {TESTI.titolo}

@@ -27,7 +27,7 @@ export function Fine({ s }: { s: Stato }) {
   return (
     <main data-schermo="fine" className="mx-auto flex min-h-dvh max-w-md flex-col gap-4 px-4 pt-6 pb-10">
       <div className="flex flex-col items-center gap-3 text-center">
-        <Immagine src={arte('ui', IMMAGINE_FINE[s.fine] ?? 'fine-vittoria')} nome={s.fine} className="aspect-square w-48 rounded-3xl" cover={false} />
+        <Immagine src={arte('ui', IMMAGINE_FINE[s.fine] ?? 'fine-vittoria')} nome={s.fine} className="anim-galleggia aspect-square w-48 rounded-3xl" cover={false} />
         <h1 className="titolo-neon text-3xl font-black uppercase italic">{t.titolo}</h1>
         <p className="text-white/75">{t.testo}</p>
         <div className="pannello w-full p-4">
