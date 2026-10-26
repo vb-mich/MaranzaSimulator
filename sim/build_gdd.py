@@ -34,7 +34,7 @@ def tabella_azioni(ids):
         if sp == "corsa": b = "50%: ×2 la puntata"
         rep = f"{a['rep']:+g}" if a["rep"] else "0"
         if sp == "poker": rep = "+3 vinci / −2 perdi"
-        if sp == "chill": rep = "+0,5 (+drip/500) fino a rep 60"
+        if sp == "chill": rep = f"+{a['rep']:g} (+drip/{M.CHILL_DRIP_DIV}) fino a rep {M.CHILL_CAP}".replace(".", ",")
         if sp == "tiktok": rep = f"+{a['rep']:g} fino a rep 80 (8%: +10)"
         if sp == "tag": rep = f"+{a['rep']:g} (8%: +10)"
         pena = f"{a['pena']} gg" if a["pena"] else "—"
@@ -49,15 +49,16 @@ def tabella_azioni(ids):
 
 def tabella_negozio():
     out = ["| Oggetto | Prezzo | Tipo | Effetto |", "|---|---|---|---|"]
+    drip = lambda k: f"Drip {eur(M.NEGOZIO[k]['valore'])[:-1]}"
     eff = {"passamontagna": "−5 punti di rischio Gabbio nelle azioni di Notte",
            "tronchese": "−5 punti di rischio Gabbio nelle azioni con Effrazione",
-           "cappello": "Drip 90 (conta per il Chill e per il Patrimonio)",
-           "tuta": "Drip 180",
-           "catena": "Drip 250 — sblocca 'Trapper di quartiere' (Magrebino)",
+           "cappello": f"{drip('cappello')} (conta per il Chill e per il Patrimonio)",
+           "tuta": drip("tuta"),
+           "catena": f"{drip('catena')} — sblocca 'Trapper di quartiere' (Magrebino)",
            "monopattino": "Veicolo liv. 1: trasferte senza slot extra; −5 pt Gabbio nelle azioni di Fuga; sblocca le azioni che richiedono un veicolo",
-           "telefono": "Drip 1.200",
+           "telefono": drip("telefono"),
            "motorino": "Veicolo liv. 2: come il monopattino ma −10 pt Gabbio nelle azioni di Fuga e −5 pt in quelle che richiedono veicolo",
-           "orologio": "Drip 2.500"}
+           "orologio": drip("orologio")}
     for k, it in M.NEGOZIO.items():
         out.append(f"| {it['nome']} | {eur(it['prezzo'])} | {it['tipo']} | {eff[k]} |")
     return "\n".join(out)

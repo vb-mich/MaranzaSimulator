@@ -192,7 +192,7 @@
     "VIRALE_REP": 10,
     "CHILL_CAP": 60,
     "TIKTOK_CAP": 80,
-    "CHILL_DRIP_DIV": 500,
+    "CHILL_DRIP_DIV": 1750,
     "MONOPATTINO_TIENI_P": 0.5,
     "NOIA_GIORNI": 7,
     "ZONA_CALDA_GIORNI": 7,
@@ -223,7 +223,7 @@
     ],
     "PENA_ARROTONDAMENTO": 0.5,
     "PENA_MIN_GIORNI": 1,
-    "TRAPPER_DRIP_MIN": 200,
+    "TRAPPER_DRIP_MIN": 1000,
     "TRAPPER_REP_MULT": 1.1,
     "RAMADAN_INIZIO": [
       2,
@@ -370,7 +370,7 @@
   "abilita_classi": {
     "Magrebino": [
       "trasferta_gratis",
-      "trapper_di_quartiere(+10% rep se drip>200)",
+      "trapper_di_quartiere(+10% rep se drip>1000)",
       "no_azzardo",
       "ramadan(15feb-16mar: no azioni mattina/pomeriggio)"
     ],
@@ -429,61 +429,61 @@
   "negozio": {
     "passamontagna": {
       "nome": "Passamontagna Naik",
-      "prezzo": 15,
+      "prezzo": 50,
       "tipo": "tool",
       "effetto": "notte",
       "valore": 0
     },
     "tronchese": {
       "nome": "Tronchese del cuggino",
-      "prezzo": 30,
+      "prezzo": 150,
       "tipo": "tool",
       "effetto": "effrazione",
       "valore": 0
     },
     "cappello": {
       "nome": "Cappello Nord Faccia",
-      "prezzo": 90,
+      "prezzo": 200,
       "tipo": "drip",
-      "valore": 90
+      "valore": 200
     },
     "tuta": {
       "nome": "Tuta Naik Tech",
-      "prezzo": 180,
+      "prezzo": 400,
       "tipo": "drip",
-      "valore": 180
+      "valore": 400
     },
     "catena": {
       "nome": "Catena placcata 'oro'",
-      "prezzo": 250,
+      "prezzo": 1500,
       "tipo": "drip",
-      "valore": 250
+      "valore": 1500
     },
     "monopattino": {
       "nome": "Monopattino truccato",
-      "prezzo": 350,
+      "prezzo": 1200,
       "tipo": "veicolo",
-      "valore": 350,
+      "valore": 1200,
       "livello": 1
     },
     "telefono": {
       "nome": "aiFon ultimo modello",
-      "prezzo": 1200,
+      "prezzo": 2000,
       "tipo": "drip",
-      "valore": 1200
+      "valore": 2000
     },
     "motorino": {
       "nome": "Motorino elaborato",
-      "prezzo": 1500,
+      "prezzo": 5000,
       "tipo": "veicolo",
-      "valore": 1500,
+      "valore": 5000,
       "livello": 2
     },
     "orologio": {
       "nome": "Orologio 'svizzero' di Napoli",
-      "prezzo": 2500,
+      "prezzo": 10000,
       "tipo": "drip",
-      "valore": 2500
+      "valore": 10000
     }
   },
   "avvocati": {
@@ -862,11 +862,11 @@
       "energia": 20,
       "spesa": [
         1,
-        1
+        20
       ],
       "gabbio": [
-        0.04,
-        0.04
+        0.06,
+        0.03
       ],
       "ospedale": 0.04,
       "bottino": [
@@ -1129,8 +1129,8 @@
         60
       ],
       "gabbio": [
-        0.06,
-        0.06
+        0.04,
+        0.1
       ],
       "ospedale": 0.0,
       "bottino": [
@@ -1169,7 +1169,7 @@
       "energia": 35,
       "spesa": [
         0,
-        30
+        50
       ],
       "gabbio": [
         0.15,
@@ -1323,7 +1323,7 @@
       "energia": 45,
       "spesa": [
         0,
-        20
+        100
       ],
       "gabbio": [
         0.15,
@@ -1364,10 +1364,10 @@
         0
       ],
       "gabbio": [
-        0.12,
-        0.12
+        0.08,
+        0.08
       ],
-      "ospedale": 0.1,
+      "ospedale": 0.06,
       "bottino": [
         75,
         300
@@ -1398,7 +1398,7 @@
       "energia": 40,
       "spesa": [
         0,
-        10
+        30
       ],
       "gabbio": [
         0.12,
@@ -1438,8 +1438,8 @@
         300
       ],
       "gabbio": [
-        0.08,
-        0.08
+        0.05,
+        0.12
       ],
       "ospedale": 0.05,
       "bottino": [
@@ -1551,7 +1551,7 @@
       "energia": 70,
       "spesa": [
         0,
-        50
+        120
       ],
       "gabbio": [
         0.15,
@@ -1630,8 +1630,8 @@
         300
       ],
       "gabbio": [
-        0.22,
-        0.22
+        0.15,
+        0.3
       ],
       "ospedale": 0.06,
       "bottino": [
@@ -1669,7 +1669,7 @@
       "energia": 80,
       "spesa": [
         0,
-        100
+        600
       ],
       "gabbio": [
         0.25,
@@ -1708,7 +1708,7 @@
       "energia": 50,
       "spesa": [
         0,
-        30
+        180
       ],
       "gabbio": [
         0.25,
@@ -1783,7 +1783,7 @@
       "energia": 60,
       "spesa": [
         0,
-        200
+        300
       ],
       "gabbio": [
         0.25,
@@ -1821,7 +1821,7 @@
       "energia": 80,
       "spesa": [
         300,
-        5000
+        8000
       ],
       "gabbio": [
         0.6,

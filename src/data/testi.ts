@@ -578,7 +578,7 @@ export const TESTI = {
     multa: 'Multa',
     energiaCosto: 'Energia',
     tacche: 'Investimento',
-    tacchaSpiega: 'Spendere di più abbassa il rischio di gabbio e alza il bottino. La spesa è persa comunque.',
+    tacchaSpiega: 'Spendere di più abbassa il rischio di gabbio e alza il bottino minimo. Dove incassi un multiplo della spesa, invece, più merce vuol dire più guadagno e più rischio. La spesa è persa comunque.',
     modificatori: 'Oggi conta anche',
     bloccate: (n: number) => (n === 1 ? '1 azione bloccata' : `${n} azioni bloccate`),
   },
