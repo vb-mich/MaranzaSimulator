@@ -445,23 +445,25 @@ $ Il sistema eventi e' una tabella dati (vedi `GUAI` e `CONDIZIONI` nel simulato
 
 ## Interfaccia: semplice davanti, complessa dietro
 
-Regola unica: **a schermo solo parole, icone e colori; i numeri stanno dietro il pulsante (?)**. Il (?) e' presente su ogni elemento che nasconde matematica; si apre al touch su mobile e al click/mouse-over su PC, come un tooltip, e si chiude toccando fuori.
+Regola unica: **a schermo parole, icone, colori e i valori che il giocatore gestisce (soldi, reputazione, energia, salute, quanto costa un'azione, cosa ha cambiato un esito); probabilita' e matematica stanno dietro il pulsante (?)**. Il (?) e' presente su ogni elemento che nasconde matematica; si apre al touch su mobile e al click/mouse-over su PC, come un tooltip, e si chiude toccando fuori.
+
+$ Prima alpha: la regola era "solo parole, icone e colori, tutti i numeri dietro il (?)". I tester l'hanno trovata troppo spinta (non capivano quanto avevano e quanto spendevano): ora i valori del profilo, i costi delle azioni e le variazioni degli esiti sono a schermo; le percentuali di rischio restano nascoste dietro il pallino.
 
 | Elemento | Cosa si vede sempre | Cosa c'e' dietro il (?) |
 |---|---|---|
 | Soldi | "1.240 €" | Patrimonio = contanti + 50% drip; lista oggetti con valore |
-| Reputazione | Barra + etichetta: *Sconosciuto* (0–9), *Zanza* (10–19), *Conosciuto* (20–34), *Rispettato* (35–49), *Boss di zona* (50–69), *Leggenda* (70+) | Valore %, cosa sblocca il prossimo grado, "−1%/giorno se non fai niente", "ripetere la stessa cosa annoia la piazza" |
-| Energia | Barra con fulmine | Valore / massimo di oggi (caldo e salute bassa lo abbassano), cosa recupera ogni cibo |
-| Salute | Barra con siringa, nessun numero | "Ogni ricovero la abbassa; parco e mensa la alzano; a zero finisce la run" |
-| Bottone azione | Nome, icona, **pallino rischio** (🟢 basso < 8%, 🟡 medio 8–15%, 🔴 alto 16–30%, 💀 estremo > 30%), costo energia come fulmini (1: fino a 20, 2: fino a 40, 3: fino a 60, 4: oltre), bottino atteso alla tacca scelta come "€" (< 100€), "€€" (< 500€), "€€€" (da 500€). Il pallino usa **Gabbio + Ospedale** alla tacca selezionata (di default *Alla buona*) con tutti i modificatori di oggi | Percentuali esatte di gabbio e ospedale, intervallo del bottino, pena base e multa, rep, modificatori attivi oggi (es. "Blitz: +10%", "Passamontagna: −5%") |
+| Reputazione | Barra + etichetta: *Sconosciuto* (0–9), *Zanza* (10–19), *Conosciuto* (20–34), *Rispettato* (35–49), *Boss di zona* (50–69), *Leggenda* (70+) + valore ("12,4%") | Cosa sblocca il prossimo grado, "−1%/giorno se non fai niente", "ripetere la stessa cosa annoia la piazza" |
+| Energia | Barra con fulmine + valore sul massimo di oggi ("45/120") | Perche' il massimo di oggi e' piu' basso (caldo, salute bassa), cosa recupera ogni cibo |
+| Salute | Barra con siringa + valore ("80/100") | "Ogni ricovero la abbassa; parco e mensa la alzano; a zero finisce la run" |
+| Bottone azione | Nome, icona, **pallino rischio** (🟢 basso < 8%, 🟡 medio 8–15%, 🔴 alto 16–30%, 💀 estremo > 30%), costo energia come fulmini (1: fino a 20, 2: fino a 40, 3: fino a 60, 4: oltre) seguiti dal numero ("⚡⚡ 40"), bottino atteso alla tacca scelta come "€" (< 100€), "€€" (< 500€), "€€€" (da 500€), costo in euro per le azioni con investimento, da *Alla buona* a *Da professionista* ("Costa 10–200 €"). Il pallino usa **Gabbio + Ospedale** alla tacca selezionata (di default *Alla buona*) con tutti i modificatori di oggi | Percentuali esatte di gabbio e ospedale, intervallo del bottino, pena base e multa, rep, modificatori attivi oggi (es. "Blitz: +10%", "Passamontagna: −5%") |
 | Slider investimento | Tre tacche: *Alla buona / Preparato / Da professionista* (t = 0 / 0,5 / 1) con il costo in € | Come cambia il rischio e il bottino tacca per tacca |
 | Giorno | Data, slot con icona (☀️🌤️🌆🌙), riga della condizione ("Oggi piove") | Effetto numerico della condizione |
 | Tribunale | Pena richiesta in giorni, 5 bottoni di difesa con il prezzo | Bonus al tiro di ogni difesa, modificatori attivi (incensurato, recidiva, classe), tabella degli esiti |
-| Esito | Card con una frase e il risultato ("+340 €", "Assolto!", "3 giorni di ospedale") | Il tiro effettuato e la soglia |
+| Esito | Card con una frase, il risultato ("+340 €", "Assolto!", "3 giorni di ospedale") e ogni variazione: "Reputazione +2", "Energia −30", "Salute −20", "Spesa −50 €" | Il tiro effettuato e la soglia |
 | MARANZA POINTS | "4,6M" | Formula, patrimonio, rep, penalita' |
 
 Linee guida:
-* Mai mostrare due numeri dove ne basta uno; mai una percentuale senza (?).
+* Mai mostrare due numeri dove ne basta uno; le probabilita' (gabbio, ospedale, vincita) non vanno mai a schermo: li' c'e' il pallino, il resto nel (?).
 * Il pallino del rischio tiene conto dei modificatori del giorno e dell'equipaggiamento: e' la verita' del momento, non il valore base.
 * I nomi dei gradi di reputazione e le etichette dello slider sono testo di gioco (gergo), i valori nel (?) sono asciutti.
 * Il messaggio del Boss spiega la *prima* volta; il (?) e' per chi vuole capire; nessun popup bloccante dopo il giorno 7.

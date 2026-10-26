@@ -1,4 +1,4 @@
-// HUD bar: icon, fill and an optional label (rep grade). No numbers on screen.
+// HUD bar: icon, fill, a label (rep grade, or what the bar is) and the value in numbers on the right.
 
 import type { ReactNode } from 'react';
 
@@ -7,6 +7,7 @@ export function Barra({
   frazione,
   colore,
   etichetta,
+  valore,
   info,
   nome,
 }: {
@@ -14,6 +15,7 @@ export function Barra({
   frazione: number;
   colore: string;
   etichetta?: ReactNode;
+  valore?: ReactNode;
   info?: ReactNode;
   nome: string;
 }) {
@@ -24,7 +26,12 @@ export function Barra({
         {icona}
       </span>
       <div className="min-w-0 flex-1">
-        {etichetta && <div className="mb-0.5 truncate text-[11px] leading-none font-extrabold tracking-wide text-white/85 uppercase">{etichetta}</div>}
+        {(etichetta || valore) && (
+          <div className="mb-1 flex items-baseline gap-1.5 text-[11px] leading-none font-extrabold">
+            <span className="min-w-0 flex-1 truncate tracking-wide text-white/85 uppercase">{etichetta}</span>
+            {valore !== undefined && <span className="shrink-0 text-xs text-white tabular-nums">{valore}</span>}
+          </div>
+        )}
         <div
           className="h-2.5 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/10"
           role="meter"
@@ -32,6 +39,7 @@ export function Barra({
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round(f * 100)}
+          aria-valuetext={typeof valore === 'string' ? valore : undefined}
         >
           <div className="h-full rounded-full transition-[width] duration-500" style={{ width: `${f * 100}%`, background: colore, boxShadow: `0 0 8px ${colore}` }} />
         </div>

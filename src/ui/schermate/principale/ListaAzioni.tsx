@@ -1,5 +1,5 @@
-// The actions available now: risk dot, energy bolts, €/€€/€€€, a three-notch investment slider
-// where it applies, and every number behind the (?).
+// The actions available now: risk dot, energy bolts with the energy they take, €/€€/€€€, the cost
+// range in euro and a three-notch investment slider where it applies; the rest is behind the (?).
 
 import { useState } from 'react';
 import { C, type Azione } from '../../../data/gameData';
@@ -22,7 +22,7 @@ import {
 import { arte } from '../../arte';
 import { Immagine } from '../../componenti/Immagine';
 import { Info, Riga } from '../../componenti/Info';
-import { euro, giorni, giorniPena, numero, segno } from '../../formato';
+import { euro, euroIntervallo, giorni, giorniPena, numero, segno } from '../../formato';
 import { useGioco } from '../../gioco/contesto';
 import { gruppo, percentuale, quoteAzzardo, rigaModificatore, vistaAzione, type Gruppo } from '../../vista';
 
@@ -47,11 +47,20 @@ export function Pallino({ fascia, conNome = false }: { fascia: string; conNome?:
   );
 }
 
-export function Fulmini({ n }: { n: number }) {
+export function Fulmini({ n, energia }: { n: number; energia: number }) {
+  const e = Math.round(energia);
   return (
-    <span className="whitespace-nowrap text-ciano" aria-label={`${TESTI.principale.energiaCosto} ${n}`}>
-      {'⚡'.repeat(n)}
+    <span className="whitespace-nowrap text-ciano" aria-label={`${TESTI.principale.energiaCosto} ${e}`}>
+      <span aria-hidden>{'⚡'.repeat(n)}</span> <b className="tabular-nums">{e}</b>
     </span>
+  );
+}
+
+/** What the action costs in euro: the range across the slider, or the one price. */
+export function Spesa({ a }: { a: Azione }) {
+  if (!puoInvestire(a)) return null;
+  return (
+    <span className="whitespace-nowrap font-bold text-white/85 tabular-nums">{TESTI.principale.costo(euroIntervallo(spesa(a, 0), spesa(a, 1)))}</span>
   );
 }
 
@@ -112,9 +121,10 @@ function RigaAzione({
             <span className="block leading-tight font-extrabold">{testo?.nome ?? a.nome}</span>
             <span className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-sm">
               <Pallino fascia={v.fascia} conNome />
-              <Fulmini n={v.fulmini} />
+              <Fulmini n={v.fulmini} energia={v.energia} />
               {v.simboli && <span className="font-black text-sole">{v.simboli}</span>}
               {v.azzardo && <span aria-hidden>🎲</span>}
+              <Spesa a={a} />
               {v.trasferta && <span className="text-xs text-white/60">🚶 {TESTI.principale.trasferta}</span>}
             </span>
           </span>

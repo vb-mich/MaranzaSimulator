@@ -1,4 +1,5 @@
-// Full-screen outcome cards: one sentence, the result, one button (GDD §Interfaccia, "Esito").
+// Full-screen outcome cards: one sentence, the result, a chip for every other change (rep, energy,
+// health, money lost), one button (GDD §Interfaccia, "Esito").
 
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { C } from '../../data/gameData';
@@ -34,7 +35,10 @@ export function CartaEsito({ carta, s }: { carta: Carta; s: Stato }) {
         <Cornice s={s} onAvanti={avanti} immagine={<Img sezione="ui" id="esito-ospedale" />} tono="male">
           <Titolo>{TESTI.esito.maleTitolo}</Titolo>
           <Grande colore="text-rischio-alto">{TESTI.esito.ospedaleGiorni(giorni(carta.ricovero.giorni))}</Grande>
-          {carta.ricovero.furto > 0 && <Chip>💸 {TESTI.esito.furto(euroDelta(-carta.ricovero.furto))}</Chip>}
+          <div className="flex flex-wrap justify-center gap-1.5">
+            {carta.ricovero.furto > 0 && <Chip>💸 {TESTI.esito.furto(euroDelta(-carta.ricovero.furto))}</Chip>}
+            <ChipSalute salute={-carta.ricovero.danno} />
+          </div>
         </Cornice>
       );
     case 'uscita':
@@ -141,6 +145,8 @@ function EsitoAzione({ carta, s, onAvanti }: { carta: Extract<Carta, { tipo: 'az
         <div className="flex flex-wrap justify-center gap-1.5">
           {carta.arresto && carta.arresto.sequestro > 0 && <Chip>👮 {E.sequestro(euroDelta(-carta.arresto.sequestro))}</Chip>}
           {carta.arresto?.veicolo_sequestrato && <Chip>🛴 {E.veicoloSequestrato}</Chip>}
+          <ChipSpesa soldi={e.soldi} />
+          <ChipEnergia energia={carta.energia} />
         </div>
       </Cornice>
     );
@@ -149,7 +155,12 @@ function EsitoAzione({ carta, s, onAvanti }: { carta: Extract<Carta, { tipo: 'az
       <Cornice s={s} onAvanti={onAvanti} immagine={<Img sezione="ui" id="esito-ospedale" />} tono="male" numeri={numeri} sotto={nomeAzione(e.id)}>
         <Titolo>{E.maleTitolo}</Titolo>
         {carta.ricovero && <Grande colore="text-rischio-alto">{E.ospedaleGiorni(giorni(carta.ricovero.giorni))}</Grande>}
-        {carta.ricovero && carta.ricovero.furto > 0 && <Chip>💸 {E.furto(euroDelta(-carta.ricovero.furto))}</Chip>}
+        <div className="flex flex-wrap justify-center gap-1.5">
+          {carta.ricovero && carta.ricovero.furto > 0 && <Chip>💸 {E.furto(euroDelta(-carta.ricovero.furto))}</Chip>}
+          <ChipSpesa soldi={e.soldi} />
+          <ChipEnergia energia={carta.energia} />
+          <ChipSalute salute={carta.salute - (carta.ricovero?.danno ?? 0)} />
+        </div>
       </Cornice>
     );
   const righe = e.vinto === true ? t?.vinto : e.vinto === false ? t?.perso : t?.ok;
@@ -161,6 +172,8 @@ function EsitoAzione({ carta, s, onAvanti }: { carta: Extract<Carta, { tipo: 'az
       {e.soldi !== 0 && <Grande colore={e.soldi > 0 ? 'text-sole' : 'text-rischio-alto'}>{euroDelta(e.soldi)}</Grande>}
       <div className="flex flex-wrap justify-center gap-1.5">
         <ChipRep rep={e.rep} />
+        <ChipEnergia energia={carta.energia} />
+        <ChipSalute salute={carta.salute} />
         {e.veicolo && <Chip>🛴 {E.veicolo}</Chip>}
       </div>
     </Cornice>
@@ -280,6 +293,7 @@ function CartaGuaio({ carta, s, onAvanti }: { carta: Extract<Carta, { tipo: 'gua
       {carta.ricovero && <Grande colore="text-rischio-alto">{TESTI.esito.ospedaleGiorni(giorni(carta.ricovero.giorni))}</Grande>}
       <div className="flex flex-wrap justify-center gap-1.5">
         <ChipRep rep={g.rep} />
+        {carta.ricovero && <ChipSalute salute={-carta.ricovero.danno} />}
       </div>
     </Cornice>
   );
@@ -355,11 +369,31 @@ function Grande({ children, colore }: { children: ReactNode; colore: string }) {
   return <div className={`text-4xl font-black tabular-nums ${colore}`}>{children}</div>;
 }
 
-function Chip({ children }: { children: ReactNode }) {
-  return <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-bold">{children}</span>;
+function Chip({ children, colore = '' }: { children: ReactNode; colore?: string }) {
+  return <span className={`rounded-full bg-white/10 px-3 py-1 text-sm font-bold tabular-nums ${colore}`}>{children}</span>;
 }
 
 function ChipRep({ rep }: { rep: number }) {
   if (Math.abs(rep) < REP_VISIBILE) return null;
-  return rep > 0 ? <Chip>⭐ {TESTI.esito.repSu}</Chip> : <Chip>💢 {TESTI.esito.repGiu}</Chip>;
+  return (
+    <Chip colore={rep > 0 ? 'text-rosa' : 'text-rischio-alto'}>
+      {rep > 0 ? '⭐' : '💢'} {TESTI.esito.rep(segno(rep, 1))}
+    </Chip>
+  );
+}
+
+function ChipEnergia({ energia }: { energia: number }) {
+  if (Math.round(energia) === 0) return null;
+  return <Chip colore="text-ciano">⚡ {TESTI.esito.energia(segno(-energia, 0))}</Chip>;
+}
+
+function ChipSalute({ salute }: { salute: number }) {
+  if (Math.round(salute) === 0) return null;
+  return <Chip colore={salute > 0 ? 'text-rischio-basso' : 'text-rischio-alto'}>💉 {TESTI.esito.salute(segno(salute, 0))}</Chip>;
+}
+
+/** The investment lost on an action that went wrong: there's no big money figure on those cards. */
+function ChipSpesa({ soldi }: { soldi: number }) {
+  if (soldi === 0) return null;
+  return <Chip colore="text-rischio-alto">💸 {TESTI.esito.spesa(euroDelta(soldi))}</Chip>;
 }

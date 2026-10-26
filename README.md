@@ -50,7 +50,8 @@ aggiornano da soli alla prossima apertura dopo un rilascio.
   lo Zingaro in galera puo' chiamare il cuggino e va avanti a mano.
 * **Il Boss** ti scrive in chat la prima volta che succede qualcosa di nuovo. Ogni notte arriva il teaser
   della condizione di domani, e ci sono feste del calendario e guai con una scelta da fare.
-* **A schermo solo parole, icone e colori**: i numeri veri stanno dietro ogni (?).
+* **A schermo parole, icone, colori e i valori che contano** (soldi, reputazione, energia, salute, costi delle
+  azioni, cosa cambia un esito): le probabilita' e i calcoli stanno dietro ogni (?).
 * **Fine partita**: al 365° giorno contano i MARANZA POINTS (patrimonio × reputazione). Marcire in galera
   o restare piantati all'ospedale chiude la run prima, e conta molto meno. Le run finite vanno nella
   classifica locale (schermata finale e menu).

@@ -1,11 +1,11 @@
-// Sleep with a choice of food: price, how much energy it brings back, whether it's good for you.
+// Sleep with a choice of food: price, how much energy it brings back, whether it's good for you (with numbers).
 
 import { C, DATI } from '../../data/gameData';
 import { TESTI, nomeCibo } from '../../data/testi';
 import { anteprimaSonno, rifiuto, type Stato } from '../../engine';
 import { Foglio } from '../componenti/Foglio';
 import { Info, Riga } from '../componenti/Info';
-import { euro, numero, pct } from '../formato';
+import { euro, numero, pct, segno } from '../formato';
 import { useGioco } from '../gioco/contesto';
 
 export function SceltaCibo({ s }: { s: Stato }) {
@@ -53,10 +53,11 @@ export function SceltaCibo({ s }: { s: Stato }) {
                 <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
                   <span className="block h-full rounded-full bg-ciano" style={{ width: `${Math.min(1, pieno) * 100}%` }} />
                 </span>
+                {dopo && <span className="font-bold text-ciano tabular-nums">{segno(Math.floor(dopo.energia + 1e-9) - Math.floor(s.energia + 1e-9), 0)}</span>}
               </span>
               {!s.cibo_pagato && c.salute !== 0 && (
                 <span className={`text-xs font-bold ${c.salute > 0 ? 'text-rischio-basso' : 'text-rischio-alto'}`}>
-                  💉 {c.salute > 0 ? D.saluteSu : D.saluteGiu}
+                  💉 {c.salute > 0 ? D.saluteSu : D.saluteGiu} <span className="tabular-nums">{segno(c.salute, 0)}</span>
                 </span>
               )}
             </button>

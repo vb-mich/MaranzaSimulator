@@ -1,8 +1,8 @@
 // Turns the engine's outcomes into what the UI shows: full-screen cards (one tap each) and toasts.
 
-import { C } from '../../data/gameData';
+import { C, azione } from '../../data/gameData';
 import { TESTI, nomeCibo, nomeOggetto } from '../../data/testi';
-import { data, rischi, type Comando, type Esito, type MessaggioBoss, type Stato } from '../../engine';
+import { costoEnergia, data, rischi, type Comando, type Esito, type MessaggioBoss, type Stato } from '../../engine';
 import { dataBreve, euro } from '../formato';
 
 type Di<T extends Esito['tipo']> = Extract<Esito, { tipo: T }>;
@@ -20,6 +20,9 @@ export type Carta =
       ricovero?: EsitoRicovero;
       /** [gabbio, ospedale] the action carried, for the (?). */
       rischi: [number, number];
+      /** Energy the action took, and the health it gave or took by itself (not the hospital's). */
+      energia: number;
+      salute: number;
       giorno: number;
     }
   | { tipo: 'verdetto'; verdetto: EsitoVerdetto; azione: string; pena_base: number; multa: number }
@@ -36,6 +39,12 @@ export interface Toast {
 }
 
 export type NuovoToast = Omit<Toast, 'id'>;
+
+/** Health an action changes by itself (the park), as the engine applies it: within 0..max. */
+function saluteAzione(s: Stato, id: string): number {
+  const d = azione(id).salute;
+  return d ? Math.max(0, Math.min(s.salute_max, s.salute + d)) - s.salute : 0;
+}
 
 /**
  * Groups the outcomes of one command. `prima` is the state the command was applied to (the risks
@@ -54,6 +63,8 @@ export function smista(esiti: Esito[], prima: Stato | null, comando: Comando | n
           tipo: 'azione',
           azione: e,
           rischi: prima ? rischi(prima, e.id, e.t) : [0, 0],
+          energia: prima ? costoEnergia(prima, e.id) : 0,
+          salute: prima ? saluteAzione(prima, e.id) : 0,
           giorno: prima?.giorno ?? dopo.giorno,
         });
         break;

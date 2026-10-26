@@ -18,7 +18,8 @@ Game language: Italian. Code and comments: English or Italian, consistently with
 - Engine in `src/engine/` is pure and deterministic (seedable RNG inside the state); no React/DOM imports.
 - One command → `applica(stato, comando)` → new state + list of outcomes to display.
 - Game texts live in `src/data/testi.ts`.
-- UI shows words, icons and colours; numbers only behind the `(?)` tooltip (GDD §Interfaccia).
+- UI shows words, icons, colours and the values the player manages (profile values, action costs, what an
+  outcome changed); probabilities and the maths stay behind the `(?)` tooltip (GDD §Interfaccia).
 - Balancing changes go to `sim/maranza_sim.py` → `python3 sim/export_data.py` → `python3 sim/build_gdd.py`.
 - Before shipping engine changes run `scripts/autoplay.ts` and compare with `sim/results/batch_finale.txt`.
 
