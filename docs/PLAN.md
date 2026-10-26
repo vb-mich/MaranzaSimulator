@@ -27,7 +27,8 @@ Riferimenti: `ALPHA-PROMPT.md` (brief), `docs/GDD.md` (specifica), `data/game-da
   le fa la policy *dentro* il motore. Nel gioco diventano **richieste in sospeso** nello stato
   (`stato.attesa = {tipo: "TRIBUNALE" | "EVENTO", ...}`) che il comando successivo risolve. Le policy
   della fase 3 sono "giocatori" che inviano comandi come la UI.
-* **Testi** solo in `src/data/testi.ts`; **UI** mostra parole/icone/colori, i numeri solo dietro il (?).
+* **Testi** solo in `src/data/testi.ts`; **UI** mostra parole/icone/colori e i valori del profilo, dei costi e degli esiti;
+  probabilita' e calcoli solo dietro il (?).
 
 ## Come lavoro sulla cartella e sul repo
 

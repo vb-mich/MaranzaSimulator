@@ -19,6 +19,16 @@ export function euroDelta(n: number): string {
   return `${n < 0 ? '−' : '+'}${s} €`;
 }
 
+/** "10–200 €" for a range, "1 €" when both ends are the same. */
+export function euroIntervallo(min: number, max: number): string {
+  return Math.floor(min + 1e-9) === Math.floor(max + 1e-9) ? euro(min) : `${euro(min).slice(0, -2)}–${euro(max)}`;
+}
+
+/** "45/100": a value (rounded down, like the money) and its maximum. */
+export function suMassimo(v: number, max: number): string {
+  return `${Math.floor(v + 1e-9)}/${Math.round(max)}`;
+}
+
 /** Decimal number with an Italian comma, up to `cifre` decimals, no trailing zeros. */
 export function numero(n: number, cifre = 1): string {
   const f = 10 ** cifre;

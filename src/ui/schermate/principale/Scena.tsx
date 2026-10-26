@@ -1,4 +1,5 @@
-// The character in the piazza (location by time of day) with the HUD: money, rep, energy, health.
+// The character in the piazza (location by time of day) with the HUD: money, rep, energy, health,
+// each with its value in numbers and the details behind the (?).
 
 import { C, DATI, type Cibo } from '../../../data/gameData';
 import { TESTI, nomeCibo, nomeOggetto } from '../../../data/testi';
@@ -8,7 +9,7 @@ import { Barra } from '../../componenti/Barra';
 import { Immagine } from '../../componenti/Immagine';
 import { Info, Riga } from '../../componenti/Info';
 import { Personaggio } from '../../componenti/Personaggio';
-import { euro, numero, pct } from '../../formato';
+import { euro, numero, pct, suMassimo } from '../../formato';
 import { prossimoTier, valoriOggetti } from '../../vista';
 
 const LUOGO_PER_SLOT: Record<number, string> = { 1: 'piazza', 2: 'piazza', 3: 'piazza-sera', 4: 'piazza-notte' };
@@ -83,6 +84,7 @@ function Hud({ s }: { s: Stato }) {
         frazione={s.rep / C.REP_MAX}
         colore="var(--color-rosa)"
         etichetta={grado}
+        valore={`${numero(s.rep, 1)}%`}
         info={
           <Info titolo={TESTI.hud.rep}>
             <p className="font-bold">{TESTI.hud.repValore(`${numero(s.rep, 1)}%`)}</p>
@@ -105,9 +107,11 @@ function Hud({ s }: { s: Stato }) {
         icona="⚡"
         frazione={s.energia / s.energia_max}
         colore="var(--color-ciano)"
+        etichetta={TESTI.hud.energia}
+        valore={suMassimo(s.energia, emaxOggi)}
         info={
           <Info titolo={TESTI.hud.energia}>
-            <p className="font-bold">{TESTI.hud.energiaValore(Math.round(s.energia), Math.round(emaxOggi))}</p>
+            <p className="font-bold">{TESTI.hud.energiaValore(Math.floor(s.energia + 1e-9), Math.round(emaxOggi))}</p>
             {emaxOggi < s.energia_max && <p className="text-sole">{TESTI.hud.energiaMaxRidotta}</p>}
             <p className="mt-1.5">{s.classe === 'Balcanico' ? TESTI.hud.energiaBalcanico : TESTI.hud.energiaCibo}</p>
             {DATI.cibo.map((c: Cibo) => (
@@ -121,6 +125,8 @@ function Hud({ s }: { s: Stato }) {
         icona="💉"
         frazione={s.salute / s.salute_max}
         colore={s.salute < C.SALUTE_BASSA_SOGLIA ? 'var(--color-rischio-alto)' : 'var(--color-rischio-basso)'}
+        etichetta={TESTI.hud.salute}
+        valore={suMassimo(s.salute, s.salute_max)}
         info={
           <Info titolo={TESTI.hud.salute}>
             <ul className="list-disc space-y-0.5 pl-4">

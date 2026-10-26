@@ -18,7 +18,7 @@ import {
   type Stato,
 } from '../src/engine';
 import { leggiImport, nuovoSalvataggio, validaSalvataggio } from '../src/save/SaveAdapter';
-import { abbrevia, euro, euroDelta, numero, pct } from '../src/ui/formato';
+import { abbrevia, euro, euroDelta, euroIntervallo, numero, pct, suMassimo } from '../src/ui/formato';
 import { smista } from '../src/ui/gioco/esiti';
 import { riduttore, statoIniziale, type StatoUi } from '../src/ui/gioco/statoUi';
 import { effettiCondizione, effettoOggetto, nomeCondizione, prossimoTier } from '../src/ui/vista';
@@ -45,6 +45,14 @@ describe('formato', () => {
   it('numeri e percentuali con la virgola', () => {
     expect(numero(4.25, 1)).toBe('4,3');
     expect(pct(0.065)).toBe('6,5%');
+  });
+  it('intervalli di spesa e valori sul massimo', () => {
+    expect(euroIntervallo(10, 200)).toBe('10–200 €');
+    expect(euroIntervallo(300, 5000)).toBe('300–5.000 €');
+    expect(euroIntervallo(1, 1)).toBe('1 €');
+    expect(euroIntervallo(0, 30)).toBe('0–30 €');
+    expect(suMassimo(19.6, 100)).toBe('19/100');
+    expect(suMassimo(100, 85.00000001)).toBe('100/85');
   });
 });
 
@@ -100,6 +108,16 @@ describe('esiti → carte e toast', () => {
     expect(carte).toHaveLength(2);
     expect(carte[0]).toMatchObject({ tipo: 'azione', arresto: { sequestro: 20 } });
     expect(carte[1]).toMatchObject({ tipo: 'boss', id: 'primo_arresto' });
+  });
+  it('la carta dell\'azione porta energia spesa e salute', () => {
+    // the park: health goes up, but never past the maximum
+    const parco = AZIONI.find((a) => a.salute > 0 && (a.tags as string[]).includes('LEGALE'))!;
+    const esiti: Esito[] = [
+      { tipo: 'AZIONE', id: parco.id, t: 0, spesa: 0, risultato: 'ok', vinto: null, soldi: 0, rep: 1, virale: false, veicolo: false },
+    ];
+    const prima: Stato = { ...s, salute: s.salute_max - 1 };
+    const { carte } = smista(esiti, prima, { type: 'AZIONE', id: parco.id, t: 0 }, prima);
+    expect(carte[0]).toMatchObject({ tipo: 'azione', energia: parco.energia, salute: 1 });
   });
   it('il ricovero si attacca alla sua azione', () => {
     const esiti: Esito[] = [
