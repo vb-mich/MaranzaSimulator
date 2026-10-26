@@ -1,9 +1,9 @@
 // Full-screen outcome cards: one sentence, the result, one button (GDD §Interfaccia, "Esito").
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { C } from '../../data/gameData';
 import { TESTI, nomeAzione, scegliRiga } from '../../data/testi';
-import type { Stato } from '../../engine';
+import { fasciaRischio, type Stato } from '../../engine';
 import { arte, ritratto } from '../arte';
 import { Immagine } from '../componenti/Immagine';
 import { Info, Riga } from '../componenti/Info';
@@ -56,7 +56,70 @@ export function CartaEsito({ carta, s }: { carta: Carta; s: Stato }) {
   }
 }
 
+/** How long the breath is held before the outcome, by risk band: a safe shift barely pauses. */
+const DURATA_SUSPENSE: Record<string, number> = { basso: 700, medio: 1400, alto: 2000, estremo: 2500 };
+const DURATA_SUSPENSE_AZZARDO = 1900;
+
+/** Colour of the heartbeat glow while waiting, the same as the risk dots of the action list. */
+const BAGLIORE_FASCIA: Record<string, string> = {
+  basso: 'var(--color-rischio-basso)',
+  medio: 'var(--color-rischio-medio)',
+  alto: 'var(--color-rischio-alto)',
+  estremo: 'var(--color-rischio-estremo)',
+};
+
 function CartaAzione({ carta, s, onAvanti }: { carta: Extract<Carta, { tipo: 'azione' }>; s: Stato; onAvanti: () => void }) {
+  // with reduced motion the outcome shows at once
+  const [fermo, setFermo] = useState(movimentoRidotto);
+  const fine = useCallback(() => setFermo(true), []);
+  if (!fermo) return <Suspense carta={carta} s={s} onFine={fine} />;
+  return <EsitoAzione carta={carta} s={s} onAvanti={onAvanti} />;
+}
+
+/**
+ * The held breath after "Fallo": the action art trembles, a heartbeat glows in the colour of the
+ * risk and a bar fills; riskier actions make you wait longer. A tap skips it.
+ */
+function Suspense({ carta, s, onFine }: { carta: Extract<Carta, { tipo: 'azione' }>; s: Stato; onFine: () => void }) {
+  const e = carta.azione;
+  const azzardo = e.vinto !== null;
+  const fascia = fasciaRischio(carta.rischi[0] + carta.rischi[1]);
+  const durata = azzardo ? DURATA_SUSPENSE_AZZARDO : (DURATA_SUSPENSE[fascia] ?? DURATA_SUSPENSE.basso!);
+  const righe = TESTI.suspense.righe[azzardo ? 'azzardo' : fascia] ?? TESTI.suspense.righe.basso!;
+  useEffect(() => {
+    const t = setTimeout(onFine, durata);
+    return () => clearTimeout(t);
+  }, [durata, onFine]);
+  const colore = azzardo ? 'var(--color-sole)' : (BAGLIORE_FASCIA[fascia] ?? BAGLIORE_FASCIA.basso!);
+  // the heart beats faster the riskier it gets
+  const battito = `${Math.max(0.45, 1.1 - durata / 5000)}s`;
+  return (
+    <Cornice
+      s={s}
+      onAvanti={onFine}
+      bottone={TESTI.suspense.subito}
+      tono="boss"
+      sotto={nomeAzione(e.id)}
+      immagine={
+        <div className="relative grid place-items-center py-2">
+          <div className="anim-battito absolute size-48 rounded-full" style={{ background: `radial-gradient(circle, ${colore} 0%, transparent 68%)`, animationDuration: battito }} aria-hidden />
+          <div className={azzardo ? 'anim-gira' : 'anim-trema'} style={{ animationDuration: azzardo ? '0.5s' : battito }}>
+            <Img sezione="azioni" id={e.id} />
+          </div>
+        </div>
+      }
+    >
+      <Titolo>
+        <span className="anim-entra-su inline-block">{scegliRiga(righe, carta.giorno * 7 + hash(e.id))}</span>
+      </Titolo>
+      <div className="h-2 w-full overflow-hidden rounded-full bg-white/10" role="progressbar" aria-label={TESTI.suspense.subito}>
+        <div className="anim-riempi h-full origin-left rounded-full" style={{ background: colore, animationDuration: `${durata}ms` }} />
+      </div>
+    </Cornice>
+  );
+}
+
+function EsitoAzione({ carta, s, onAvanti }: { carta: Extract<Carta, { tipo: 'azione' }>; s: Stato; onAvanti: () => void }) {
   const e = carta.azione;
   const t = TESTI.azioni[e.id];
   const E = TESTI.esito;
@@ -92,7 +155,7 @@ function CartaAzione({ carta, s, onAvanti }: { carta: Extract<Carta, { tipo: 'az
   const righe = e.vinto === true ? t?.vinto : e.vinto === false ? t?.perso : t?.ok;
   const bene = e.vinto !== false;
   return (
-    <Cornice s={s} onAvanti={onAvanti} immagine={<Img sezione="azioni" id={e.id} />} tono={bene ? 'bene' : 'male'} numeri={numeri} sotto={nomeAzione(e.id)}>
+    <Cornice s={s} onAvanti={onAvanti} immagine={<div className="anim-atterra"><Img sezione="azioni" id={e.id} /></div>} tono={bene ? 'bene' : 'male'} numeri={numeri} sotto={nomeAzione(e.id)}>
       {e.virale && <div className="anim-pulsa text-3xl font-black text-rosa italic">{E.virale}</div>}
       <Titolo>{scegliRiga(righe ?? [], seme)}</Titolo>
       {e.soldi !== 0 && <Grande colore={e.soldi > 0 ? 'text-sole' : 'text-rischio-alto'}>{euroDelta(e.soldi)}</Grande>}

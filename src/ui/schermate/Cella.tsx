@@ -49,7 +49,7 @@ export function Cella({ s }: { s: Stato }) {
         <Immagine src={arte('luoghi', galera ? 'galera' : 'ospedale')} nome={galera ? 'galera' : 'ospedale'} className="absolute inset-0 size-full opacity-70" />
         <div className="absolute inset-0 bg-gradient-to-b from-notte-950/20 to-notte-950" />
         <div className="relative flex items-end gap-3 px-4 pt-4 pb-3">
-          <Personaggio classe={s.classe} items={s.items} salute={s.salute} className="w-28 shrink-0 grayscale-[35%]" />
+          <Personaggio classe={s.classe} items={s.items} salute={s.salute} vivo className="w-28 shrink-0 grayscale-[35%]" />
           <div className="pannello mb-2 flex-1 p-3 text-center">
             <div className="text-xs font-black tracking-[0.2em] text-white/60 uppercase">{galera ? K.galera : K.ospedale}</div>
             <div className="text-3xl font-black text-sole">{restanti > 1 ? K.giorniRestanti(giorni(restanti)) : K.ultimoGiorno}</div>

@@ -131,6 +131,132 @@
   }
 }
 
+/* Idle loops on the art. They animate the individual `scale`/`rotate`/`translate` properties, so they
+   stack on the inline transforms that place the drip layers instead of replacing them. */
+
+@keyframes respira {
+  0%,
+  100% {
+    scale: 1 1;
+  }
+  50% {
+    scale: 1.008 1.018;
+  }
+}
+
+@keyframes ondeggia {
+  0%,
+  100% {
+    rotate: -0.6deg;
+  }
+  50% {
+    rotate: 0.6deg;
+  }
+}
+
+@keyframes dondola {
+  0%,
+  100% {
+    rotate: -4deg;
+  }
+  50% {
+    rotate: 4deg;
+  }
+}
+
+@keyframes panoramica {
+  from {
+    scale: 1.04;
+    translate: 1.5% 0;
+  }
+  to {
+    scale: 1.12;
+    translate: -1.5% -1%;
+  }
+}
+
+@keyframes avvicina {
+  from {
+    scale: 1;
+  }
+  to {
+    scale: 1.05;
+  }
+}
+
+@keyframes battito {
+  0%,
+  100% {
+    scale: 0.85;
+    opacity: 0.35;
+  }
+  15% {
+    scale: 1.05;
+    opacity: 0.8;
+  }
+  30% {
+    scale: 0.92;
+    opacity: 0.45;
+  }
+  45% {
+    scale: 1.02;
+    opacity: 0.7;
+  }
+}
+
+@keyframes trema {
+  0%,
+  100% {
+    rotate: 0deg;
+    translate: 0 0;
+  }
+  20% {
+    rotate: -3deg;
+    translate: -2px 1px;
+  }
+  40% {
+    rotate: 2deg;
+    translate: 2px -1px;
+  }
+  60% {
+    rotate: -2deg;
+    translate: -1px 0;
+  }
+  80% {
+    rotate: 3deg;
+    translate: 1px 1px;
+  }
+}
+
+@keyframes gira {
+  0% {
+    transform: perspective(600px) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(600px) rotateY(360deg);
+  }
+}
+
+@keyframes riflesso {
+  0%,
+  55% {
+    translate: -120% 0;
+  }
+  100% {
+    translate: 120% 0;
+  }
+}
+
+@keyframes galleggia {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -6px;
+  }
+}
+
 @utility anim-entra-su {
   animation: entra-su 0.25s ease-out both;
 }
@@ -149,6 +275,58 @@
 
 @utility anim-atterra {
   animation: atterra 0.35s ease-out both;
+}
+
+/* the body breathes from the feet up and sways a little; the drip layers ride along */
+@utility anim-respira {
+  transform-origin: 50% 100%;
+  animation:
+    respira 3.2s ease-in-out infinite,
+    ondeggia 6.4s ease-in-out infinite;
+}
+
+/* the chain swings from its top edge */
+@utility anim-dondola {
+  transform-origin: 50% 8%;
+  animation: dondola 2.6s ease-in-out infinite;
+}
+
+/* slow Ken Burns on a location or the splash */
+@utility anim-panoramica {
+  animation: panoramica 24s ease-in-out infinite alternate;
+}
+
+/* the suspense before an outcome: a double heartbeat, a nervous tremble, a spinning coin for bets,
+   a bar that fills (durations are set inline by the risk) */
+@utility anim-battito {
+  animation: battito 0.9s ease-out infinite;
+}
+
+@utility anim-trema {
+  animation: trema 0.6s linear infinite;
+}
+
+@utility anim-gira {
+  animation: gira 0.5s linear infinite;
+}
+
+@utility anim-riempi {
+  animation: riempi 1s linear both;
+}
+
+/* a gentler zoom for the splash, whose characters reach the edges */
+@utility anim-avvicina {
+  animation: avvicina 12s ease-in-out infinite alternate;
+}
+
+/* a band of light sweeping across, for the chrome title of the splash */
+@utility anim-riflesso {
+  translate: -120% 0;
+  animation: riflesso 4.5s ease-in-out infinite;
+}
+
+@utility anim-galleggia {
+  animation: galleggia 3s ease-in-out infinite;
 }
 
 @utility pb-sicuro {

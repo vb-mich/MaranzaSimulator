@@ -12,11 +12,13 @@ export function Personaggio({
   classe,
   items = [],
   salute = C.SALUTE_MAX,
+  vivo = false,
   className = '',
 }: {
   classe: Classe;
   items?: string[];
   salute?: number;
+  vivo?: boolean;
   className?: string;
 }) {
   const r = ritratto(classe);
@@ -24,7 +26,7 @@ export function Personaggio({
   const layer = strati(classe, capi);
   return (
     <div
-      className={`relative ${className}`}
+      className={`relative ${vivo ? 'anim-respira' : ''} ${className}`}
       style={{ aspectRatio: r ? `${r.w} / ${r.h}` : String(PROPORZIONE) }}
       data-capi={layer.map((l) => l.id).join(' ')}
     >
@@ -35,12 +37,14 @@ export function Personaggio({
           src={l.src}
           alt=""
           draggable={false}
-          className="pointer-events-none absolute h-auto max-w-none"
+          className={`pointer-events-none absolute h-auto max-w-none ${vivo && l.id === 'catena' ? 'anim-dondola' : ''}`}
           style={{
             width: `${l.ancora.larghezza * 100}%`,
             left: `${l.ancora.x * 100}%`,
             top: `${l.ancora.y * 100}%`,
-            transform: `translate(-50%, -50%) rotate(${l.ancora.rot}deg)${l.ancora.specchio ? ' scaleX(-1)' : ''}`,
+            // centring goes in `translate` so the swing (`rotate`) pivots on the placed layer
+            translate: '-50% -50%',
+            transform: `rotate(${l.ancora.rot}deg)${l.ancora.specchio ? ' scaleX(-1)' : ''}`,
           }}
         />
       ))}

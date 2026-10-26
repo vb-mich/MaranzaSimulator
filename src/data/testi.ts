@@ -644,6 +644,18 @@ export const TESTI = {
     ricoveroGuaio: (g: string) => `${g} di ospedale`,
   },
 
+  /** The held breath between "Fallo" and the outcome card, by risk band (and one set for gambling). */
+  suspense: {
+    righe: {
+      basso: ['Vediamo come va…', 'Tranqui, si fa…', 'Easy, fra…'],
+      medio: ['Testa bassa, cappuccio su…', 'Nessuno sta guardando… vero?', 'Speriamo bene…'],
+      alto: ['Occhio agli sbirri…', 'Sento una sirena…', 'Cuore a mille…'],
+      estremo: ['Qui finisce male…', 'Sirene ovunque…', 'Prega, fra…'],
+      azzardo: ['Gira, gira, gira…', 'Tutto sul rosso, fra…', 'Dai che è la volta buona…'],
+    } as Record<string, string[]>,
+    subito: 'Dimmi subito',
+  },
+
   toast: {
     giorno: (data: string) => `Nuovo giorno: ${data}`,
     paghetta: (e: string) => `Il papi ti ha mandato la paghetta: ${e}`,
