@@ -90,7 +90,7 @@ data = {
     },
     "classi": M.CLASSI,
     "abilita_classi": {
-        "Magrebino": ["trasferta_gratis", "trapper_di_quartiere(+10% rep se drip>200)", "no_azzardo", "ramadan(15feb-16mar: no azioni mattina/pomeriggio)"],
+        "Magrebino": ["trasferta_gratis", f"trapper_di_quartiere(+10% rep se drip>{M.TRAPPER_DRIP_MIN})", "no_azzardo", "ramadan(15feb-16mar: no azioni mattina/pomeriggio)"],
         "Pakistano": ["instancabile(energia<=15 -> 100, 1/mese)", "business(+10% incassi)", "ventiquattrosette(1 azione di notte a settimana)"],
         "Africano":  ["giudice(+10 al tiro)", "fuga(rischio x0.9)", "famiglia(-10% incassi)"],
         "Zingaro":   ["prestanome(40% perdite azzerate)", "cuggino(1 azione senza rischio al giorno in galera, energia x2)", "carovana(-10% guadagni rep)"],

@@ -95,7 +95,7 @@ CORSA_BALCANICO_BONUS = 0.10
 CORSA_VINCITA_MULT = 2.0
 VIRALE_P = 0.08                 # TikTok / parkour / tag: probabilita' di diventare virale
 VIRALE_REP = 10                 # ... +10 rep (prima dei rendimenti decrescenti)
-CHILL_DRIP_DIV = 500            # chill: rep = (rep base + drip / 500) x (1 - rep / 60)
+CHILL_DRIP_DIV = 1750           # chill: rep = (rep base + drip / 1750) x (1 - rep / 60)
 CHILL_CAP = 60
 TIKTOK_CAP = 80                 # tiktok: rep = rep base x (1 - rep / 80)
 MONOPATTINO_TIENI_P = 0.5       # C09 senza veicolo: 50% te lo tieni invece del bottino
@@ -112,7 +112,7 @@ CLASSI = {   # soldi iniziali, energia massima (le abilita' sono nel motore)
     "Italiano":  dict(soldi=200, energia=120),
 }
 # Abilita' di classe (vedi abilita_classi in export_data.py)
-TRAPPER_DRIP_MIN = 200          # Magrebino: +10% rep se il drip piu' caro vale > 200
+TRAPPER_DRIP_MIN = 1000         # Magrebino: +10% rep se il drip piu' caro vale > 1000 (dalla catena in su)
 TRAPPER_REP_MULT = 1.10
 RAMADAN_INIZIO = [2, 15]        # Magrebino: [mese, giorno], estremi inclusi
 RAMADAN_FINE = [3, 16]
@@ -144,15 +144,15 @@ CIBO = [  # nome, costo, recupero (quota di energia max), salute/giorno
 # ---- Negozio -----------------------------------------------------------
 # tipo: drip (estetica/rep), veicolo (livello), tool (bonus rischio)
 NEGOZIO = {
-    "passamontagna":  dict(nome="Passamontagna Naik", prezzo=15,  tipo="tool",   effetto="notte", valore=0),
-    "tronchese":      dict(nome="Tronchese del cuggino", prezzo=30, tipo="tool", effetto="effrazione", valore=0),
-    "cappello":       dict(nome="Cappello Nord Faccia",   prezzo=90,  tipo="drip", valore=90),
-    "tuta":           dict(nome="Tuta Naik Tech",        prezzo=180, tipo="drip", valore=180),
-    "catena":         dict(nome="Catena placcata 'oro'", prezzo=250, tipo="drip", valore=250),
-    "monopattino":    dict(nome="Monopattino truccato",  prezzo=350, tipo="veicolo", valore=350, livello=1),
-    "telefono":       dict(nome="aiFon ultimo modello", prezzo=1200, tipo="drip", valore=1200),
-    "motorino":       dict(nome="Motorino elaborato",    prezzo=1500, tipo="veicolo", valore=1500, livello=2),
-    "orologio":       dict(nome="Orologio 'svizzero' di Napoli", prezzo=2500, tipo="drip", valore=2500),
+    "passamontagna":  dict(nome="Passamontagna Naik", prezzo=50,  tipo="tool",   effetto="notte", valore=0),
+    "tronchese":      dict(nome="Tronchese del cuggino", prezzo=150, tipo="tool", effetto="effrazione", valore=0),
+    "cappello":       dict(nome="Cappello Nord Faccia",   prezzo=200,  tipo="drip", valore=200),
+    "tuta":           dict(nome="Tuta Naik Tech",        prezzo=400, tipo="drip", valore=400),
+    "catena":         dict(nome="Catena placcata 'oro'", prezzo=1500, tipo="drip", valore=1500),
+    "monopattino":    dict(nome="Monopattino truccato",  prezzo=1200, tipo="veicolo", valore=1200, livello=1),
+    "telefono":       dict(nome="aiFon ultimo modello", prezzo=2000, tipo="drip", valore=2000),
+    "motorino":       dict(nome="Motorino elaborato",    prezzo=5000, tipo="veicolo", valore=5000, livello=2),
+    "orologio":       dict(nome="Orologio 'svizzero' di Napoli", prezzo=10000, tipo="drip", valore=10000),
 }
 
 # ---- Avvocati (Tribunale) ---------------------------------------------
@@ -182,7 +182,10 @@ PENA_MIN_GIORNI = 1             # ogni condanna vale almeno 1 giorno
 #   trasferta : True -> costa 1 slot extra (salvo Magrebino / veicolo)
 #   rep_min   : reputazione minima per sbloccarla
 #   energia   : costo
-#   spesa     : (min,max) investimento in soldi; t in [0,1] = quanto investi
+#   spesa     : (min,max) investimento in soldi; t in [0,1] = quanto investi.
+#               Regola delle tacche: col bottino fisso la spesa massima vale circa il bottino medio in piu'
+#               che porta (da professionista non si guadagna di piu', si rischia meno); con bottino_x la spesa
+#               e' la merce e il gabbio sale con lei. Eccezione: il bancomat, dove l'investimento decide tutto.
 #   gabbio    : (a_spesa_min, a_spesa_max) probabilita' di essere beccato
 #   ospedale  : probabilita' di finire in ospedale (se non beccato)
 #   bottino   : (min,max) in euro; oppure bottino_x=(a,b) moltiplicatore della spesa
@@ -214,7 +217,7 @@ _a("G03","Poker nel retrobottega", tags={"AZZARDO"}, energia=30, spesa=(50,300),
 _a("G04","Corsa clandestina in monopattino", tags={"AZZARDO","VEICOLO"}, energia=30, spesa=(20,100),
    speciale="corsa", gabbio=(0.10,0.10), ospedale=0.15, pena=1, multa=150, rep=4, veicolo_req=True, slots={3,4})
 # --- Reati minori (tier 1: rep 0+) ---
-_a("C01","Truffa dell'anello d'oro", tags={"TRUFFA"}, energia=20, spesa=(1,1), gabbio=(0.04,0.04), ospedale=0.04,
+_a("C01","Truffa dell'anello d'oro", tags={"TRUFFA"}, energia=20, spesa=(1,20), gabbio=(0.06,0.03), ospedale=0.04,
    bottino=(25,100), rep=2, pena=1, multa=100, slots={1,2,3})
 _a("C02","Portoghese sul regionale", tags={"FURTO","VEICOLO"}, energia=15, gabbio=(0.05,0.05), bottino=(10,20),
    rep=1, pena=1, multa=100, slots={1,2,3})
@@ -228,9 +231,9 @@ _a("C06","Tag sui muri del quartiere", tags={"SOCIAL"}, energia=25, spesa=(5,20)
    rep=4, pena=1, multa=150, slots={3,4}, speciale="tag")
 _a("C07","Fumo nascosto nel parchetto", tags={"FURTO"}, energia=30, gabbio=(0.06,0.06), ospedale=0.15,
    bottino=(0,200), rep=5, pena=4, slots={3,4})
-_a("C08","Truffa Vinted (sneakers fulle)", tags={"TRUFFA"}, energia=20, spesa=(15,60), gabbio=(0.06,0.06),
+_a("C08","Truffa Vinted (sneakers fulle)", tags={"TRUFFA"}, energia=20, spesa=(15,60), gabbio=(0.04,0.10),
    bottino_x=(1.8,3.5), rep=2, pena=3, multa=300, cooldown=4)
-_a("C09","Ruba monopattino elettrico", tags={"FURTO","EFFRAZIONE"}, energia=35, spesa=(0,30), gabbio=(0.15,0.08),
+_a("C09","Ruba monopattino elettrico", tags={"FURTO","EFFRAZIONE"}, energia=35, spesa=(0,50), gabbio=(0.15,0.08),
    ospedale=0.05, bottino=(50,260), rep=4, pena=4, speciale="monopattino")
 _a("C10","Parkour sui tetti per TikTok", tags={"SOCIAL"}, energia=40, gabbio=(0.03,0.03), ospedale=0.15,
    rep=6, pena=1, multa=200, slots={1,2,3}, speciale="tiktok")
@@ -239,36 +242,36 @@ _a("C11","Scippo in stazione (bici)", tags={"FURTO","VEICOLO"}, rep_min=10, ener
    ospedale=0.10, bottino=(45,380), rep=4, pena=6)
 _a("C12","Scippo al centro commerciale", tags={"FURTO"}, rep_min=10, energia=35, gabbio=(0.12,0.12),
    ospedale=0.05, bottino=(75,600), rep=4, pena=6, trasferta=True, slots={1,2})
-_a("C13","Scassinare auto", tags={"FURTO","EFFRAZIONE","NOTTE"}, rep_min=10, energia=45, spesa=(0,20),
+_a("C13","Scassinare auto", tags={"FURTO","EFFRAZIONE","NOTTE"}, rep_min=10, energia=45, spesa=(0,100),
    gabbio=(0.15,0.08), ospedale=0.05, bottino=(15,450), rep=4, pena=6, slots={3,4})
-_a("C14","Truffa dello specchietto", tags={"TRUFFA"}, rep_min=10, energia=40, gabbio=(0.12,0.12), ospedale=0.10,
+_a("C14","Truffa dello specchietto", tags={"TRUFFA"}, rep_min=10, energia=40, gabbio=(0.08,0.08), ospedale=0.06,
    bottino=(75,300), rep=4, pena=5, multa=300, slots={1,2,3})
-_a("C15","Parcheggiatore abusivo", tags={"TRUFFA"}, rep_min=10, energia=40, spesa=(0,10), gabbio=(0.12,0.08),
+_a("C15","Parcheggiatore abusivo", tags={"TRUFFA"}, rep_min=10, energia=40, spesa=(0,30), gabbio=(0.12,0.08),
    ospedale=0.10, bottino=(30,180), rep=3, pena=1, multa=200, trasferta=True, slots={2,3}, solo_evento="evento")
-_a("C16","Bagarinaggio allo stadio", tags={"TRUFFA"}, rep_min=10, energia=45, spesa=(90,300), gabbio=(0.08,0.08),
+_a("C16","Bagarinaggio allo stadio", tags={"TRUFFA"}, rep_min=10, energia=45, spesa=(90,300), gabbio=(0.05,0.12),
    ospedale=0.05, bottino_x=(1.5,3.0), rep=3, pena=2, multa=500, trasferta=True, slots={2,3}, solo_evento="evento")
 _a("C17","Rissa per collana/cappello drip", tags={"FORZA"}, rep_min=10, energia=50, gabbio=(0.12,0.12),
    ospedale=0.20, bottino=(60,380), rep=6, pena=7, slots={2,3})
 _a("C18","Rapina al rider", tags={"FORZA","VEICOLO"}, rep_min=10, energia=45, gabbio=(0.12,0.12), ospedale=0.15,
    bottino=(45,220), rep=-2, pena=9, slots={3,4}, speciale="veicolo_bonus")
 # --- Reati tier 3 (rep 20+) ---
-_a("C19","Rame al cantiere", tags={"FURTO","EFFRAZIONE","NOTTE"}, rep_min=20, energia=70, spesa=(0,50),
+_a("C19","Rame al cantiere", tags={"FURTO","EFFRAZIONE","NOTTE"}, rep_min=20, energia=70, spesa=(0,120),
    gabbio=(0.15,0.08), ospedale=0.12, bottino=(120,600), rep=5, pena=9, trasferta=True, slots={4})
 _a("C20","Rapina alla lucciola sulla statale", tags={"FORZA","NOTTE"}, rep_min=20, energia=50, gabbio=(0.12,0.12),
    ospedale=0.25, bottino=(150,750), rep=-6, pena=12, trasferta=True, slots={3,4})
 _a("C21","Spaccio fuori dalla discoteca", tags={"SPACCIO","NOTTE"}, rep_min=20, energia=60, spesa=(50,300),
-   gabbio=(0.22,0.22), ospedale=0.06, bottino_x=(2.0,4.0), rep=8, pena=15, trasferta=True, slots={3,4})
+   gabbio=(0.15,0.30), ospedale=0.06, bottino_x=(2.0,4.0), rep=8, pena=15, trasferta=True, slots={3,4})
 # --- Reati tier 4 (rep 35+) ---
-_a("C22","Topino d'appartamento", tags={"FURTO","EFFRAZIONE"}, rep_min=35, energia=80, spesa=(0,100),
+_a("C22","Topino d'appartamento", tags={"FURTO","EFFRAZIONE"}, rep_min=35, energia=80, spesa=(0,600),
    gabbio=(0.25,0.12), ospedale=0.10, bottino=(200,2500), rep=7, pena=24, slots={1,2,4}, cooldown=3)
-_a("C23","Corriere per il boss", tags={"SPACCIO"}, rep_min=35, energia=50, spesa=(0,30), gabbio=(0.25,0.15),
+_a("C23","Corriere per il boss", tags={"SPACCIO"}, rep_min=35, energia=50, spesa=(0,180), gabbio=(0.25,0.15),
    ospedale=0.05, bottino=(150,800), rep=8, pena=21, trasferta=True, veicolo_req=True, cooldown=2)
 _a("C24","Spedizione punitiva per il boss", tags={"FORZA"}, rep_min=45, energia=70, gabbio=(0.20,0.20),
    ospedale=0.20, bottino=(100,600), rep=12, pena=18, cooldown=7, slots={3,4})
-_a("C25","Spaccata al Compro Oro", tags={"FURTO","EFFRAZIONE","NOTTE"}, rep_min=50, energia=60, spesa=(0,200),
+_a("C25","Spaccata al Compro Oro", tags={"FURTO","EFFRAZIONE","NOTTE"}, rep_min=50, energia=60, spesa=(0,300),
    gabbio=(0.25,0.12), ospedale=0.10, bottino=(150,1200), rep=10, pena=30, cooldown=14, slots={4}, veicolo_req=True)
 # --- Endgame (rep 70+) ---
-_a("C26","Furto del BANCOMAT", tags={"FURTO","EFFRAZIONE","NOTTE"}, rep_min=70, energia=80, spesa=(300,5000),
+_a("C26","Furto del BANCOMAT", tags={"FURTO","EFFRAZIONE","NOTTE"}, rep_min=70, energia=80, spesa=(300,8000),
    gabbio=(0.60,0.08), ospedale=0.15, bottino=(4000,30000), rep=5, pena=60, cooldown=30, slots={4})
 
 for _x in A.values():
@@ -1012,26 +1015,18 @@ def cibo_tirchio(s: Stato):
     if s.soldi >= 15: return CIBO[2]
     return CIBO[-1]
 
-def acquisti_bilanciato(s: Stato):
-    out = []
-    if s.soldi > 120: out += ["passamontagna", "tronchese"]
-    if s.soldi > 700: out.append("monopattino")
-    if s.soldi > 900: out.append("tuta")
-    if s.soldi > 1500: out.append("catena")
-    if s.soldi > 4000: out.append("motorino")
-    if s.soldi > 6000: out.append("telefono")
-    if s.soldi > 12000: out.append("orologio")
-    return out
+def _acquisti(s: Stato, regole):
+    """Compra un oggetto quando i contanti superano k volte il suo prezzo, nell'ordine della lista."""
+    return [i for i, k in regole if s.soldi > k * NEGOZIO[i]["prezzo"]]
 
-def acquisti_yolo(s: Stato):
-    out = []
-    if s.soldi > 300: out.append("tuta")
-    if s.soldi > 500: out.append("monopattino")
-    if s.soldi > 800: out += ["catena", "passamontagna"]
-    if s.soldi > 2500: out.append("motorino")
-    if s.soldi > 3000: out.append("telefono")
-    if s.soldi > 8000: out.append("orologio")
-    return out
+ACQUISTI_BILANCIATO = [("passamontagna", 3), ("tronchese", 3), ("cappello", 4), ("monopattino", 2), ("tuta", 4),
+                       ("catena", 4), ("telefono", 4), ("motorino", 2.5), ("orologio", 4)]
+ACQUISTI_YOLO = [("passamontagna", 2), ("cappello", 1.5), ("tuta", 1.5), ("monopattino", 1.5), ("catena", 1.5),
+                 ("telefono", 1.5), ("motorino", 1.5), ("orologio", 1.5)]
+
+def acquisti_bilanciato(s: Stato): return _acquisti(s, ACQUISTI_BILANCIATO)
+
+def acquisti_yolo(s: Stato): return _acquisti(s, ACQUISTI_YOLO)
 
 def difesa_bilanciato(g: Gioco, pena):
     s = g.s

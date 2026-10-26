@@ -5,7 +5,7 @@
 // from the engine's read-only queries. The random player draws from the game's own RNG, exactly
 // like `g.rng` in Python, so the runs match the simulator's.
 
-import { AZIONI, C, DATI, haBottino, haSpesa, type Azione, type Cibo } from '../src/data/gameData';
+import { AZIONI, C, DATI, NEGOZIO, haBottino, haSpesa, type Azione, type Cibo } from '../src/data/gameData';
 import {
   Rng,
   bottinoAtteso,
@@ -138,28 +138,22 @@ function ciboTirchio(s: Stato): Cibo {
   return CIBO[CIBO.length - 1]!;
 }
 
-function acquistiBilanciato(s: Stato): string[] {
-  const out: string[] = [];
-  if (s.soldi > 120) out.push('passamontagna', 'tronchese');
-  if (s.soldi > 700) out.push('monopattino');
-  if (s.soldi > 900) out.push('tuta');
-  if (s.soldi > 1500) out.push('catena');
-  if (s.soldi > 4000) out.push('motorino');
-  if (s.soldi > 6000) out.push('telefono');
-  if (s.soldi > 12000) out.push('orologio');
-  return out;
+/** Python `_acquisti`: buys an item when cash is above k times its price, in the order listed. */
+function acquistiSe(s: Stato, regole: readonly (readonly [string, number])[]): string[] {
+  return regole.filter(([i, k]) => s.soldi > k * NEGOZIO[i]!.prezzo).map(([i]) => i);
 }
 
-function acquistiYolo(s: Stato): string[] {
-  const out: string[] = [];
-  if (s.soldi > 300) out.push('tuta');
-  if (s.soldi > 500) out.push('monopattino');
-  if (s.soldi > 800) out.push('catena', 'passamontagna');
-  if (s.soldi > 2500) out.push('motorino');
-  if (s.soldi > 3000) out.push('telefono');
-  if (s.soldi > 8000) out.push('orologio');
-  return out;
-}
+const ACQUISTI_BILANCIATO = [
+  ['passamontagna', 3], ['tronchese', 3], ['cappello', 4], ['monopattino', 2], ['tuta', 4],
+  ['catena', 4], ['telefono', 4], ['motorino', 2.5], ['orologio', 4],
+] as const;
+const ACQUISTI_YOLO = [
+  ['passamontagna', 2], ['cappello', 1.5], ['tuta', 1.5], ['monopattino', 1.5], ['catena', 1.5],
+  ['telefono', 1.5], ['motorino', 1.5], ['orologio', 1.5],
+] as const;
+
+const acquistiBilanciato = (s: Stato) => acquistiSe(s, ACQUISTI_BILANCIATO);
+const acquistiYolo = (s: Stato) => acquistiSe(s, ACQUISTI_YOLO);
 
 function difesaBilanciato(s: Stato, pena: number): Difesa {
   if (pena <= 3) return 'ufficio';

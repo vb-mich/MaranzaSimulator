@@ -42,7 +42,7 @@ $ Questo progetto e' ispirato ad un vecchio gioco chiamato Tabboz simulator (htt
 * *Patrimonio* = contanti + 50% del valore degli oggetti posseduti (drip e veicoli).
 * Se la run finisce prima del giorno 365 (game over), i punti sono `Patrimonio × Reputazione × 0,5 × (giorni sopravvissuti / 365)`. Una run finita male conta, ma poco: il modo per andare in classifica e' arrivare in fondo.
 * **Si mostrano sempre abbreviati**: "870K", "4,6M", "18,2M" (una cifra decimale). Il numero intero compare solo nel dettaglio della classifica.
-* Ordine di grandezza atteso (dalla simulazione): giocatore casuale ~1M, prudente ~5–7M, bilanciato ~7–9M, spericolato ~10–14M quando sopravvive (guadagna di piu' ma perde mezzo anno in cella e rischia la run sul bancomat).
+* Ordine di grandezza atteso (dalla simulazione): giocatore casuale ~0,6–0,9M, prudente ~4–5M, bilanciato ~4,5–6M, spericolato ~6–10M quando sopravvive (guadagna di piu' ma perde mezzo anno in cella e rischia la run sul bancomat).
 
 Il gioco inizia con **una sola scelta**: la Classe del personaggio, piu' il nome. Niente altro da configurare: il giocatore deve essere in piazza entro 30 secondi.
 
@@ -86,7 +86,7 @@ Tra parentesi quadre, dove serve, l'interpretazione precisa da implementare (e' 
 
 * **Magrebino** — Taglio sfumato, profumo insetticida e marsupio più costoso del contenuto. Il suo monopattino ha più cavalli di una Panda.
   * *Spostamento rapido*: le azioni che richiedono una trasferta non consumano slot temporali addizionali.
-  * *Trapper di quartiere*: +10% Reputazione [sui guadagni di rep] quando indossa un capo Drip di valore superiore a 200€.
+  * *Trapper di quartiere*: +10% Reputazione [sui guadagni di rep] quando indossa un capo Drip di valore superiore a 1.000€ [dalla catena in su].
   * *Ramadan mubarak*: non puo' compiere azioni di tipo Azzardo. Dal 15 Febbraio al 16 Marzo non puo' compiere alcuna azione durante la Mattina e il Pomeriggio [puo' dormire].
 * **Pakistano** — Sempre aperto 24/7 anche sotto le bombe. Nel suo minimarket abusivo ti vende di tutto: dalle birre calde alle 4 di mattina fino alle SIM intestate a suo cugino.
   * *Instancabile*: quando l'energia e' pari o inferiore a 15, viene riportata a 100. Max 1 volta al mese, reset il primo del mese.
@@ -153,20 +153,22 @@ Accessibile in qualsiasi momento senza consumare slot. Gli oggetti sono visibili
 
 | Oggetto | Prezzo | Tipo | Effetto |
 |---|---|---|---|
-| Passamontagna Naik | 15€ | tool | −5 punti di rischio Gabbio nelle azioni di Notte |
-| Tronchese del cuggino | 30€ | tool | −5 punti di rischio Gabbio nelle azioni con Effrazione |
-| Cappello Nord Faccia | 90€ | drip | Drip 90 (conta per il Chill e per il Patrimonio) |
-| Tuta Naik Tech | 180€ | drip | Drip 180 |
-| Catena placcata 'oro' | 250€ | drip | Drip 250 — sblocca 'Trapper di quartiere' (Magrebino) |
-| Monopattino truccato | 350€ | veicolo | Veicolo liv. 1: trasferte senza slot extra; −5 pt Gabbio nelle azioni di Fuga; sblocca le azioni che richiedono un veicolo |
-| aiFon ultimo modello | 1.200€ | drip | Drip 1.200 |
-| Motorino elaborato | 1.500€ | veicolo | Veicolo liv. 2: come il monopattino ma −10 pt Gabbio nelle azioni di Fuga e −5 pt in quelle che richiedono veicolo |
-| Orologio 'svizzero' di Napoli | 2.500€ | drip | Drip 2.500 |
+| Passamontagna Naik | 50€ | tool | −5 punti di rischio Gabbio nelle azioni di Notte |
+| Tronchese del cuggino | 150€ | tool | −5 punti di rischio Gabbio nelle azioni con Effrazione |
+| Cappello Nord Faccia | 200€ | drip | Drip 200 (conta per il Chill e per il Patrimonio) |
+| Tuta Naik Tech | 400€ | drip | Drip 400 |
+| Catena placcata 'oro' | 1.500€ | drip | Drip 1.500 — sblocca 'Trapper di quartiere' (Magrebino) |
+| Monopattino truccato | 1.200€ | veicolo | Veicolo liv. 1: trasferte senza slot extra; −5 pt Gabbio nelle azioni di Fuga; sblocca le azioni che richiedono un veicolo |
+| aiFon ultimo modello | 2.000€ | drip | Drip 2.000 |
+| Motorino elaborato | 5.000€ | veicolo | Veicolo liv. 2: come il monopattino ma −10 pt Gabbio nelle azioni di Fuga e −5 pt in quelle che richiedono veicolo |
+| Orologio 'svizzero' di Napoli | 10.000€ | drip | Drip 10.000 |
 
 Regole:
-* Il **Drip** conta per il Patrimonio (al 50%) e aumenta la rep del "Chillare in piazza" (+1 ogni 500€ di drip).
+* Il **Drip** conta per il Patrimonio (al 50%) e aumenta la rep del "Chillare in piazza" (+1 ogni 1.750€ di drip).
 * I **veicoli** possono essere sequestrati (50% se arrestato durante un'azione che richiede veicolo; 20% a un posto di blocco senza casco) o rubati (il monopattino, evento "Guaio").
 * Gli **attrezzi** non si perdono mai.
+
+$ Prezzi ritoccati il 26/10 dopo il primo alpha test ("in una settimana si fanno 1000€ e si compra quasi tutto"): circa ×3,4 (da 6.115€ a 20.500€ per tutto il negozio), a scala. Obiettivo: il giocatore tipico compra il passamontagna e spesso il cappello nella prima settimana, la tuta a maggio, catena, monopattino e telefono tra giugno e luglio, e l'orologio solo se gioca bene. I prezzi sono fatti per durare tutto l'anno: comprare drip toglie meta' del suo valore dai MARANZA POINTS, e' una scelta di vanita' contro punti.
 
 $ Oggetti futuri da valutare: "Casa del cuggino" (affitto settimanale, sblocca un quinto slot "Siesta"), "Cane Pitbull" (−rischio ospedale, +mantenimento), "Avvocato in abbonamento".
 
@@ -178,7 +180,7 @@ Ogni azione e' definita da questi campi:
 
 * **Slot** in cui e' disponibile; **Trasferta** (costa 1 slot extra senza veicolo/Magrebino); **Rep minima** per sbloccarla.
 * **Energia** consumata.
-* **Spesa (min–max)**: l'*investimento*. Il giocatore sceglie con uno slider quanto spendere tra il minimo e il massimo. Spendere di piu' **abbassa la probabilita' di gabbio** (da "spesa min" a "spesa max" nella tabella, lineare) e **alza il bottino** (il minimo del bottino sale fino alla meta' dell'intervallo). Nelle azioni "× spesa" il bottino e' direttamente un multiplo di quanto investito. La spesa e' persa comunque, anche se l'azione fallisce.
+* **Spesa (min–max)**: l'*investimento*. Il giocatore sceglie con uno slider quanto spendere tra il minimo e il massimo. Spendere di piu' **abbassa la probabilita' di gabbio** (da "spesa min" a "spesa max" nella tabella, lineare) e **alza il bottino** (il minimo del bottino sale fino alla meta' dell'intervallo). La spesa massima vale circa il bottino medio in piu' che porta: *Da professionista* in media non fa guadagnare di piu', fa rischiare meno e tornare raramente a mani vuote; *Alla buona* e' per chi e' al verde o si sente fortunato. Nelle azioni "× spesa" (Vinted, bagarinaggio, spaccio) la spesa e' la merce: il bottino e' un multiplo di quanto investito e il **rischio sale** con il volume (piu' merce, piu' occhi addosso). Unica eccezione voluta il bancomat, dove l'investimento decide quasi tutto. La spesa e' persa comunque, anche se l'azione fallisce.
 * **Gabbio**: probabilita' di essere beccati dagli sbirri → Arresto → Tribunale.
 * **Ospedale**: probabilita', *se non beccati*, che l'azione finisca male → ricovero.
 * **Bottino**: estratto a caso nell'intervallo, poi moltiplicato per i bonus (rep, classe, condizione del giorno) e per la **zona calda**.
@@ -210,7 +212,7 @@ $ Scala dei rischi: il giocatore medio fa ~700 azioni l'anno. A 5% di rischio so
 
 | ID | Azione | Slot | Trasf. | Rep min | Energia | Spesa (min–max) | Gabbio (spesa min→max) | Ospedale | Bottino | Rep | Pena base | Multa | Cooldown |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| L01 | Chillare in piazza | tutti | — | — | 10 | — | — | — | — | +0,5 (+drip/500) fino a rep 60 | 1 gg | — | — |
+| L01 | Chillare in piazza | tutti | — | — | 10 | — | — | — | — | +0,5 (+drip/1750) fino a rep 60 | 1 gg | — | — |
 | L02 | TikTok brainrot in piazza | Mat/Pom/Ser | — | — | 20 | — | — | — | — | +1.5 fino a rep 80 (8%: +10) | 1 gg | — | — |
 | L03 | Turno al minimarket | Mat/Pom/Ser | — | — | 40 | — | — | — | 20€–30€ | -1 | 1 gg | — | — |
 | L04 | Rider delle consegne | Mat/Pom/Ser | sì | — | 50 | — | — | — | 20€–30€ | 0 | 1 gg | — | — |
@@ -241,26 +243,26 @@ $ Scala dei rischi: il giocatore medio fa ~700 azioni l'anno. A 5% di rischio so
 
 | ID | Azione | Slot | Trasf. | Rep min | Energia | Spesa (min–max) | Gabbio (spesa min→max) | Ospedale | Bottino | Rep | Pena base | Multa | Cooldown |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C01 | Truffa dell'anello d'oro | Mat/Pom/Ser | — | — | 20 | 1€ | 4% | 4% | 25€–100€ | +2 | 1 gg | 100€ | — |
+| C01 | Truffa dell'anello d'oro | Mat/Pom/Ser | — | — | 20 | 1€–20€ | 6%→3% | 4% | 25€–100€ | +2 | 1 gg | 100€ | — |
 | C02 | Portoghese sul regionale | Mat/Pom/Ser | — | — | 15 | — | 5% | — | 10€–20€ | +1 | 1 gg | 100€ | — |
 | C03 | Taccheggio al Lidl | Mat/Pom/Ser | — | — | 20 | — | 6% | 4% | 15€–50€ | +1 | 1 gg | 100€ | — |
 | C04 | Rubare alcool all'alimentari | Mat/Pom/Ser | — | — | 25 | — | 8% | 5% | 20€–60€ | +3 | 2 gg | 100€ | — |
 | C05 | Borseggio al mercato | Mat | — | — | 30 | — | 8% | 10% | 25€–160€ | -3 | 3 gg | — | — |
 | C06 | Tag sui muri del quartiere | Ser/Not | — | — | 25 | 5€–20€ | 8%→5% | — | — | +4 (8%: +10) | 1 gg | 150€ | — |
 | C07 | Fumo nascosto nel parchetto | Ser/Not | — | — | 30 | — | 6% | 15% | 0€–200€ | +5 | 4 gg | — | — |
-| C08 | Truffa Vinted (sneakers fulle) | tutti | — | — | 20 | 15€–60€ | 6% | — | spesa × 1.8–3.5 | +2 | 3 gg | 300€ | 4 gg |
-| C09 | Ruba monopattino elettrico | tutti | — | — | 35 | 0€–30€ | 15%→8% | 5% | 50€–260€ | +4 | 4 gg | — | — |
+| C08 | Truffa Vinted (sneakers fulle) | tutti | — | — | 20 | 15€–60€ | 4%→10% | — | spesa × 1.8–3.5 | +2 | 3 gg | 300€ | 4 gg |
+| C09 | Ruba monopattino elettrico | tutti | — | — | 35 | 0€–50€ | 15%→8% | 5% | 50€–260€ | +4 | 4 gg | — | — |
 | C10 | Parkour sui tetti per TikTok | Mat/Pom/Ser | — | — | 40 | — | 3% | 15% | — | +6 fino a rep 80 (8%: +10) | 1 gg | 200€ | — |
 
-* **C01 Truffa dell'anello d'oro** — Raccogli da terra un anello di ottone dorato da 1€ e convinci un passante credulone che e' oro puro, chiedendogli una ricompensa.
+* **C01 Truffa dell'anello d'oro** — Raccogli da terra un anello di ottone dorato da 1€ e convinci un passante credulone che e' oro puro, chiedendogli una ricompensa. Con un astuccio e un certificato falsi (fino a 20€) il passante abbocca prima e ti molla di piu'.
 * **C02 Portoghese sul regionale** — Sali sul regionale senza biglietto. Appena vedi spuntare la divisa del controllore, ti chiudi in bagno o corri lungo i vagoni per scendere alla fermata dopo. Se ti bloccano: multa.
 * **C03 Taccheggio al Lidl** — Tuta larga, zaino aperto. Se riesce, oggi non paghi il mantenimento.
 * **C04 Rubare alcool all'alimentari** — Entri nell'alimentari, ti infili due bottiglie di superalcolici dentro la tuta larga e esci facendo finta di niente. Se il proprietario ti sgama, ti rincorre col mocio.
 * **C05 Borseggio al mercato** — Nel casino del mercato ti infili tra i banchi e con la mano lesta sfili la borsa della spesa della signora. Mossa poco rispettata: "ai vecchi non si ruba" (−3 rep). Solo di Mattina; il Venerdi' il mercato e' piu' pieno (condizione "Mercato straordinario").
 * **C06 Tag sui muri del quartiere** — Bombolette e il tuo nome su ogni saracinesca. Pura rep. Piu' bombolette compri, piu' grande e' il pezzo e meno tempo stai esposto.
 * **C07 Fumo nascosto nel parchetto** — Setacci cespugli e tubi della luce del parco per scovare le "stecche" nascoste dagli spacciatori di zona. Il rischio vero non e' la madama, sono i proprietari.
-* **C08 Truffa Vinted (sneakers fulle)** — Metti in vendita scarpe tarocche prese dai cinesi spacciandole per "Edizione Limitata intonsa" con scontrino finto. Piu' paia compri, piu' incassi. Il profilo viene bannato per 4 giorni dopo ogni colpo (cooldown).
-* **C09 Ruba monopattino elettrico** — Tranci il lucchetto di un monopattino in sharing e te lo porti via. Con un tronchese vero (30€) e' tutto piu' veloce. Se non hai un veicolo, il 50% delle volte te lo tieni *invece* di venderlo (niente bottino, ma hai un mezzo).
+* **C08 Truffa Vinted (sneakers fulle)** — Metti in vendita scarpe tarocche prese dai cinesi spacciandole per "Edizione Limitata intonsa" con scontrino finto. Piu' paia compri, piu' incassi, ma piu' segnalazioni rischi. Il profilo viene bannato per 4 giorni dopo ogni colpo (cooldown).
+* **C09 Ruba monopattino elettrico** — Tranci il lucchetto di un monopattino in sharing e te lo porti via. Con l'attrezzatura giusta (fino a 50€) e' tutto piu' veloce. Se non hai un veicolo, il 50% delle volte te lo tieni *invece* di venderlo (niente bottino, ma hai un mezzo).
 * **C10 Parkour sui tetti per TikTok** — Salti tra i tetti dei capannoni con il telefono in mano. Rep alta, rischio di gabbio quasi nullo, ma un piede in fallo e' un mese di gesso.
 
 ### Reati — Tier 2 (rep 10+): il quartiere ti conosce
@@ -269,19 +271,19 @@ $ Scala dei rischi: il giocatore medio fa ~700 azioni l'anno. A 5% di rischio so
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | C11 | Scippo in stazione (bici) | tutti | — | 10 | 40 | — | 15% | 10% | 45€–380€ | +4 | 6 gg | — | — |
 | C12 | Scippo al centro commerciale | Mat/Pom | sì | 10 | 35 | — | 12% | 5% | 75€–600€ | +4 | 6 gg | — | — |
-| C13 | Scassinare auto | Ser/Not | — | 10 | 45 | 0€–20€ | 15%→8% | 5% | 15€–450€ | +4 | 6 gg | — | — |
-| C14 | Truffa dello specchietto | Mat/Pom/Ser | — | 10 | 40 | — | 12% | 10% | 75€–300€ | +4 | 5 gg | 300€ | — |
-| C15 | Parcheggiatore abusivo *(solo giorni evento)* | Pom/Ser | sì | 10 | 40 | 0€–10€ | 12%→8% | 10% | 30€–180€ | +3 | 1 gg | 200€ | — |
-| C16 | Bagarinaggio allo stadio *(solo giorni evento)* | Pom/Ser | sì | 10 | 45 | 90€–300€ | 8% | 5% | spesa × 1.5–3.0 | +3 | 2 gg | 500€ | — |
+| C13 | Scassinare auto | Ser/Not | — | 10 | 45 | 0€–100€ | 15%→8% | 5% | 15€–450€ | +4 | 6 gg | — | — |
+| C14 | Truffa dello specchietto | Mat/Pom/Ser | — | 10 | 40 | — | 8% | 6% | 75€–300€ | +4 | 5 gg | 300€ | — |
+| C15 | Parcheggiatore abusivo *(solo giorni evento)* | Pom/Ser | sì | 10 | 40 | 0€–30€ | 12%→8% | 10% | 30€–180€ | +3 | 1 gg | 200€ | — |
+| C16 | Bagarinaggio allo stadio *(solo giorni evento)* | Pom/Ser | sì | 10 | 45 | 90€–300€ | 5%→12% | 5% | spesa × 1.5–3.0 | +3 | 2 gg | 500€ | — |
 | C17 | Rissa per collana/cappello drip | Pom/Ser | — | 10 | 50 | — | 12% | 20% | 60€–380€ | +6 | 7 gg | — | — |
 | C18 | Rapina al rider | Ser/Not | — | 10 | 45 | — | 12% | 15% | 45€–220€ | -2 | 9 gg | — | — |
 
 * **C11 Scippo in stazione (bici)** — Sfrecci sulla bici pieghevole e sfili il marsupio a un pendolare distratto mentre guarda gli orari dei treni. Azione di Fuga: con un veicolo il rischio scende.
 * **C12 Scippo al centro commerciale** — Nella food court adocchi una borsa appoggiata sullo schienale della sedia, la sfili e scompari tra la folla. Trasferta.
-* **C13 Scassinare auto** — Spacchi il finestrino di un'auto parcheggiata al buio con una candela d'auto per svuotare il cassetto portaoggetti. Guanti e cappuccio (20€) abbassano il rischio.
+* **C13 Scassinare auto** — Spacchi il finestrino di un'auto parcheggiata al buio con una candela d'auto per svuotare il cassetto portaoggetti. Guanti, cappuccio e un amico che fa da palo (fino a 100€) abbassano il rischio.
 * **C14 Truffa dello specchietto** — Lanci una sassata contro la portiera di una macchina in rotonda e sostieni che ti ha spaccato lo specchietto, pretendendo contanti sul posto. Se l'automobilista insiste per il CID, chiama i vigili.
 * **C15 Parcheggiatore abusivo** *(solo giorni evento)* — Gilet catarifrangente trovato nei cespugli e "un'offerta per la custodia" nel piazzale dello stadio o della discoteca.
-* **C16 Bagarinaggio allo stadio** *(solo giorni evento)* — Compri biglietti col bot dell'amico e li rivendi al triplo ai disperati rimasti fuori. L'investimento decide il guadagno.
+* **C16 Bagarinaggio allo stadio** *(solo giorni evento)* — Compri biglietti col bot dell'amico e li rivendi al triplo ai disperati rimasti fuori. L'investimento decide il guadagno, ma con piu' biglietti in mano ti notano prima.
 * **C17 Rissa per collana/cappello drip** — Punti un ragazzetto in piazza con il cappello introvabile e glielo strappi, scatenando un parapiglia. Se la sua compagnia reagisce in blocco, ospedale.
 * **C18 Rapina al rider** — Gli blocchi la strada e gli prendi lo zaino e, se va bene, il motorino (bottino sempre, piu' il 50% di ottenere un veicolo se non ne hai). Mossa infame: il rider e' un poveraccio come te (−2 rep).
 
@@ -289,24 +291,24 @@ $ Scala dei rischi: il giocatore medio fa ~700 azioni l'anno. A 5% di rischio so
 
 | ID | Azione | Slot | Trasf. | Rep min | Energia | Spesa (min–max) | Gabbio (spesa min→max) | Ospedale | Bottino | Rep | Pena base | Multa | Cooldown |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C19 | Rame al cantiere | Not | sì | 20 | 70 | 0€–50€ | 15%→8% | 12% | 120€–600€ | +5 | 9 gg | — | — |
+| C19 | Rame al cantiere | Not | sì | 20 | 70 | 0€–120€ | 15%→8% | 12% | 120€–600€ | +5 | 9 gg | — | — |
 | C20 | Rapina alla lucciola sulla statale | Ser/Not | sì | 20 | 50 | — | 12% | 25% | 150€–750€ | -6 | 12 gg | — | — |
-| C21 | Spaccio fuori dalla discoteca | Ser/Not | sì | 20 | 60 | 50€–300€ | 22% | 6% | spesa × 2.0–4.0 | +8 | 15 gg | — | — |
+| C21 | Spaccio fuori dalla discoteca | Ser/Not | sì | 20 | 60 | 50€–300€ | 15%→30% | 6% | spesa × 2.0–4.0 | +8 | 15 gg | — | — |
 
-* **C19 Rame al cantiere** — Ti intrufoli di Notte nel cantiere dell'alta velocita' per sfilare i cavi di rame e rivenderli al chilo. Il furgone del cuggino (50€) raddoppia il carico.
+* **C19 Rame al cantiere** — Ti intrufoli di Notte nel cantiere dell'alta velocita' per sfilare i cavi di rame e rivenderli al chilo. Il furgone del cuggino (fino a 120€) raddoppia il carico.
 * **C20 Rapina alla lucciola sulla statale** — Ti apposti di Sera/Notte, individui una ragazza isolata e le strappi la borsetta. Se il protettore e' appostato nel furgone vicino, finisce malissimo. La piazza non rispetta chi se la prende con le lucciole (−6 rep).
-* **C21 Spaccio fuori dalla discoteca** — Ti piazzi nel parcheggio all'uscita dei locali a vendere "robina" tagliata male. L'investimento e' la merce: incassi 2–4 volte quello che compri. La zona e' piena di pattuglie in borghese.
+* **C21 Spaccio fuori dalla discoteca** — Ti piazzi nel parcheggio all'uscita dei locali a vendere "robina" tagliata male. L'investimento e' la merce: incassi 2–4 volte quello che compri, ma piu' roba hai addosso piu' rischi. La zona e' piena di pattuglie in borghese.
 
 ### Reati — Tier 4 (rep 35+): la fiducia del boss
 
 | ID | Azione | Slot | Trasf. | Rep min | Energia | Spesa (min–max) | Gabbio (spesa min→max) | Ospedale | Bottino | Rep | Pena base | Multa | Cooldown |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C22 | Topino d'appartamento | Mat/Pom/Not | — | 35 | 80 | 0€–100€ | 25%→12% | 10% | 200€–2.500€ | +7 | 24 gg | — | 3 gg |
-| C23 | Corriere per il boss *(veicolo)* | tutti | sì | 35 | 50 | 0€–30€ | 25%→15% | 5% | 150€–800€ | +8 | 21 gg | — | 2 gg |
+| C22 | Topino d'appartamento | Mat/Pom/Not | — | 35 | 80 | 0€–600€ | 25%→12% | 10% | 200€–2.500€ | +7 | 24 gg | — | 3 gg |
+| C23 | Corriere per il boss *(veicolo)* | tutti | sì | 35 | 50 | 0€–180€ | 25%→15% | 5% | 150€–800€ | +8 | 21 gg | — | 2 gg |
 | C24 | Spedizione punitiva per il boss | Ser/Not | — | 45 | 70 | — | 20% | 20% | 100€–600€ | +12 | 18 gg | — | 7 gg |
-| C25 | Spaccata al Compro Oro *(veicolo)* | Not | — | 50 | 60 | 0€–200€ | 25%→12% | 10% | 150€–1.200€ | +10 | 30 gg | — | 14 gg |
+| C25 | Spaccata al Compro Oro *(veicolo)* | Not | — | 50 | 60 | 0€–300€ | 25%→12% | 10% | 150€–1.200€ | +10 | 30 gg | — | 14 gg |
 
-* **C22 Topino d'appartamento** — Ti arrampichi sulla grondaia ed entri dalla finestra lasciata aperta al primo piano. Un palo e una scala (100€) dimezzano il rischio. Il colpo piu' redditizio prima del bancomat; a Ferragosto la citta' e' vuota (bottino ×2).
+* **C22 Topino d'appartamento** — Ti arrampichi sulla grondaia ed entri dalla finestra lasciata aperta al primo piano. Un palo, una scala e la soffiata giusta (fino a 600€) dimezzano il rischio. Il colpo piu' redditizio prima del bancomat; a Ferragosto la citta' e' vuota (bottino ×2).
 * **C23 Corriere per il boss** *(richiede veicolo)* — Fai da spedizioniere rapido per consegnare panetti e bustine in giro per la citta' per conto del capo. Posti di blocco con i cani ovunque.
 * **C24 Spedizione punitiva per il boss** — Il boss ti manda con la cricca a "chiarire un malinteso" con una banda rivale. Spranghe. E' l'azione che da' piu' rep di tutto il gioco.
 * **C25 Spaccata al Compro Oro** *(richiede veicolo)* — Lanci uno scooter rubato contro la vetrina per fare razzia di catenine. Colpo rumoroso: la piazza ne parla per settimane (cooldown 14 giorni).
@@ -315,11 +317,11 @@ $ Scala dei rischi: il giocatore medio fa ~700 azioni l'anno. A 5% di rischio so
 
 | ID | Azione | Slot | Trasf. | Rep min | Energia | Spesa (min–max) | Gabbio (spesa min→max) | Ospedale | Bottino | Rep | Pena base | Multa | Cooldown |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C26 | Furto del BANCOMAT | Not | — | 70 | 80 | 300€–5.000€ | 60%→8% | 15% | 4.000€–30.000€ | +5 | 60 gg | — | 30 gg |
+| C26 | Furto del BANCOMAT | Not | — | 70 | 80 | 300€–8.000€ | 60%→8% | 15% | 4.000€–30.000€ | +5 | 60 gg | — | 30 gg |
 
-* **C26 Furto del BANCOMAT** — Classica rimozione forzata del bancomat con spettacolare esplosione all'acetilene. Da 300€ (una bombola e una Panda) a 5.000€ (squadra, furgone, basista): l'investimento decide quasi tutto. Riuscito, vale un anno di scippi. Beccato con precedenti, e' la fine della run.
+* **C26 Furto del BANCOMAT** — Classica rimozione forzata del bancomat con spettacolare esplosione all'acetilene. Da 300€ (una bombola e una Panda) a 8.000€ (squadra, furgone, basista): l'investimento decide quasi tutto. Riuscito, vale un anno di scippi. Beccato con precedenti, e' la fine della run.
 
-$ Il bancomat e' progettato come *tentazione*: a investimento massimo ha valore atteso di circa +15.000€, ma e' l'unica azione con una pena base (60 giorni) che con la recidiva (fino a ×1,5) e l'aggravante (×1,5) supera i 90 giorni → game over. Un incensurato puo' permetterselo una volta; un recidivo se lo gioca la run. E' esattamente la curva che vogliamo: il colpo grosso deve far litigare la chat di Twitch.
+$ Il bancomat e' progettato come *tentazione*: a investimento massimo ha valore atteso di circa +14.000€ (spesa compresa), ma e' l'unica azione con una pena base (60 giorni) che con la recidiva (fino a ×1,5) e l'aggravante (×1,5) supera i 90 giorni → game over. Un incensurato puo' permetterselo una volta; un recidivo se lo gioca la run. E' esattamente la curva che vogliamo: il colpo grosso deve far litigare la chat di Twitch.
 
 ## Sbirri, arresto e Tribunale
 
@@ -491,85 +493,88 @@ Le quattro policy automatiche:
 ```
 === CLASSI — policy prudente (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino        100%    6,048,973    79,119  76.7     31    18  10.0    910  365 giorni:164, 365 giorni (finiti in cella):36
-Pakistano        100%    6,718,543    88,683  75.5     33    17  11.0    912  365 giorni:170, 365 giorni (finiti in cella):30
-Africano         100%    5,524,204    73,770  76.1     15    19  10.0    974  365 giorni:174, 365 giorni (finiti in cella):26
-Zingaro          100%    6,899,673    92,722  74.7     32    19  11.0    934  365 giorni:173, 365 giorni (finiti in cella):27
-Balcanico        100%    5,377,838    71,103  76.2     30    22   9.0    916  365 giorni:161, 365 giorni (finiti in cella):39
-Italiano         100%    5,640,370    75,295  75.1     47    18  10.0    891  365 giorni:148, 365 giorni (finiti in cella):52
+Magrebino        100%    4,243,920    55,122  77.3     18    20   7.0    932  365 giorni:166, 365 giorni (finiti in cella):34
+Pakistano        100%    5,077,122    66,391  76.2     20    19   8.0    942  365 giorni:177, 365 giorni (finiti in cella):23
+Africano         100%    3,876,500    51,395  76.2     13    20   8.0    976  365 giorni:174, 365 giorni (finiti in cella):26
+Zingaro          100%    5,039,560    67,343  75.2     24    20   8.0    958  365 giorni:174, 365 giorni (finiti in cella):26
+Balcanico        100%    3,912,550    51,228  76.4     24    22   7.0    940  365 giorni:169, 365 giorni (finiti in cella):31
+Italiano         100%    4,424,792    58,163  75.8     34    20   7.0    922  365 giorni:156, 365 giorni (finiti in cella):44
 
 === CLASSI — policy bilanciato (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino        100%    7,464,709    89,456  83.5     70    31  14.0    737  365 giorni:135, 365 giorni (finiti in cella):65
-Pakistano        100%    7,811,645    95,402  82.4     80    31  16.0    714  365 giorni:134, 365 giorni (finiti in cella):66
-Africano         100%    6,877,926    83,865  82.5     62    34  16.0    782  365 giorni:148, 365 giorni (finiti in cella):52
-Zingaro          100%    8,795,204   107,908  81.8     82    32  17.0    733  365 giorni:128, 365 giorni (finiti in cella):72
-Balcanico        100%    6,503,628    79,032  81.6     85    31  16.0    703  365 giorni:123, 365 giorni (finiti in cella):77
-Italiano         100%    6,672,619    80,387  82.5     95    31  15.0    676  365 giorni:124, 365 giorni (finiti in cella):76
+Magrebino        100%    5,274,619    63,076  83.3     61    33  13.0    762  365 giorni:145, 365 giorni (finiti in cella):55
+Pakistano        100%    5,761,030    71,012  81.8     80    32  14.5    720  365 giorni:141, 365 giorni (finiti in cella):59
+Africano         100%    4,570,054    55,397  82.1     45    35  15.0    820  365 giorni:155, 365 giorni (finiti in cella):45
+Zingaro          100%    6,207,978    76,137  81.7     70    36  16.0    765  365 giorni:140, 365 giorni (finiti in cella):60
+Balcanico        100%    4,726,372    57,910  81.7     68    32  15.0    759  365 giorni:130, 365 giorni (finiti in cella):70
+Italiano         100%    4,830,713    58,939  82.1     91    32  14.0    698  365 giorni:127, 365 giorni (finiti in cella):73
 
 === CLASSI — policy yolo (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino         88%   12,567,791   146,569  87.5    176    26  20.0    430  365 giorni (finiti in cella):113, 365 giorni:62, marcito in galera:25
-Pakistano         84%   13,452,367   160,901  86.8    186    25  21.0    400  365 giorni (finiti in cella):92, 365 giorni:75, marcito in galera:33
-Africano          93%    8,779,157   101,950  87.2    170    32  23.0    455  365 giorni:97, 365 giorni (finiti in cella):89, marcito in galera:14
-Zingaro           87%   14,537,898   169,757  86.1    182    26  22.0    442  365 giorni (finiti in cella):104, 365 giorni:70, marcito in galera:26
-Balcanico         76%    9,097,876   116,117  86.9    197    26  21.0    384  365 giorni (finiti in cella):95, 365 giorni:58, marcito in galera:47
-Italiano          66%   10,278,593   133,725  86.6    198    21  19.0    355  365 giorni (finiti in cella):80, marcito in galera:67, 365 giorni:53
+Magrebino         70%    8,258,974   100,759  87.8    177    23  19.0    386  365 giorni (finiti in cella):80, 365 giorni:60, marcito in galera:60
+Pakistano         76%   10,327,457   121,625  86.8    188    24  21.0    378  365 giorni (finiti in cella):93, 365 giorni:60, marcito in galera:47
+Africano          88%    5,880,936    68,596  87.3    172    31  23.5    423  365 giorni (finiti in cella):93, 365 giorni:83, marcito in galera:24
+Zingaro           75%   10,452,647   121,835  86.6    181    25  21.0    408  365 giorni (finiti in cella):85, 365 giorni:65, marcito in galera:50
+Balcanico         76%    7,203,065    83,564  87.2    195    26  21.0    368  365 giorni (finiti in cella):82, 365 giorni:70, marcito in galera:48
+Italiano          54%    5,678,387    85,713  86.3    202    19  18.0    328  marcito in galera:93, 365 giorni (finiti in cella):62, 365 giorni:45
 
 === CLASSI — policy casuale (200 run) ===
                 sopr.    punti med   patrim.   rep galera   osp  arr. azioni  fine
-Magrebino         90%    1,157,304    15,813  74.2    160    30  19.0    467  365 giorni:102, 365 giorni (finiti in cella):79, marcito in galera:19
-Pakistano         98%      997,337    14,824  69.4    144    30  18.0    543  365 giorni:124, 365 giorni (finiti in cella):73, marcito in galera:3
-Africano          99%      800,851    11,125  70.2    124    31  18.0    604  365 giorni:126, 365 giorni (finiti in cella):72, marcito in galera:2
-Zingaro           98%    1,076,971    16,416  67.0    134    29  18.0    594  365 giorni:106, 365 giorni (finiti in cella):89, marcito in galera:5
-Balcanico        100%      886,697    12,932  70.0    142    30  18.0    555  365 giorni:111, 365 giorni (finiti in cella):88, marcito in galera:1
-Italiano          94%      854,069    12,330  71.0    157    26  17.0    511  365 giorni (finiti in cella):97, 365 giorni:92, marcito in galera:11
+Magrebino         83%      919,065    12,863  74.2    175    27  19.0    442  365 giorni (finiti in cella):85, 365 giorni:81, marcito in galera:34
+Pakistano         98%      934,313    13,240  71.0    152    27  18.0    536  365 giorni:111, 365 giorni (finiti in cella):84, marcito in galera:5
+Africano          99%      596,354     8,426  70.1    130    31  19.0    573  365 giorni:116, 365 giorni (finiti in cella):82, marcito in galera:2
+Zingaro           96%      895,552    13,046  69.1    142    27  19.0    568  365 giorni:114, 365 giorni (finiti in cella):78, marcito in galera:8
+Balcanico         98%      696,972     9,894  71.5    148    27  19.0    538  365 giorni:98, 365 giorni (finiti in cella):97, marcito in galera:5
+Italiano          94%      686,347    10,073  70.9    162    27  17.0    496  365 giorni:104, 365 giorni (finiti in cella):83, marcito in galera:13
 
 === USO DELLE AZIONI (policy bilanciato, tutte le classi) ===
-  C02 Portoghese sul regionale                16.8%
-  L04 Rider delle consegne                    16.7%
-  L05 Calisthenics al parco                   14.0%
-  C06 Tag sui muri del quartiere              10.0%
-  C13 Scassinare auto                          9.8%
-  C22 Topino d'appartamento                    9.1%
-  C08 Truffa Vinted (sneakers fulle)           6.9%
-  L01 Chillare in piazza                       3.8%
-  C09 Ruba monopattino elettrico               3.4%
-  C25 Spaccata al Compro Oro                   2.2%
-  C16 Bagarinaggio allo stadio                 1.9%
-  G03 Poker nel retrobottega                   1.4%
-  C23 Corriere per il boss                     1.3%
-  C19 Rame al cantiere                         0.8%
-  L02 TikTok brainrot in piazza                0.6%
-  C12 Scippo al centro commerciale             0.6%
+  L04 Rider delle consegne                    18.7%
+  C02 Portoghese sul regionale                16.9%
+  L05 Calisthenics al parco                   13.6%
+  C13 Scassinare auto                         10.2%
+  C06 Tag sui muri del quartiere               8.8%
+  C22 Topino d'appartamento                    7.4%
+  C08 Truffa Vinted (sneakers fulle)           5.3%
+  C09 Ruba monopattino elettrico               5.0%
+  L01 Chillare in piazza                       3.5%
+  C25 Spaccata al Compro Oro                   2.1%
+  C16 Bagarinaggio allo stadio                 1.8%
+  G03 Poker nel retrobottega                   1.8%
+  C19 Rame al cantiere                         1.4%
+  C12 Scippo al centro commerciale             1.0%
+  L02 TikTok brainrot in piazza                0.7%
+  C23 Corriere per il boss                     0.6%
+  C14 Truffa dello specchietto                 0.3%
   C01 Truffa dell'anello d'oro                 0.3%
-  C11 Scippo in stazione (bici)                0.2%
-  C21 Spaccio fuori dalla discoteca            0.2%
+  C21 Spaccio fuori dalla discoteca            0.1%
+  C11 Scippo in stazione (bici)                0.1%
   C04 Rubare alcool all'alimentari             0.1%
+  C10 Parkour sui tetti per TikTok             0.0%
   C17 Rissa per collana/cappello drip          0.0%
   C07 Fumo nascosto nel parchetto              0.0%
-  C14 Truffa dello specchietto                 0.0%
-  C10 Parkour sui tetti per TikTok             0.0%
+  C24 Spedizione punitiva per il boss          0.0%
   C15 Parcheggiatore abusivo                   0.0%
-  MAI usate: L03, G01, G02, G04, C03, C05, C18, C20, C24, C26
+  MAI usate: L03, G01, G02, G04, C03, C05, C18, C20, C26
 
 Grafico salvato: results/bilanciamento.png
 ```
 
 ### Lettura dei risultati
-* **Il giocatore casuale** (il riferimento): sopravvive nel 90–100% delle partite, finisce l'anno con 13–19 mila euro e circa 1M di punti. Fa 16–19 arresti e passa 120–170 giorni in cella: tanti, ma in brevi tratti (mediana 7 giorni) e senza game over. Il 40% delle sue partite finisce l'anno in cella per una condanna tardiva: va mostrato come un finale ("hai finito l'anno al gabbio: 1,1M"), non come una sconfitta.
-* **Equita' tra classi**: con la policy bilanciata le sei classi stanno in una forbice di ±14% (6,5M–8,6M) e con la prudente di ±12% (5,4M–6,9M), tutte al 100% di sopravvivenza. Lo Zingaro e' il piu' forte in entrambe (Prestanome), l'Italiano e il Balcanico i piu' deboli. Nessuna classe domina in tutti gli stili: con lo yolo vincono Pakistano e Magrebino.
-* **Curva di difficolta'**: prudente ≈ 6M, bilanciato ≈ 7M, yolo ≈ 9–14M con sopravvivenza 76–96%. Lo yolo vince la classifica quando sopravvive, ma passa 180 giorni in cella e perde la run nel 3–23% dei casi (bancomat da recidivo, tetto dei 240 giorni). E' la forma voluta: il rischio paga, ma costa tempo e puo' costare tutto.
-* **Galera**: bilanciato 14–17 arresti, 60–90 giorni; il Tribunale e' una scena ogni 3 settimane. Circa un terzo delle partite bilanciate finisce l'anno in cella: la policy automatica accetta rischi piu' alti negli ultimi mesi perche' "ha meno da perdere"; un giocatore umano fara' lo stesso, ed e' una dinamica da sfruttare (badge "Finale col botto").
-* **Azioni usate** (bilanciato): rider e portoghese sono i riempitivi (18% ciascuno), poi calisthenics (per curare la Salute), scassinare auto, tag, topino, Vinted. Compro Oro e bancomat compaiono solo nelle policy aggressive. Le azioni mai scelte dalle policy (borseggio alle vecchiette, rapina al rider, lucciola, spedizione punitiva) hanno rep negativa o rischio-ospedale alto: esistono per il sapore e per il giocatore umano, non per l'ottimizzatore.
+* **Il giocatore casuale** (il riferimento): sopravvive nell'83–99% delle partite, finisce l'anno con 8–13 mila euro di patrimonio e 0,6–0,9M di punti. Fa 17–19 arresti e passa 130–175 giorni in cella: tanti, ma in brevi tratti e quasi senza game over (il Magrebino, che arriva prima al bancomat, perde la run una volta su sei). Circa il 40% delle sue partite finisce l'anno in cella per una condanna tardiva: va mostrato come un finale ("hai finito l'anno al gabbio: 0,8M"), non come una sconfitta.
+* **Economia e negozio**: il casuale guadagna circa 500€ nella prima settimana (1.250€ il 10% migliore, che e' il ritmo dei primi tester umani) e compra il passamontagna e, una volta su due, il cappello; la tuta arriva a meta' maggio, la catena a giugno, monopattino e telefono a luglio, il motorino a novembre in 4 partite su 5, l'orologio solo in una su 5. Il bilanciato compra tutto tranne l'orologio entro il giorno 50 (mediana), l'orologio verso ottobre.
+* **Equita' tra classi**: con la policy bilanciata le sei classi stanno in una forbice di ±15% (4,6M–6,2M) e con la prudente di ±13% (3,9M–5,1M), tutte al 100% di sopravvivenza. Zingaro e Pakistano sono i piu' forti in entrambe, Africano e Balcanico i piu' deboli. Nessuna classe domina in tutti gli stili: con lo yolo vincono ancora Zingaro e Pakistano, ma l'Africano sopravvive di piu' e l'Italiano e' l'ultimo.
+* **Curva di difficolta'**: prudente ≈ 4,4M, bilanciato ≈ 5M, yolo ≈ 6–10M con sopravvivenza 54–88%. Lo yolo vince la classifica quando sopravvive, ma passa 180 giorni in cella e perde la run nel 12–46% dei casi (bancomat da recidivo, tetto dei 240 giorni). E' la forma voluta: il rischio paga, ma costa tempo e puo' costare tutto.
+* **Galera**: bilanciato 13–16 arresti, 45–90 giorni; il Tribunale e' una scena ogni 3 settimane. Da un quinto a un terzo delle partite bilanciate finisce l'anno in cella: la policy automatica accetta rischi piu' alti negli ultimi mesi perche' "ha meno da perdere"; un giocatore umano fara' lo stesso, ed e' una dinamica da sfruttare (badge "Finale col botto").
+* **Azioni usate** (bilanciato): rider e portoghese sono i riempitivi (17–19% ciascuno), poi calisthenics (per curare la Salute), scassinare auto, tag, topino, Vinted, furto di monopattini. Il Compro Oro compare poco, il bancomat solo nelle policy aggressive. Le azioni mai scelte dalle policy (borseggio alle vecchiette, rapina al rider, lucciola, spedizione punitiva) hanno rep negativa o rischio-ospedale alto: esistono per il sapore e per il giocatore umano, non per l'ottimizzatore.
 
 ### Cose da verificare nel playtest
-1. **Giorni di cella del casuale (120–170)**: le pene piu' corte non li riducono (il giocatore fa semplicemente piu' azioni e piu' arresti: ~18/anno e' un equilibrio). Se nel playtest risultano frustranti, la leva giusta e' il **rischio dei reati di tier 3–4** (ridurli del 20%), non le pene. Alternativa: rendere la cella un momento piacevole (diario, visite del cuggino, mini-eventi) piu' che corto.
-2. **Lo yolo batte il bilanciato** (12M vs 8M) grazie al bancomat. E' accettabile per una leaderboard, ma se si vuole premiare la costanza: cooldown del bancomat 45 giorni o bottino 4–20K.
+1. **Giorni di cella del casuale (130–175)**: le pene piu' corte non li riducono (il giocatore fa semplicemente piu' azioni e piu' arresti: ~18/anno e' un equilibrio). Se nel playtest risultano frustranti, la leva giusta e' il **rischio dei reati di tier 3–4** (ridurli del 20%), non le pene. Alternativa: rendere la cella un momento piacevole (diario, visite del cuggino, mini-eventi) piu' che corto.
+2. **Lo yolo batte il bilanciato** (6–10M contro 4,5–6M) grazie al bancomat, e lo paga con quasi meta' delle run perse nel caso peggiore (Italiano). E' accettabile per una leaderboard, ma se si vuole premiare la costanza: cooldown del bancomat 45 giorni o bottino 4–20K.
 3. **Riempitivi**: rider (limitato a 1/giorno) e "Portoghese sul regionale" (rischio 5%, 15 energia) sono le azioni di riempimento. Valutare un cooldown di 1 giorno sul Portoghese.
-4. **Fine anno in cella** (20–40% delle partite): aggiungere la schermata finale dedicata e la card "finito l'anno al gabbio".
+4. **Fine anno in cella** (dal 10% delle partite prudenti a quasi la meta' di quelle casuali): aggiungere la schermata finale dedicata e la card "finito l'anno al gabbio".
 5. **Soglie dei tier**: 35 e 45 sono vicine; valutare 10/20/30/45/60/75 con i nomi dei gradi della §Interfaccia.
 6. **Azzardo**: valore atteso negativo, le policy non lo toccano; il giocatore umano si'. Va tenuto d'occhio che non diventi il modo principale di perdere la partita.
+7. **Prezzi del negozio e tacche** (ritoccati il 26/10): verificare che la prima settimana non basti piu' a comprare quasi tutto, che l'orologio resti un traguardo e che "Alla buona" venga scelta davvero da chi e' al verde.
 
 # Appendice B — Come usare il simulatore
 
